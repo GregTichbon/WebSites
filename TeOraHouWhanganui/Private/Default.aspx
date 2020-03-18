@@ -12,8 +12,6 @@
             })
 
              $("#form1").validate();
-
-
              //Generic.Functions.googleanalyticstracking()%>
 
         }); //document.ready
