@@ -56,3 +56,7 @@
     background: #4cff00;
     !important;
 }
+
+.ui-autocomplete-loading {
+    background: white url('Images/processing_16x16.gif') right no-repeat;
+}

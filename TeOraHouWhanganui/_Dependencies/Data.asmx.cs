@@ -50,7 +50,8 @@ namespace TeOraHouWhanganui._Dependencies
                         {
                             person_ctr = dr["person_ctr"].ToString(),
                             name = dr["name"].ToString(),
-                            label = dr["name"].ToString()
+                            label = dr["name"].ToString(),
+                            value = dr["person_ctr"].ToString()
                         });
                     }
 
@@ -76,6 +77,7 @@ namespace TeOraHouWhanganui._Dependencies
             public string person_ctr;
             public string name;
             public string label;
+            public string value;
 
         }
     }

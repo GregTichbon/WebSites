@@ -8,27 +8,46 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Generic;
 
 namespace TeOraHouWhanganui.Private
 {
     public partial class PersonMaintenance : System.Web.UI.Page
     {
+        public string username = "";
         public string person_ctr;
-        public string firstname;
-        public string surname;
-        public string knownas;
-        public string dietary;
-        public string medical;
-        public string notes;
-        public string birthdate;
+        public string fld_firstname;
+        public string fld_surname;
+        public string fld_knownas;
+        public string fld_dietary;
+        public string fld_medical;
+        public string fld_notes;
+        public string fld_birthdate;
+         public string[] fld_gender = new string[1];
+
 
         public string html_tab = "";
         public string html_encounter = "";
+        public string html_encounter_workers = "";
+        public string html_worker = "";
+        public string html_workerroles = "";
+        public string html_assigned = "";
 
-        public string[] yesno = new string[2] { "Yes", "No" };
+        public Dictionary<string, string> options = new Dictionary<string, string>();
+
+        public Dictionary<string, string> genders = new Dictionary<string, string>();
+        public Dictionary<string, string> workers = new Dictionary<string, string>();
+        public Dictionary<string, string> workerRoles = new Dictionary<string, string>();
+        public Dictionary<string, string> assignmenttypes = new Dictionary<string, string>();
+        //public Dictionary<string, string> persons = new Dictionary<string, string>();
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
+            username = HttpContext.Current.User.Identity.Name.ToLower();
+            //Username += "<br />" + Environment.UserName;
+
             if (!IsPostBack)
             {
                 person_ctr = Request.QueryString["id"] ?? "";
@@ -37,11 +56,42 @@ namespace TeOraHouWhanganui.Private
                     Response.Redirect("personsearch.aspx");
                 }
 
+                ViewState["person_ctr"] = person_ctr;
+                ViewState["returnto"] = Request.QueryString["returnto"] + "";
+
+                genders.Add("Female", "Female");
+                genders.Add("Male", "Male");
+
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
                 String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
 
+ 
                 if (person_ctr != "new")
                 {
+                    options.Clear();
+                    options.Add("storedprocedure", "");
+                    options.Add("storedprocedurename", "");
+                    options.Add("usevalues", "");
+                    //options.Add("insertblank", "start");
+                    workers = Functions.buildselectionlist(connectionString, "get_workers", options);
+
+                    options.Clear();
+                    options.Add("storedprocedure", "");
+                    options.Add("storedprocedurename", "");
+                    options.Add("usevalues", "");
+                    //options.Add("insertblank", "start");
+                    workerRoles = Functions.buildselectionlist(connectionString, "get_workerRoles", options);
+
+                    //options.Clear();
+                    //options.Add("storedprocedure", "");
+                    //options.Add("storedprocedurename", "");
+                    //options.Add("usevalues", "");
+                    ////options.Add("insertblank", "start");
+                    //persons = Functions.buildselectionlist(connectionString, "get_all_entities", options);
+
+                    assignmenttypes.Add("Youth", "");
+                    assignmenttypes.Add("Worker", "");
+
                     SqlConnection con = new SqlConnection(connectionString);
 
                     SqlCommand cmd = new SqlCommand();
@@ -55,24 +105,27 @@ namespace TeOraHouWhanganui.Private
                     if (dr.HasRows)
                     {
                         dr.Read();
-                        //person_ctr = dr["person_id"].ToString();
-                        firstname = dr["firstname"].ToString();
-                        surname = dr["surname"].ToString();
-                        knownas = dr["knownas"].ToString();
+                        //person_ctr = dr["person_ctr"].ToString();
+                        fld_firstname = dr["firstname"].ToString();
+                        fld_surname = dr["surname"].ToString();
+                        fld_knownas = dr["knownas"].ToString();
+                        fld_gender[0] = dr["gender"].ToString();
+                        fld_birthdate = Functions.formatdate(dr["DateofBirth"].ToString(), "dd MMM yyyy");
+                        fld_dietary = dr["dietary"].ToString();
+                        fld_medical = dr["medical"].ToString();
+                        fld_notes = dr["notes"].ToString();
                     }
                     dr.Close();
 
-
-
-                    //-------------------------------------------------------------------------------------
-                    //ENCOUNTERS
+                    #region ENCOUNTERS
+                   
+                    //-------------------------------ENCOUNTERS TAB------------------------------------------------------
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
                     //{
 
                     html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
 
                     html_encounter = "<thead>";
-
                     html_encounter += "<tr><th style=\"width:50px;text-align:center\"></th><th>Start Date/Time</th><th>End Date/Time</th><th>Narrative</th><th>Worker</th><th style=\"width:100px\">Action / <a class=\"encounteredit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_encounter += "</thead>";
                     html_encounter += "<tbody>";
@@ -89,6 +142,7 @@ namespace TeOraHouWhanganui.Private
 
                     cmd.CommandText = "Get_Encounters";
                     cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                     cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
                     dr = cmd.ExecuteReader();
                     while (dr.Read())
@@ -101,8 +155,12 @@ namespace TeOraHouWhanganui.Private
                         string Worker = dr["Worker"].ToString();
                         string WorkerDisplay = "";
                         string WorkerCTR = "";
+                        /*
                         if (Worker != "")
                         {
+                            html_encounter_workers = Functions.buildselection(workers, selectedoptions, options);
+                            //problem - selectedoptions would change each time
+
                             string[] WorkerSplit = Worker.Split(Convert.ToChar(254));
                             string delim1 = "";
                             string delim2 = "";
@@ -115,6 +173,7 @@ namespace TeOraHouWhanganui.Private
                                 delim2 = "<br />";
                             }
                         }
+                        */
 
                         html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
                         html_encounter += "<td style=\"text-align:center\"></td>";
@@ -127,6 +186,134 @@ namespace TeOraHouWhanganui.Private
 
                     }
                     dr.Close();
+                    //}
+                 
+                    #endregion ENCOUNTERS
+
+                    #region WORKER ROLES
+                    //-------------------------------WORKER ROLES TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_workerrole\">Worker Roles</a></li>";
+
+                    html_workerroles = "<thead>";
+                    html_workerroles += "<tr><th style=\"width:50px;text-align:center\"></th><th>Role</th><th>Start Date</th><th>End Date</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"workerroleedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_workerroles += "</thead>";
+                    html_workerroles += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_workerroles += "<tr style=\"display:none\">";
+                    html_workerroles += "<td style=\"text-align:center\"></td>";
+                    html_workerroles += "<td></td>";
+                    html_workerroles += "<td></td>";
+                    html_workerroles += "<td></td>";
+                    html_workerroles += "<td></td>";
+                    html_workerroles += "<td><a href=\"javascript:void(0)\" class=\"workerroleedit\" data-mode=\"edit\">Edit</td>";
+                    html_workerroles += "</tr>";
+
+                  
+
+                    cmd.CommandText = "get_entity_workerRoles";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+
+                        string entity_workerRole_CTR = dr["entity_workerRole_CTR"].ToString();
+                        string Role = dr["Role"].ToString();
+                        string StartDate = Functions.formatdate(dr["StartDate"].ToString(), "dd MMM yyyy");
+                        string EndDate = Functions.formatdate(dr["EndDate"].ToString(), "dd MMM yyyy");
+                        string Note = dr["Note"].ToString();
+                        string workerrole_ctr = dr["workerrole_ctr"].ToString();
+
+                        html_workerroles += "<tr id=\"workerrole_" + entity_workerRole_CTR + "\">";
+                        html_workerroles += "<td style=\"text-align:center\"></td>";
+                        html_workerroles += "<td role_ctr=\"" + workerrole_ctr + "\">" + Role + "</td>";
+                        html_workerroles += "<td>" + StartDate + "</td>";
+                        html_workerroles += "<td>" + EndDate + "</td>";
+                        html_workerroles += "<td>" + Note + "</td>";
+                        if (EndDate != "")
+                        {
+                            html_assigned += "<td></td>";
+                        }
+                        else
+                        {
+                            html_workerroles += "<td><a href=\"javascript:void(0)\" class=\"workerroleedit\" data-mode=\"edit\">Edit</td>";
+                        }
+                        html_workerroles += "</tr>";
+
+                    }
+                    dr.Close();
+
+                    //}
+                    #endregion //WORKERS
+
+                    #region ASSIGNED
+                    //-------------------------------ASSIGNED TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_assigned\">Worker Assigments</a></li>";
+
+                    html_assigned = "<thead>";
+                    html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_assigned += "</thead>";
+                    html_assigned += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_assigned += "<tr style=\"display:none\">";
+                    html_assigned += "<td style=\"text-align:center\"></td>";
+                    html_assigned += "<td></td>";
+                    html_assigned += "<td></td>";
+                    html_assigned += "<td></td>";
+                    html_assigned += "<td></td>";
+                    html_assigned += "<td></td>";
+                    html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
+                    html_assigned += "</tr>";
+
+
+
+                    cmd.CommandText = "get_entity_assigned";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+
+                        string entity_assigned_CTR = dr["entity_worker_id"].ToString();
+                        string type = dr["type"].ToString();
+                        string person_ctr = dr["person_ctr"].ToString();
+                        string person = dr["person"].ToString();
+                        string StartDate = Functions.formatdate(dr["StartDate"].ToString(), "dd MMM yyyy");
+                        string EndDate = Functions.formatdate(dr["EndDate"].ToString(), "dd MMM yyyy");
+                        string Note = dr["Note"].ToString();
+ 
+                        html_assigned += "<tr id=\"assigned_" + entity_assigned_CTR + "\">";
+                        html_assigned += "<td style=\"text-align:center\"></td>";
+                        html_assigned += "<td>" + type + "</td>";
+                        html_assigned += "<td person_ctr=\"" + person_ctr + "\">" + person + "</td>";
+                        html_assigned += "<td>" + StartDate + "</td>";
+                        html_assigned += "<td>" + EndDate + "</td>";
+                        html_assigned += "<td>" + Note + "</td>";
+                        if(EndDate != "")
+                        {
+                            html_assigned += "<td></td>";
+                        }
+                        else
+                        {
+                            html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
+                        }
+                        html_assigned += "</tr>";
+
+                    }
+                    dr.Close();
+
+                    //}
+                    #endregion //ASSIGNED
+
+                    //-------------------------------END TABS------------------------------------------------------
                 }
             }
         }
@@ -134,7 +321,135 @@ namespace TeOraHouWhanganui.Private
 
         protected void btn_submit_Click(object sender, EventArgs e)
         {
+            Boolean Creating = false;
+            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            SqlConnection con = new SqlConnection(strConnString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
 
+            person_ctr = ViewState["person_ctr"].ToString();
+            if (person_ctr == "new")
+            {
+                Creating = true;
+            }
+
+            cmd.CommandText = "Update_person";
+            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+            cmd.Parameters.Add("@firstname", SqlDbType.VarChar).Value = Request.Form["fld_firstname"].Trim();
+            cmd.Parameters.Add("@lastname", SqlDbType.VarChar).Value = Request.Form["fld_surname"].Trim();
+            cmd.Parameters.Add("@knownas", SqlDbType.VarChar).Value = Request.Form["fld_knownas"].Trim();
+            cmd.Parameters.Add("@birthdate", SqlDbType.VarChar).Value = Request.Form["fld_birthdate"].Trim();
+            cmd.Parameters.Add("@gender", SqlDbType.VarChar).Value = Request.Form["fld_gender"].Trim();
+            cmd.Parameters.Add("@medical", SqlDbType.VarChar).Value = Request.Form["fld_medical"].Trim();
+            cmd.Parameters.Add("@dietary", SqlDbType.VarChar).Value = Request.Form["fld_dietary"].Trim();
+            cmd.Parameters.Add("@notes", SqlDbType.VarChar).Value = Request.Form["fld_notes"].Trim();
+
+            cmd.Connection = con;
+            //try
+            //{
+            con.Open();
+            person_ctr = cmd.ExecuteScalar().ToString();
+            con.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
+
+            foreach (string key in Request.Form)
+            {
+                if (key.StartsWith("assigned_"))
+                {
+                    string person_worker_ctr = key.Substring(9);  //key length 
+                    if (person_worker_ctr.EndsWith("_delete"))
+                    {
+                        cmd.CommandText = "Delete_person_Worker";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@person_worker_ctr", SqlDbType.VarChar).Value = person_worker_ctr.Substring(0, person_worker_ctr.Length - 7);
+                    }
+                    else
+                    {
+                        if (person_worker_ctr.StartsWith("new"))
+                        {
+                            person_worker_ctr = "new";
+                        }
+
+                        string[] valuesSplit = Request.Form[key].Split('\x00FE');
+                        cmd.CommandText = "Update_person_Worker";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@person_worker_ctr", SqlDbType.VarChar).Value = person_worker_ctr;
+                        cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                        cmd.Parameters.Add("@type", SqlDbType.VarChar).Value = valuesSplit[0];
+                        cmd.Parameters.Add("@worker_ctr", SqlDbType.VarChar).Value = valuesSplit[1];
+                        cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[2];
+                        cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[3];
+                        cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
+                    }
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
+                }
+                else if (key.StartsWith("workerrole_"))
+                {
+                    string person_workerrole_ctr = key.Substring(11);   //key length 
+                    //if (person_worker_ctr.EndsWith("_delete"))
+                    //{
+                    //    cmd.CommandText = "Delete_person_Worker";
+                    //    cmd.Parameters.Clear();
+                    //    cmd.Parameters.Add("@person_worker_ctr", SqlDbType.VarChar).Value = person_worker_ctr.Substring(0, person_worker_ctr.Length - 7);
+                    //}
+                    //else
+                    //{
+                    if (person_workerrole_ctr.StartsWith("new"))
+                    {
+                        person_workerrole_ctr = "new";
+                    }
+
+                    string[] valuesSplit = Request.Form[key].Split('\x00FE');
+                    cmd.CommandText = "Update_person_workerrole";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_workerrole_ctr", SqlDbType.VarChar).Value = person_workerrole_ctr;
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    cmd.Parameters.Add("@workerrole_ctr", SqlDbType.VarChar).Value = valuesSplit[0];
+                    cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[1];
+                    cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[2];
+                    cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[3];
+                    //}
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
+
+                }
+            }
+            //finally
+            //{
+
+            con.Dispose();
+            //}
+
+            string returnto = ViewState["returnto"].ToString();
+          
+            if (Creating)
+            {
+                if (returnto == "")
+                {
+                    returnto = "personmaintenance.aspx?id=" + person_ctr;
+                }
+                else
+                {
+                    returnto = "personmaintenance.aspx?id=" + person_ctr + "&returnto=" + returnto + ".aspx";
+                }
+            }
+            else
+            {
+                if (returnto == "")
+                {
+                    returnto = "personsearch.aspx";
+                }
+            }
+
+            Response.Redirect(returnto);
         }
     }
 }

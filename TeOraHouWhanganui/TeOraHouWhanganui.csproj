@@ -45,6 +45,8 @@
   <ItemGroup>
     <Reference Include="Generic">
       <HintPath>..\Generic\bin\Debug\Generic.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
@@ -70,9 +72,41 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Community\Location.aspx" />
+    <Content Include="Community\Person.aspx" />
+    <Content Include="Community\Reports\ListAll_Updates.aspx" />
+    <Content Include="Community\Search.aspx" />
+    <Content Include="Community\ShowMap.aspx" />
+    <Content Include="Community\_Dependencies\data.asmx" />
+    <Content Include="Community\_Dependencies\Images\Covid19.jpg" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-144x144.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-152x152.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-57x57.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-60x60.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-72x72.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\apple-touch-icon-76x76.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\code.txt" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon-128.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon-16x16.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon-196x196.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon-32x32.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon-96x96.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\favicon.ico" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\mstile-144x144.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\mstile-150x150.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\mstile-310x150.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\mstile-310x310.png" />
+    <Content Include="Community\_Dependencies\Images\FavIcon\mstile-70x70.png" />
+    <Content Include="Default.aspx" />
+    <Content Include="Private\Administration\Program.aspx" />
+    <Content Include="Private\Administration\ProgramActivity.aspx" />
     <Content Include="Private\Default.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
+    <Content Include="TestAndPlay\GoogleMaps1.html" />
+    <Content Include="TestAndPlay\LongRunning1.aspx" />
     <Content Include="XDefault.aspx" />
     <Content Include="Login\Default.aspx" />
     <Content Include="XPersonMaintenance.aspx" />
@@ -103,6 +137,7 @@
     <Content Include="_Dependencies\Images\FavIcon\mstile-310x310.png" />
     <Content Include="_Dependencies\Images\FavIcon\mstile-70x70.png" />
     <Content Include="_Dependencies\Images\pencil.png" />
+    <Content Include="_Dependencies\Images\processing_16x16.gif" />
     <Content Include="_Dependencies\Images\qm.png" />
     <Content Include="_Dependencies\Images\Scissors.png" />
     <Content Include="_Dependencies\Images\star.png" />
@@ -111,6 +146,73 @@
     <Content Include="_Dependencies\Main.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Community\Community.Master.cs">
+      <DependentUpon>Community.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\Community.Master.designer.cs">
+      <DependentUpon>Community.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Community\Location.aspx.cs">
+      <DependentUpon>Location.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\Location.aspx.designer.cs">
+      <DependentUpon>Location.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Community\Person.aspx.cs">
+      <DependentUpon>Person.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\Person.aspx.designer.cs">
+      <DependentUpon>Person.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Community\Reports\ListAll_Updates.aspx.cs">
+      <DependentUpon>ListAll_Updates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\Reports\ListAll_Updates.aspx.designer.cs">
+      <DependentUpon>ListAll_Updates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Community\Search.aspx.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\Search.aspx.designer.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Community\ShowMap.aspx.cs">
+      <DependentUpon>ShowMap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Community\ShowMap.aspx.designer.cs">
+      <DependentUpon>ShowMap.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Community\_Dependencies\data.asmx.cs">
+      <DependentUpon>data.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Administration\Program.aspx.cs">
+      <DependentUpon>Program.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Administration\Program.aspx.designer.cs">
+      <DependentUpon>Program.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Administration\ProgramActivity.aspx.cs">
+      <DependentUpon>ProgramActivity.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Administration\ProgramActivity.aspx.designer.cs">
+      <DependentUpon>ProgramActivity.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,6 +233,13 @@
     </Compile>
     <Compile Include="Private\PersonSearch.aspx.designer.cs">
       <DependentUpon>PersonSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestAndPlay\LongRunning1.aspx.cs">
+      <DependentUpon>LongRunning1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestAndPlay\LongRunning1.aspx.designer.cs">
+      <DependentUpon>LongRunning1.aspx</DependentUpon>
     </Compile>
     <Compile Include="XDefault.aspx.cs">
       <DependentUpon>XDefault.aspx</DependentUpon>
@@ -189,8 +298,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main.Master" />
+    <Content Include="Community\Community.Master" />
     <None Include="packages.config" />
     <Content Include="Private\Main.Master" />
+    <Content Include="Te Ora Hou Notes.docx" />
+    <None Include="Properties\PublishProfiles\TOH-APP TeOraHou.online.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

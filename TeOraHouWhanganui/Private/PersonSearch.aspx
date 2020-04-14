@@ -19,16 +19,10 @@
                 source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete")%>",
                 minLength: 2,
                 select: function (event, ui) {
+                    event.preventDefault();
                     $('#name').val("");
-                    //event.preventDefault();
                     selected = ui.item;
-                    //alert(selected.guid);
                     window.open("PersonMaintenance.aspx?id=" + selected.person_ctr, "_self");
-                    /*
-                    $("#category").val(selected ?
-                        selected.label : "Nothing selected, input was " + this.value);
-                        */
-
                 }
             })
 

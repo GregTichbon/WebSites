@@ -36,21 +36,34 @@ namespace Generic
         string UserName = "";
         string Password = "";
 
-        public static string buildselection(string strConnString, string cmdtext, string[] selectedoption, string[,] values, Dictionary<string, string> options)
+        public static google_geocodeClass google_geocode(string api_key, string address, Dictionary<string, string> options)
         {
-            string selected;
-            string html = "";
 
-            //string[] selectedoptions = selectedoption.Split(',');
-            if (selectedoption != "")
-            {
-                selectedoption = "," + selectedoption + ",";
-            }
+            string requestUri = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?key={1}&address={0}&sensor=false", Uri.EscapeDataString(address), api_key);
 
-            if (options.ContainsKey("firstoption"))  // could be "Please Select" etc
-            {
-                html = html + ("<option>" + firstoption + "</option>");
-            }
+            WebRequest request = WebRequest.Create(requestUri);
+            WebResponse response = request.GetResponse();
+            XDocument xdoc = XDocument.Load(response.GetResponseStream());
+
+            XElement result = xdoc.Element("GeocodeResponse").Element("result");
+            XElement formatted_address = result.Element("formatted_address");
+            XElement locationElement = result.Element("geometry").Element("location");
+            XElement lat = locationElement.Element("lat");
+            XElement lng = locationElement.Element("lng");
+
+            google_geocodeClass google_geocode = new google_geocodeClass();
+
+            google_geocode.address = formatted_address.Value;
+            google_geocode.lat = lat.Value;
+            google_geocode.lng = lng.Value;
+
+            return google_geocode;
+        }
+
+        public static Dictionary<string, string> buildselectionlist(string strConnString, string cmdtext, Dictionary<string, string> options)
+        {
+
+            Dictionary<string, string> selectionlist = new Dictionary<string, string>();
 
             SqlConnection con = new SqlConnection(strConnString);
             SqlCommand cmd;
@@ -65,14 +78,13 @@ namespace Generic
                 }
                 else
                 {
-                    cmd = new SqlCommand("builddropdownlist", con);
+                    cmd = new SqlCommand("buildselectionlist", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@sqltext", SqlDbType.VarChar).Value = cmdtext;
                 }
                 if (options.ContainsKey("parameters"))
                 {
                     cmd.Parameters.Add("@parameters", SqlDbType.VarChar).Value = options["parameters"];
-
                 }
             }
             else
@@ -92,38 +104,14 @@ namespace Generic
                 {
                     string Label;
                     string Value = "";
-                    string ValueText = "";
-                    string selectText = "";
                     while (dr.Read())
                     {
                         Label = dr["label"].ToString();
                         if (options.ContainsKey("usevalues"))
                         {
                             Value = dr["value"].ToString();
-                            ValueText = " value=\"" + Value + "\"";
                         }
-                        //if (options["selecttype"] == "Label")
-                        if (options.ContainsKey("comparelabel"))
-                        {
-                            selectText = Label;
-                        }
-                        else //compare value
-                        {
-                            selectText = Value;
-                        }
-                        //foreach (string option in selectedoptions)
-                        //{
-                        //if (selectText == selectedoption) 
-                        if (selectedoption.Contains("," + selectText + ","))
-                        {
-                            selected = " selected";
-                        }
-                        else
-                        {
-                            selected = "";
-                        }
-                        html = html + ("<option" + ValueText + selected + ">" + Label + "</option>");
-                        //}
+                        selectionlist.Add(Label, Value);
                     }
                 }
             }
@@ -137,14 +125,95 @@ namespace Generic
                 con.Dispose();
             }
 
+            return selectionlist;
+        }
+        public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
+        {
+            string html = "";
+
+            /* Can just put the option on the page
+            if (options["firstoption"] != "None")  //eg: Please Select
+            {
+                html = html + ("<option>" + options["firstoption"] + "</option>");
+            }
+            */
+
+            string Label;
+            string Value = "";
+            string ValueText;
+            string selectText = "";
+
+            foreach (KeyValuePair<string, string> selectionpair in optionlist)
+            {
+                ValueText = "";
+                Label = selectionpair.Key;
+                if (options.ContainsKey("valuefield"))
+                {
+                    if (options["valuefield"] == "label")
+                    {
+                        Value = Label;
+                    }
+                    else if (options["valuefield"] == "value")
+                    {
+                        Value = selectionpair.Value;
+                    }
+                }
+                string selected = "";
+
+                if (options.ContainsKey("comparelabel"))
+                {
+                    selectText = Label;
+                }
+                else //compare value
+                {
+                    selectText = Value;
+                }
+
+                if (selectedoption.Contains(selectText))
+                {
+                    selected = " selected";
+                }
+                else
+                {
+                    selected = "";
+                }
+
+                if (options["type"] == "uiselectable")
+                {
+                    string id = "checkbox_" + Value;
+                    string name = options["name"];
+                    ValueText = "<label for=\"" + id + "\">" + Label + "</label>";
+                    ValueText += "<input class=\"uicheckbox\" type=\"checkbox\" name=\"" + name + "\" id=\"" + id + "\">";
+                }
+                else if (options["type"] == "select")
+                {
+                    if (Value != "")
+                    {
+                        ValueText = " value=\"" + Value + "\"";
+                    }
+                    ValueText = "<option" + ValueText + selected + ">" + Label + "</option>";
+                }
+                else if (options["type"] == "checkbox")
+                {
+
+                }
+                else if (options["type"] == "radio")
+                {
+
+                }
+
+
+
+                html += ValueText;
+
+
+            }
             return html;
         }
-
         public IHtmlString HTMLRaw(string source)
         {
             return new HtmlString(source);
         }
-
         public string HTMLtoText(string source)
         {
             var text = new HtmlDocument();
@@ -152,23 +221,26 @@ namespace Generic
             string pageText = text.DocumentNode.InnerText;
             return pageText;
         }
-
         public string formatphonenumber(string phonenumber)
         {
             phonenumber = Regex.Replace(phonenumber, "[^0-9]", "");
             return phonenumber;
         }
 
+        public static string formatdate(string date, string format)
+        {
+            if (date != "")
+            {
+                date = Convert.ToDateTime(date).ToString(format);
+            }
+            return date;
+        }
         public string test()
         {
             return "Test";
         }
 
-        public string test21()
-        {
-            return "Test";
-        }
-
+       
         public static Boolean accessstringtest(string personaccess, string requiredaccess)
         {
             int personaccesslength = personaccess.Length;
@@ -197,14 +269,10 @@ namespace Generic
             }
 
         }
-
-
-
         public static string googleanalyticstracking()
         {
             return "";
         }
-
         public void sendemail(string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto)
         {
             //MailMessage mail = new MailMessage("noreply@whanganui.govt.nz", emailRecipient);
@@ -933,19 +1001,18 @@ namespace Generic
             con.Dispose();
             return response;
         }
-        public static string populateselect(string[] options, string selectedoption, string firstoption = "None")
+        public static string populateselect(string[] selectoptions, string selectedoptions, string firstoption)
         {
             string selected;
             string html = "";
-            if (firstoption != "None")
+            if (firstoption != "None")  //eg: Please Select
             {
                 html = html + ("<option>" + firstoption + "</option>");
-
             }
 
-            foreach (string option in options)
+            foreach (string option in selectoptions)
             {
-                if (option == selectedoption)
+                if (option == selectedoptions)
                 {
                     selected = " selected";
                 }
@@ -955,11 +1022,12 @@ namespace Generic
                 }
                 html = html + ("<option" + selected + ">" + option + "</option>");
             }
-            if (selectedoption != "" && !options.Contains(selectedoption))
+         /*
+            if (selectedoptions != "" && !selectoption.Contains(selectedoptions))
             {
                 html = html + ("<option selected>" + selectedoption + "</option>");
             }
-
+         */
 
             return html;
         }
@@ -1448,8 +1516,15 @@ namespace Generic
     */
 }
 
-    public class SelectList
-    {
-        public string Label { get; set; }
-        public string Value { get; set; }
-    }
+public class SelectList
+{
+    public string Label { get; set; }
+    public string Value { get; set; }
+}
+
+public class google_geocodeClass
+{
+    public String address;
+    public String lat;
+    public String lng;
+}
