@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
+using localfunctions = TeOraHouWhanganui._Dependencies;
 
 namespace TeOraHouWhanganui.Private
 {
@@ -23,15 +24,16 @@ namespace TeOraHouWhanganui.Private
         public string fld_medical;
         public string fld_notes;
         public string fld_birthdate;
-         public string[] fld_gender = new string[1];
+        public string[] fld_gender = new string[1];
 
 
         public string html_tab = "";
         public string html_encounter = "";
-        public string html_encounter_workers = "";
+        //public string html_encounter_workers = "";
         public string html_worker = "";
         public string html_workerroles = "";
         public string html_assigned = "";
+        public string show_assigned_level = "";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
 
@@ -39,15 +41,22 @@ namespace TeOraHouWhanganui.Private
         public Dictionary<string, string> workers = new Dictionary<string, string>();
         public Dictionary<string, string> workerRoles = new Dictionary<string, string>();
         public Dictionary<string, string> assignmenttypes = new Dictionary<string, string>();
+        public Dictionary<string, string> encounterAccessLevels = new Dictionary<string, string>(); 
         //public Dictionary<string, string> persons = new Dictionary<string, string>();
 
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
+           // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
             username = HttpContext.Current.User.Identity.Name.ToLower();
+            
+            if (username == "")
+            {
+                username = "toh\\gtichbon";   //localhost
+            }
+            //username = HttpContext.Current.User.Identity.Name.ToLower();
             //Username += "<br />" + Environment.UserName;
-
+            
             if (!IsPostBack)
             {
                 person_ctr = Request.QueryString["id"] ?? "";
@@ -65,7 +74,7 @@ namespace TeOraHouWhanganui.Private
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
                 String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
 
- 
+
                 if (person_ctr != "new")
                 {
                     options.Clear();
@@ -81,6 +90,21 @@ namespace TeOraHouWhanganui.Private
                     options.Add("usevalues", "");
                     //options.Add("insertblank", "start");
                     workerRoles = Functions.buildselectionlist(connectionString, "get_workerRoles", options);
+
+                    options.Clear();
+                    options.Add("storedprocedure", "");
+                    options.Add("storedprocedurename", "");
+                    options.Add("usevalues", "");
+                    //options.Add("insertblank", "start");
+                    encounterAccessLevels = Functions.buildselectionlist(connectionString, "get_EncounterAccessLevels", options);
+
+                    //options.Clear();
+                    //options.Add("type", "uiselectable");
+                    //options.Add("valuefield", "value");
+                    //options.Add("name", "EncounterWorker");
+                    //string[] selectedoptions = { };
+                    //html_encounter_workers = Functions.buildselection(workers, selectedoptions, options);
+
 
                     //options.Clear();
                     //options.Add("storedprocedure", "");
@@ -118,76 +142,83 @@ namespace TeOraHouWhanganui.Private
                     dr.Close();
 
                     #region ENCOUNTERS
-                   
+
                     //-------------------------------ENCOUNTERS TAB------------------------------------------------------
-                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
-                    //{
-
-                    html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
-
-                    html_encounter = "<thead>";
-                    html_encounter += "<tr><th style=\"width:50px;text-align:center\"></th><th>Start Date/Time</th><th>End Date/Time</th><th>Narrative</th><th>Worker</th><th style=\"width:100px\">Action / <a class=\"encounteredit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
-                    html_encounter += "</thead>";
-                    html_encounter += "<tbody>";
-
-                    //hidden row, used for creating new rows client side
-                    html_encounter += "<tr style=\"display:none\">";
-                    html_encounter += "<td style=\"text-align:center\"></td>";
-                    html_encounter += "<td></td>";
-                    html_encounter += "<td></td>";
-                    html_encounter += "<td></td>";
-                    html_encounter += "<td></td>";
-                    html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
-                    html_encounter += "</tr>";
-
-                    cmd.CommandText = "Get_Encounters";
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
-                    dr = cmd.ExecuteReader();
-                    while (dr.Read())
+                    if (localfunctions.functions.AccessStringTest(username, "111"))
                     {
 
-                        string Encounter_CTR = dr["Encounter_CTR"].ToString();
-                        string StartDateTime = Convert.ToDateTime(dr["StartDateTime"]).ToString("dd MMM yyyy HH:mm");
-                        string EndDateTime = Convert.ToDateTime(dr["EndDateTime"]).ToString("dd MMM yyyy HH:mm");
-                        string Narrative = dr["Narrative"].ToString();
-                        string Worker = dr["Worker"].ToString();
-                        string WorkerDisplay = "";
-                        string WorkerCTR = "";
-                        /*
-                        if (Worker != "")
-                        {
-                            html_encounter_workers = Functions.buildselection(workers, selectedoptions, options);
-                            //problem - selectedoptions would change each time
+                        html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
 
-                            string[] WorkerSplit = Worker.Split(Convert.ToChar(254));
-                            string delim1 = "";
-                            string delim2 = "";
-                            foreach (String thisWorker in WorkerSplit)
-                            {
-                                string[] thisWorkerSplit = thisWorker.Split(Convert.ToChar(253));
-                                WorkerCTR += delim1 + thisWorkerSplit[0];
-                                delim1 = "|";
-                                WorkerDisplay += delim2 + thisWorkerSplit[1];
-                                delim2 = "<br />";
-                            }
-                        }
-                        */
+                        html_encounter = "<thead>";
+                        html_encounter += "<tr><th style=\"width:50px;text-align:center\"></th><th>Start Date/Time</th><th>End Date/Time</th><th style=\"width:50%\">Narrative</th><th>Worker(s)</th><th>Level</th><th style=\"width:100px\">Action / <a class=\"encounteredit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_encounter += "</thead>";
+                        html_encounter += "<tbody>";
 
-                        html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
+                        //hidden row, used for creating new rows client side
+                        html_encounter += "<tr style=\"display:none\">";
                         html_encounter += "<td style=\"text-align:center\"></td>";
-                        html_encounter += "<td>" + StartDateTime + "</td>";
-                        html_encounter += "<td>" + EndDateTime + "</td>";
-                        html_encounter += "<td>" + Narrative + "</td>";
-                        html_encounter += "<td data-workerid=\"" + WorkerCTR + "\">" + WorkerDisplay + "</td>";
+                        html_encounter += "<td></td>";
+                        html_encounter += "<td></td>";
+                        html_encounter += "<td></td>";
+                        html_encounter += "<td></td>";
+                        html_encounter += "<td></td>";
                         html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
                         html_encounter += "</tr>";
 
+                        cmd.CommandText = "Get_Encounters";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                        cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                        dr = cmd.ExecuteReader();
+                        while (dr.Read())
+                        {
+
+                            string Encounter_CTR = dr["Encounter_CTR"].ToString();
+                            string StartDateTime = Convert.ToDateTime(dr["StartDateTime"]).ToString("dd MMM yyyy HH:mm");
+                            string EndDateTime = Convert.ToDateTime(dr["EndDateTime"]).ToString("dd MMM yyyy HH:mm");
+                            string Narrative = dr["Narrative"].ToString();
+                            string Worker = dr["Worker"].ToString();
+                            string Encounteraccesslevel = dr["Encounteraccesslevel"].ToString();
+                            string EncounteraccesslevelDisplay = dr["EncounteraccesslevelDisplay"].ToString();
+                            string WorkerCTR = "";
+
+                            string WorkerDisplay = "";
+                            if (Worker != "")
+                            {
+                                string[] WorkerSplit = Worker.Split(Convert.ToChar(254));
+                                string delim1 = "";
+                                string delim2 = "";
+                                foreach (String thisWorker in WorkerSplit)
+                                {
+                                    string[] thisWorkerSplit = thisWorker.Split(Convert.ToChar(253));
+                                    WorkerCTR += delim1 + thisWorkerSplit[0];
+                                    delim1 = "|";
+                                    WorkerDisplay += delim2 + thisWorkerSplit[1];
+                                    delim2 = "<br />";
+                                }
+                            }
+                       
+
+                            html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
+                            html_encounter += "<td style=\"text-align:center\"></td>";
+                            html_encounter += "<td>" + StartDateTime + "</td>";
+                            html_encounter += "<td>" + EndDateTime + "</td>";
+                            html_encounter += "<td>" + Narrative + "</td>";
+                            html_encounter += "<td workerid=\"" + WorkerCTR + "\">" + WorkerDisplay + "</td>";
+                            html_encounter += "<td encounteraccesslevel=\"" + Encounteraccesslevel + "\">" + EncounteraccesslevelDisplay + "</td>";
+                            if(Narrative == "Restricted")
+                            {
+                                html_encounter += "<td></td>";
+                            } else
+                            {
+                                html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
+                            }
+                            html_encounter += "</tr>";
+
+                        }
+                        dr.Close();
                     }
-                    dr.Close();
-                    //}
-                 
+
                     #endregion ENCOUNTERS
 
                     #region WORKER ROLES
@@ -212,7 +243,7 @@ namespace TeOraHouWhanganui.Private
                     html_workerroles += "<td><a href=\"javascript:void(0)\" class=\"workerroleedit\" data-mode=\"edit\">Edit</td>";
                     html_workerroles += "</tr>";
 
-                  
+
 
                     cmd.CommandText = "get_entity_workerRoles";
                     cmd.Parameters.Clear();
@@ -255,10 +286,15 @@ namespace TeOraHouWhanganui.Private
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
                     //{
 
+                    if (!localfunctions.functions.AccessStringTest(username, "11"))
+                    {
+                        show_assigned_level = " style=\"display:none\"";
+                    }
+
                     html_tab += "<li><a data-target=\"#div_assigned\">Worker Assigments</a></li>";
 
                     html_assigned = "<thead>";
-                    html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th" + show_assigned_level + ">Level</th><th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_assigned += "</thead>";
                     html_assigned += "<tbody>";
 
@@ -270,6 +306,7 @@ namespace TeOraHouWhanganui.Private
                     html_assigned += "<td></td>";
                     html_assigned += "<td></td>";
                     html_assigned += "<td></td>";
+                    html_assigned += "<td" + show_assigned_level + "></td>"; //level
                     html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
                     html_assigned += "</tr>";
 
@@ -289,7 +326,9 @@ namespace TeOraHouWhanganui.Private
                         string StartDate = Functions.formatdate(dr["StartDate"].ToString(), "dd MMM yyyy");
                         string EndDate = Functions.formatdate(dr["EndDate"].ToString(), "dd MMM yyyy");
                         string Note = dr["Note"].ToString();
- 
+                        string AccessLevel = dr["AccessLevel"].ToString();
+                        string AccessLevelDisplay = dr["AccessLevelDisplay"].ToString();
+
                         html_assigned += "<tr id=\"assigned_" + entity_assigned_CTR + "\">";
                         html_assigned += "<td style=\"text-align:center\"></td>";
                         html_assigned += "<td>" + type + "</td>";
@@ -297,7 +336,8 @@ namespace TeOraHouWhanganui.Private
                         html_assigned += "<td>" + StartDate + "</td>";
                         html_assigned += "<td>" + EndDate + "</td>";
                         html_assigned += "<td>" + Note + "</td>";
-                        if(EndDate != "")
+                        html_assigned += "<td" + show_assigned_level + " accesslevel=\"" + AccessLevel + "\">" + AccessLevelDisplay + "</td>";
+                        if (EndDate != "")
                         {
                             html_assigned += "<td></td>";
                         }
@@ -385,6 +425,7 @@ namespace TeOraHouWhanganui.Private
                         cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[2];
                         cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[3];
                         cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
+                        cmd.Parameters.Add("@accesslevel", SqlDbType.VarChar).Value = valuesSplit[5];
                     }
                     con.Open();
                     cmd.ExecuteScalar().ToString();
@@ -419,7 +460,38 @@ namespace TeOraHouWhanganui.Private
                     con.Open();
                     cmd.ExecuteScalar().ToString();
                     con.Close();
+                }
+                else if (key.StartsWith("encounter_"))
+                {
+                    string encounter_ctr = key.Substring(10);   //key length 
+                    //if (encounter_ctr.EndsWith("_delete"))
+                    //{
+                    //    cmd.CommandText = "Delete_encounter";
+                    //    cmd.Parameters.Clear();
+                    //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
+                    //}
+                    //else
+                    //{
+                    if (encounter_ctr.StartsWith("new"))
+                    {
+                        encounter_ctr = "new";
+                    }
 
+                    string[] valuesSplit = Request.Form[key].Split('\x00FE');
+
+                    cmd.CommandText = "Update_encounter";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter_ctr;
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    cmd.Parameters.Add("@narrative", SqlDbType.VarChar).Value = valuesSplit[2];
+                    cmd.Parameters.Add("@startdatetime", SqlDbType.VarChar).Value = valuesSplit[0];
+                    cmd.Parameters.Add("@enddatetime", SqlDbType.VarChar).Value = valuesSplit[1];
+                    cmd.Parameters.Add("@encounteraccesslevel", SqlDbType.VarChar).Value = valuesSplit[4];
+                    cmd.Parameters.Add("@workers", SqlDbType.VarChar).Value = valuesSplit[3];
+                    //}
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
                 }
             }
             //finally
@@ -429,7 +501,7 @@ namespace TeOraHouWhanganui.Private
             //}
 
             string returnto = ViewState["returnto"].ToString();
-          
+
             if (Creating)
             {
                 if (returnto == "")

@@ -75,6 +75,7 @@ namespace TeOraHouWhanganui.Community._Dependencies
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public void name_autocomplete(string term)
         {
+            string Username = HttpContext.Current.User.Identity.Name.ToLower();
             List<PersonClass> PersonList = new List<PersonClass>();
 
             string systemPrefix = "Community"; // WebConfigurationManager.AppSettings["systemPrefix"];
@@ -83,6 +84,7 @@ namespace TeOraHouWhanganui.Community._Dependencies
 
             SqlCommand cmd = new SqlCommand("name_autocomplete", con);
             cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = Username;
             cmd.Parameters.Add("@search", SqlDbType.VarChar).Value = term;
 
             cmd.Connection = con;

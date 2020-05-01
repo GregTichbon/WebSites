@@ -105,6 +105,8 @@
     <Content Include="Private\Default.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
+    <Content Include="Private\Reports\Default.aspx" />
+    <Content Include="Private\Reports\Report.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
     <Content Include="XDefault.aspx" />
@@ -234,6 +236,20 @@
     <Compile Include="Private\PersonSearch.aspx.designer.cs">
       <DependentUpon>PersonSearch.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Private\Reports\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Reports\Report.aspx.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Report.aspx.designer.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
     <Compile Include="TestAndPlay\LongRunning1.aspx.cs">
       <DependentUpon>LongRunning1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -295,6 +311,7 @@
       <DependentUpon>Data.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="_Dependencies\functions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main.Master" />
@@ -303,6 +320,7 @@
     <Content Include="Private\Main.Master" />
     <Content Include="Te Ora Hou Notes.docx" />
     <None Include="Properties\PublishProfiles\TOH-APP TeOraHou.online.pubxml" />
+    <None Include="Properties\PublishProfiles\_New.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

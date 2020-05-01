@@ -127,6 +127,7 @@ namespace Generic
 
             return selectionlist;
         }
+
         public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
         {
             string html = "";
@@ -210,10 +211,12 @@ namespace Generic
             }
             return html;
         }
+
         public IHtmlString HTMLRaw(string source)
         {
             return new HtmlString(source);
         }
+
         public string HTMLtoText(string source)
         {
             var text = new HtmlDocument();
@@ -221,6 +224,7 @@ namespace Generic
             string pageText = text.DocumentNode.InnerText;
             return pageText;
         }
+
         public string formatphonenumber(string phonenumber)
         {
             phonenumber = Regex.Replace(phonenumber, "[^0-9]", "");
@@ -235,12 +239,12 @@ namespace Generic
             }
             return date;
         }
+
         public string test()
         {
             return "Test";
         }
-
-       
+               
         public static Boolean accessstringtest(string personaccess, string requiredaccess)
         {
             int personaccesslength = personaccess.Length;
@@ -269,10 +273,12 @@ namespace Generic
             }
 
         }
+
         public static string googleanalyticstracking()
         {
             return "";
         }
+
         public void sendemail(string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto)
         {
             //MailMessage mail = new MailMessage("noreply@whanganui.govt.nz", emailRecipient);
@@ -322,6 +328,7 @@ namespace Generic
             mail.Body = emailhtml;
             client.Send(mail);
         }
+
 
         public void sendemailV2(string host, string emailfrom, string emailfromname, string password, string emailsubject, string emailtext, string emailhtml, string emailRecipient, string emailbcc, string replyto)
         {
@@ -380,6 +387,7 @@ namespace Generic
 
             client.Send(mail);
         }
+
         public void sendemailV3(string host, string emailfrom, string emailfromname, string password, string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto)
         {
             try
@@ -445,6 +453,7 @@ namespace Generic
                 Log("", @"generic/functions.cs/sendemailV3", "Error: Message; " + e.Message + ", StackTrace; " + e.StackTrace, "");
             }
         }
+
         public void sendemailV4(string host, string emailfrom, string emailfromname, string password, string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto, string[] attachments, Dictionary<string, string> options)
         {
 
@@ -516,6 +525,7 @@ namespace Generic
                 Log("", @"generic/functions.cs/sendemailV4", "Error: Message; " + e.Message + ", StackTrace; " + e.StackTrace, "");
             }
         }
+
         public void sendemailV5(string host, int port, Boolean enableSsl, string emailfrom, string emailfromname, string password, string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto, string[] attachments, Dictionary<string, string> options)
         {
 
@@ -587,6 +597,7 @@ namespace Generic
                 Log("", @"generic/functions.cs/sendemailV5", "Error: Message; " + e.Message + ", StackTrace; " + e.StackTrace, "");
             }
         }
+
         public void Log(string guid, string location, string message, string EmailAddress)
         {
             //String strConnString = ConfigurationManager.AppSettings["LogConnectionString"];
@@ -631,6 +642,7 @@ namespace Generic
             */
 
         }
+
         public string BrowserDetails(System.Web.HttpBrowserCapabilities browser)
         {
 
@@ -686,6 +698,7 @@ namespace Generic
 
             return response;
         }
+
         public string getReference(string mode = "guid")
         {
             string reference = "";
@@ -704,6 +717,7 @@ namespace Generic
 
             return reference;
         }
+
         public string makelink(string url, string window = "")
         {
             string link = url.Trim().ToLower();
@@ -736,6 +750,7 @@ namespace Generic
             }
             return link;
         }
+
         public string saveattachments(string attpath, string reference, System.Web.UI.WebControls.FileUpload fucontrol, string RawUrl)
         {
             //if attpath has had reference appended then don't  probably need to pass reference
@@ -887,10 +902,12 @@ namespace Generic
                 con.Close();
             }
         }
+
         public string test1()
         {
             return "Done";
         }
+
         public string test2()
         {
             WebRequest wr = WebRequest.Create("http://office.datainn.co.nz/sms/test2.aspx");
@@ -913,6 +930,7 @@ namespace Generic
 
             return responsevalue;
         }
+
         public string SendRemoteMessage(string PhoneNumber, string Message, string Description, string resend_id = "")
         {
             string strConnString = "Data Source=toh-app;Initial Catalog=SMS;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
@@ -1001,6 +1019,7 @@ namespace Generic
             con.Dispose();
             return response;
         }
+
         public static string populateselect(string[] selectoptions, string selectedoptions, string firstoption)
         {
             string selected;
