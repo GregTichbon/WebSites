@@ -105,6 +105,7 @@
     <Content Include="Private\Default.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
+    <Content Include="Private\Posts.asmx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
@@ -235,6 +236,10 @@
     </Compile>
     <Compile Include="Private\PersonSearch.aspx.designer.cs">
       <DependentUpon>PersonSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Posts.asmx.cs">
+      <DependentUpon>Posts.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Private\Reports\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

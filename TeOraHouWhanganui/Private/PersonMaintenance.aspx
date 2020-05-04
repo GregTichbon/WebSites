@@ -7,8 +7,37 @@
     <script src="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js")%>"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css" />
+
 
     <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
+
+    <style>
+         .imagecontainer {
+            max-width: 800px;
+            max-height: 800px;
+            margin: 20px auto;
+        }
+
+        #preview {
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        #canvas {
+            background-color: #ffffff;
+            cursor: default;
+            border: 1px solid black;
+            width: 1200px;
+        }
+
+    </style>
 
     <script type="text/javascript">
         var newctr = 0;
@@ -33,6 +62,118 @@
             });
 
             $("#form1").validate();
+
+            var canvas = $("#canvas"),
+                context = canvas.get(0).getContext("2d")//,
+
+            $('#getphoto').click(function () {
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+                $("#dialog_getphoto").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: mywidth,
+                    modal: true,
+                    buttons: {
+                        "Restore": function () {
+                            canvas.cropper('reset');
+                            //$result.empty();
+                        },
+                        "Cancel": function () {
+                            canvas.cropper("destroy");
+                            $(this).dialog("close");
+                        },
+                        "Upload": function () {
+                            var image = canvas.cropper('getCroppedCanvas').toDataURL("image/jpg");
+                            image = image.replace('data:image/png;base64,', '');
+                            console.log(image);
+                            $.ajax({
+                                type: "POST",
+                                //async: false,
+                                url: "posts.asmx/SaveImage",
+                                data: '{"imageData": "' + image + '", "id": "' + <%: person_ctr %> + '"}',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (result) {
+                                    //alert(result);
+                                    d = new Date();
+                                    $("#img_photo").attr("src", "images/<%:person_ctr %>.jpg?" + d.getTime());
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                                }
+                            });
+                            canvas.cropper("destroy");
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            })
+            $('#fileInput').on('change', function () {
+                if (this.files && this.files[0]) {
+                    if (this.files[0].type.match(/^image\//)) {
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            var img = new Image();
+                            img.onload = function () {
+                                context.canvas.height = img.height;
+                                context.canvas.width = img.width;
+                                context.drawImage(img, 0, 0);
+                                var cropper = canvas.cropper({
+                                    preview: '#preview',
+                                    dragMode: 'crop',
+                                    autoCropArea: 0.65,
+                                    rotatable: true,
+                                    cropBoxMovable: true,
+                                    cropBoxResizable: true
+                                });
+                            };
+                            img.src = evt.target.result;
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                    else {
+                        alert("Invalid file type! Please select an image file.");
+                    }
+                }
+                else {
+                    alert('No file(s) selected.');
+                }
+            });
+
+            $('#img_photo').click(function () {
+                $("#fullphoto").attr('src', $('#img_photo').attr('src'));
+                $("#dialog_fullphoto").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: 800,
+                    modal: true
+                });
+            });
+
+            $('.geocode').click(function () {
+                address = $('#fld_address_address').val();
+                if (address.toLowerCase().indexOf("whanganui") == -1 && address.toLowerCase().indexOf("wanganui") == -1) {
+                    address += ", Whanganui";
+                }
+                $.ajax({
+                    type: "POST",
+                    //async: false,
+                    url: "posts.asmx/googlegeocode",
+                    data: '{"address": "' + address + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        $('#fld_address_address').val(result.d.address.replace(/, /g,'\n'));
+                        $('#fld_address_coordinates').val(result.d.lat + "," + result.d.lng);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                    }
+                });
+            })
 
             $(".nav-tabs a").click(function () {
                 $(this).tab('show');
@@ -219,6 +360,7 @@
                 */
 
                 update_enrolement();
+                update_address();
 
             });  //.submit end
 
@@ -291,12 +433,11 @@
                             if (mode == "add") {
                                 tr = $('#div_encounter > table > tbody tr:first').clone();
                                 $(tr).removeAttr('style');
-                                $('#div_encounter > table > tbody > tr:last').after(tr);
+                                $('#div_encounter > table > tbody > tr:first').before(tr);
                                 $(tr).attr('id', 'encounter_new_' + get_newctr());
                                 $(tr).find('td:first').attr("class", "inserted");
                             } else {
                                 $(tr).find('td:first').attr("class", "changed");
-
                             }
                             $(tr).attr('maint', 'changed');
                             $(tr).find('td').eq(1).text($('#fld_encounter_startdatetime').val());
@@ -421,6 +562,116 @@
                 $("#dialog_workerrole").dialog('option', 'buttons', myButtons);
             })
 
+            /* ========================================= EDIT ADDRESSES ===========================================*/
+            $(document).on('click', '.addressedit', function () {
+                mode = $(this).data('mode');
+                if (mode == "add") {
+                    $("#dialog_address").find(':input').val('');
+                } else {
+                    tr = $(this).closest('tr');
+
+                    $('#fld_address_address').val($(tr).find('td').eq(1).text());
+                    //$('#fld_address_status').val($(tr).find('td').eq(2).text());
+                    $('#fld_address_current').val($(tr).find('td').eq(2).attr('current'));
+                    $('#fld_address_note').val($(tr).find('td').eq(3).text());
+                    $('#fld_address_coordinates').val($(tr).find('td').eq(4).text());
+                }
+
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+
+                $("#dialog_address").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: mywidth,
+                    modal: true
+                    /*
+                    ,open: function (type, data) {
+                        $(this).appendTo($('form')); // reinsert the dialog to the form       
+                    }*/
+                    , appendTo: "#form2"
+                });
+
+
+                var myButtons = {
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                    },
+                    "Save": function () {
+                        if ($("#form2").valid()) {
+                            if (mode == "add") {
+                                tr = $('#div_address > table > tbody tr:first').clone();
+                                $(tr).removeAttr('style');
+                                $('#div_address > table > tbody > tr:last').after(tr);
+                                $(tr).attr('id', 'address_new_' + get_newctr());
+                                $(tr).find('td:first').attr("class", "inserted");
+                            } else {
+                                $(tr).find('td:first').attr("class", "changed");
+
+                            }
+                            $(tr).attr('maint', 'changed');
+
+                            $(tr).find('td').eq(1).text($('#fld_address_address').val());
+                            //$(tr).find('td').eq(2).text($('#fld_address_status').val());
+                            $(tr).find('td').eq(2).text($('#fld_address_current option:selected').text());
+                            $(tr).find('td').eq(2).attr('current', $('#fld_address_current').val());
+                            $(tr).find('td').eq(3).text($('#fld_address_note').val());
+                            $(tr).find('td').eq(4).text($('#fld_address_coordinates').val());
+
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+
+                /*
+                if (mode != 'add') {
+                    myButtons["Delete"] = function () {
+                        if (window.confirm("Are you sure you want to delete this address?")) {
+                            $(tr).find('td:first').attr("class", "deleted");
+                            $(tr).attr('maint', 'deleted');
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+                */
+
+                $("#dialog_address").dialog('option', 'buttons', myButtons);
+            })
+
+            function update_address() {
+                /*----------------------------------------------ENROLMENT-----------------------------------------*/
+                delim = String.fromCharCode(254);
+                $('#addresstable > tbody > tr[maint="changed"]').each(function () {
+
+                    tr_id = $(this).attr('id');
+                    tr_address = $(this).find('td:eq(1)').text();
+                    tr_current = $(this).find('td:eq(2)').attr('current')
+                    tr_notes = $(this).find('td:eq(3)').text();
+                    tr_coordinates = $(this).find('td:eq(4)').text();
+
+                    value = tr_address + delim + tr_current + delim + tr_notes + delim + tr_coordinates;
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: tr_id,
+                        value: value
+                    }).appendTo('#form1');
+                });
+                /*
+                $('#addresstable > tbody > tr[maint="deleted"]').each(function () {
+                    tr_id = $(this).attr('id') + '_delete';
+                    if (tr_id.substring(0, 3) != 'new') {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: tr_id,
+                            value: ""
+                        }).appendTo('#form1');
+                    }
+                });
+                */
+            }
+
             /* ========================================= EDIT ASSIGNMENTS ===========================================*/
             $(document).on('click', '.assignededit', function () {
                 mode = $(this).data('mode');
@@ -492,8 +743,6 @@
 
                             $(tr).find('td').eq(6).text($('#fld_assigned_level option:selected').text());
                             $(tr).find('td').eq(6).attr('accesslevel', $('#fld_assigned_level').val());
-
-                            alert($('#fld_assigned_level').val());
 
                             $(this).dialog("close");
                         }
@@ -586,6 +835,7 @@
 
             function update_enrolement() {
                 /*----------------------------------------------ENROLMENT-----------------------------------------*/
+                delim = String.fromCharCode(254);
                 $('#enrolementtable > tbody > tr[maint="changed"]').each(function () {
 
                     tr_id = $(this).attr('id');
@@ -623,11 +873,13 @@
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>When adding a new record, enter the name fields and then click on the <span class="btn btn-info">Submit</span> button.  Tabs will then be shown to allow you to add more data.</p>
         <p>Making changes to the data under the various tabs will not be actioned until the record is submitted. </p>
-        <p>Upload photo is still to be done.</p>
+        <p><b>Upload photo: </b> Click on the link and choose a photo from your computer or internet, crop it to the correct size and upload it.  It will be saved immediatly.</p>
+        <p><b>Addresses: </b>Enter an address and then <span class="btn btn-info">Refresh</span> to verify it against Google Maps.  This will also format the address properly and resolve the co-ordinates.  Generally, you only need to enter the number and the street. " Where there are Google co-ordinates a link will allow you to go to that address in Google Maps.</p>
         <p><b>Encounters: </b> There are different levels of access given to Te Ora Hou workes.  Each worker is granted a level of between 1 and 4 for each person in the database.  They will only see the encounter notes where their access level is equal to or less than the level assigned to the encounter.  They may additionally see encounter notes where they have been recorded as a worker in that record.</p>
         <p>The levels are</p><ul><li>1. Confidential</li><li>2. Highly sensitive</li><li>3. Sensitive</li><li>4. General</li></ul>
         <p>Everyone has access to encounter notes at level 4.</p>
     </div>
+    <div id="dialog_fullphoto" title="Full Photo" style="display: none"><img id="fullphoto" src="x" /></div>
     <div class="toprighticon">
         <input type="button" id="search" class="btn btn-info" value="Search" />
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
@@ -660,8 +912,8 @@
             </div>
         </div>
         <div class="col-md-4">
-            <img id="img_photo" alt="" src="Images/<%: person_ctr %>.jpg" style="width: 200px" /><br />
-            <a id="getphoto">Upload Photo</a>
+            <img id="img_photo" alt="" src="Images/<%: person_ctr %>.jpg" style="height: 200px" /><br />
+            <a id="getphoto">Upload Photo</a> <%=photoalbumlink %>
         </div>
     </div>
 
@@ -736,6 +988,13 @@
                         <textarea id="fld_notes" name="fld_notes" class="form-control"><%: fld_notes %></textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_photoalbumlink">Photo album link</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_photoalbumlink" name="fld_photoalbumlink" class="form-control" value="<%: fld_photoalbumlink %>" /> 
+                    </div>
+                </div>
+
             </div>
 
             <!-- ================================= ENCOUNTERS TAB ===================================  -->
@@ -789,7 +1048,7 @@
                     <div class="col-sm-8">
                         <select id="fld_encounter_worker" name="fld_encounter_worker" class="form-control" required="required" multiple="multiple">
                             <%                                                                                                                                            
-                                string[] nooptions = { }; 
+                                //string[] nooptions = { }; 
                                 Dictionary<string, string> encounter_workeroptions = new Dictionary<string, string>();
                                 encounter_workeroptions["type"] = "select";
                                 encounter_workeroptions["valuefield"] = "value";
@@ -811,6 +1070,54 @@
                                 Response.Write(Generic.Functions.buildselection(encounterAccessLevels, noleveloptions, encounter_leveloptions));
                             %>
                         </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================= ADDRESSES TAB ===================================  -->
+            <div id="div_address" class="tab-pane fade in">
+                <h3 class="tabheading">Addresss</h3>
+                <table id="addresstable" class="table" style="width: 100%">
+                    <%= html_addresses %>
+                </table>
+            </div>
+
+            <!-- ================================= ADDRESSES DIALOG ===================================  -->
+            <div id="dialog_address" title="Maintain addresss" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_address_address">Address</label>
+                    <div class="col-sm-8">
+                        <textarea id="fld_address_address" name="fld_address_address" class="form-control" rows="6"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_address_current">Current</label>
+                    <div class="col-sm-8">
+
+                        <select id="fld_address_current" name="fld_address_current" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_address_note">Note</label>
+                    <div class="col-sm-8">
+                        <textarea id="fld_address_note" name="fld_address_note" class="form-control"></textarea>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_address_coordinates">Google Co-ordinates</label>
+                    <div class="col-sm-8">
+                        <input id="fld_address_coordinates" name="fld_address_coordinates" class="form-control" readonly="readonly" /> <input type="button" class="geocode btn btn-info" value="Refresh" />
                     </div>
                 </div>
             </div>
@@ -890,7 +1197,7 @@
             <!-- ================================= ASSIGNED DIALOG ===================================  -->
             <div id="dialog_assigned" title="Maintain Assigned Workers" style="display: none" class="form-horizontal">
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_assigned_type">Type</label>
+                    <label class="control-label col-sm-4" for="fld_assigned_type">The person you are linking to is a</label>
                     <div class="col-sm-8">
                         <select id="fld_assigned_type" name="fld_assigned_type" class="form-control" required="required">
                             <option value="">--- Please select ---</option>

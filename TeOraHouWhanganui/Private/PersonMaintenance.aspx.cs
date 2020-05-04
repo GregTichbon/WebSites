@@ -24,6 +24,7 @@ namespace TeOraHouWhanganui.Private
         public string fld_medical;
         public string fld_notes;
         public string fld_birthdate;
+        public string fld_photoalbumlink;
         public string[] fld_gender = new string[1];
 
 
@@ -34,20 +35,25 @@ namespace TeOraHouWhanganui.Private
         public string html_workerroles = "";
         public string html_assigned = "";
         public string show_assigned_level = "";
+        public string html_addresses = "";
+        public string photoalbumlink = "";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
+        public string[] nooptions = { };
 
         public Dictionary<string, string> genders = new Dictionary<string, string>();
         public Dictionary<string, string> workers = new Dictionary<string, string>();
         public Dictionary<string, string> workerRoles = new Dictionary<string, string>();
         public Dictionary<string, string> assignmenttypes = new Dictionary<string, string>();
-        public Dictionary<string, string> encounterAccessLevels = new Dictionary<string, string>(); 
+        public Dictionary<string, string> encounterAccessLevels = new Dictionary<string, string>();
+        public Dictionary<string, string> YesNo = new Dictionary<string, string>();
+
         //public Dictionary<string, string> persons = new Dictionary<string, string>();
 
 
         protected void Page_Load(object sender, EventArgs e)
         {
-           // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
+            // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
             username = HttpContext.Current.User.Identity.Name.ToLower();
             
             if (username == "")
@@ -116,6 +122,10 @@ namespace TeOraHouWhanganui.Private
                     assignmenttypes.Add("Youth", "");
                     assignmenttypes.Add("Worker", "");
 
+                    YesNo.Add("Yes", "1");
+                    YesNo.Add("No", "0");
+
+
                     SqlConnection con = new SqlConnection(connectionString);
 
                     SqlCommand cmd = new SqlCommand();
@@ -138,6 +148,10 @@ namespace TeOraHouWhanganui.Private
                         fld_dietary = dr["dietary"].ToString();
                         fld_medical = dr["medical"].ToString();
                         fld_notes = dr["notes"].ToString();
+                        fld_photoalbumlink = dr["photoalbumlink"].ToString();
+                        if(fld_photoalbumlink != "") {
+                            photoalbumlink = "<a href=\"" + fld_photoalbumlink + "\" target=\"photos\">Google</a>";
+                        }
                     }
                     dr.Close();
 
@@ -221,6 +235,141 @@ namespace TeOraHouWhanganui.Private
 
                     #endregion ENCOUNTERS
 
+                    #region PHONE
+                    //-------------------------------PHONE TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_phone\">X Phones</a></li>";
+
+                    //}
+
+                    #endregion PHONE
+
+
+                    #region FINANCIAL
+                    //-------------------------------FINANCIAL TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_financial\">X Financial</a></li>";
+
+                    //}
+
+                    #endregion FINANCIAL
+
+                    #region FUTURE EVENTS
+                    //-------------------------------FUTURE EVENTS TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_futureevent\">X Future Events</a></li>";
+
+                    //}
+
+                    #endregion FUTURE EVENTS
+
+                    #region RELATIONSHIPS
+                    //-------------------------------RELATIONSHIPS TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_relationship\">X Relationships</a></li>";
+
+                    //}
+
+                    #endregion RELATIONSHIPS
+
+                    #region EDUCATION
+                    //-------------------------------EDUCATION TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_education\">X Education</a></li>";
+
+                    //}
+
+                    #endregion EDUCATION
+
+                    #region INTERNET
+                    //-------------------------------INTERNET TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_internet\">X Internet Presence</a></li>";
+
+                    //}
+
+                    #endregion INTERNET
+
+                    #region EVENTS
+                    //-------------------------------EVENTS TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_event\">X Events</a></li>";
+
+                    //}
+
+                    #endregion EVENTS
+
+
+                    #region ADDRESSES
+                    //-------------------------------ADDRESSES TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_address\">Addresses</a></li>";
+
+                    html_addresses = "<thead>";
+                    html_addresses += "<tr><th style=\"width:50px;text-align:center\"></th><th>Address</th><th>Current</th><th>Note</th><th>Coordinates</th><th style=\"width:100px\">Action / <a class=\"addressedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_addresses += "</thead>";
+                    html_addresses += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_addresses += "<tr style=\"display:none\">";
+                    html_addresses += "<td style=\"text-align:center\"></td>";
+                    html_addresses += "<td></td>";
+                    html_addresses += "<td></td>";
+                    html_addresses += "<td></td>";
+                    html_addresses += "<td></td>";
+                    html_addresses += "<td><a href=\"javascript:void(0)\" class=\"addressedit\" data-mode=\"edit\">Edit</td>";
+                    html_addresses += "</tr>";
+
+                    cmd.CommandText = "get_entity_addresses";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string entity_address_CTR = dr["entity_address_CTR"].ToString();
+                        string address = dr["address"].ToString();
+                        string longitude = dr["Longitude"].ToString();
+                        string latitude = dr["latitude"].ToString();
+                        string current = dr["current"].ToString();
+
+                        string Note = dr["Note"].ToString();
+
+                        string googlelink = "";
+                        if (longitude != "" && latitude != "")
+                        {
+                            googlelink = "<a href=\"https://maps.google.com/?q=" + latitude + "," + longitude + "\" target=\"map\"> " + latitude + "," + longitude + "</a>";
+                        }
+
+                        html_addresses += "<tr id=\"address_" + entity_address_CTR + "\">";
+                        html_addresses += "<td style=\"text-align:center\"></td>";
+                        html_addresses += "<td>" + address + "</td>";
+                        html_addresses += "<td current=\"" + current + "\">" + YesNo.FirstOrDefault(x => x.Value == current).Key + "</td>";
+                        html_addresses += "<td>" + Note + "</td>";
+                        html_addresses += "<td>" + googlelink + "</td>";
+                        html_addresses += "<td><a href=\"javascript:void(0)\" class=\"addressedit\" data-mode=\"edit\">Edit</td>";
+                        html_addresses += "</tr>";
+                    }
+                    dr.Close();
+
+                    //}
+                    #endregion //ADDRESSES
+
                     #region WORKER ROLES
                     //-------------------------------WORKER ROLES TAB------------------------------------------------------
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
@@ -242,8 +391,6 @@ namespace TeOraHouWhanganui.Private
                     html_workerroles += "<td></td>";
                     html_workerroles += "<td><a href=\"javascript:void(0)\" class=\"workerroleedit\" data-mode=\"edit\">Edit</td>";
                     html_workerroles += "</tr>";
-
-
 
                     cmd.CommandText = "get_entity_workerRoles";
                     cmd.Parameters.Clear();
@@ -488,6 +635,42 @@ namespace TeOraHouWhanganui.Private
                     cmd.Parameters.Add("@enddatetime", SqlDbType.VarChar).Value = valuesSplit[1];
                     cmd.Parameters.Add("@encounteraccesslevel", SqlDbType.VarChar).Value = valuesSplit[4];
                     cmd.Parameters.Add("@workers", SqlDbType.VarChar).Value = valuesSplit[3];
+                    //}
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
+                }
+                else if (key.StartsWith("address_"))
+                {
+                    string address_ctr = key.Substring(8);   //key length 
+                    //if (encounter_ctr.EndsWith("_delete"))
+                    //{
+                    //    cmd.CommandText = "Delete_address";
+                    //    cmd.Parameters.Clear();
+                    //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
+                    //}
+                    //else
+                    //{
+                    if (address_ctr.StartsWith("new"))
+                    {
+                        address_ctr = "new";
+                    }
+
+                    string[] valuesSplit = Request.Form[key].Split('\x00FE');
+
+                    cmd.CommandText = "Update_person_address";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                    cmd.Parameters.Add("@address_ctr", SqlDbType.VarChar).Value = address_ctr;
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    cmd.Parameters.Add("@address", SqlDbType.VarChar).Value = valuesSplit[0];
+                    cmd.Parameters.Add("@current", SqlDbType.VarChar).Value = valuesSplit[1];
+                    cmd.Parameters.Add("@notes", SqlDbType.VarChar).Value = valuesSplit[2];
+                    if (valuesSplit[3] != "")
+                    {
+                        cmd.Parameters.Add("@latitude", SqlDbType.VarChar).Value = valuesSplit[3].Split(',')[0];
+                        cmd.Parameters.Add("@longitude", SqlDbType.VarChar).Value = valuesSplit[3].Split(',')[1];
+                    }
                     //}
                     con.Open();
                     cmd.ExecuteScalar().ToString();
