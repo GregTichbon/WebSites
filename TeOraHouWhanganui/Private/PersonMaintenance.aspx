@@ -9,7 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css" />
-
+    <!--<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.dirtyforms/2.0.0/jquery.dirtyforms.min.js"></script>-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
 
     <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
 
@@ -44,6 +45,11 @@
 
         $(document).ready(function () {
             //Generic.Functions.googleanalyticstracking()%>
+
+            function makedirty() {
+                //$('#hidden_dirty').addClass('dirty');
+                $('#form1').addClass('dirty');
+            }
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -60,6 +66,9 @@
             $('#search').click(function () {
                 window.location.href = "<%=ResolveUrl("~/private/personsearch.aspx")%>";
             });
+            //$("#form1").dirtyForms();
+
+            $('#form1').areYouSure();
 
             $("#form1").validate();
 
@@ -93,7 +102,7 @@
                                 type: "POST",
                                 //async: false,
                                 url: "posts.asmx/SaveImage",
-                                data: '{"imageData": "' + image + '", "id": "' + <%: person_ctr %> + '"}',
+                                data: '{"imageData": "' + image + '", "id": "<%: person_ctr %>"}',
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
                                 success: function (result) {
@@ -260,7 +269,7 @@
             }
 
             $("#fld_assigned_person").autocomplete({
-                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete")%>",
+                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete?options=")%>",
                 minLength: 2 //,
                 , appendTo: "#dialog_assigned"
                 , select: function (event, ui) {
@@ -458,7 +467,9 @@
                             $(tr).find('td').eq(5).text($('#fld_encounter_level option:selected').text());
                             $(tr).find('td').eq(5).attr('encounteraccesslevel', $('#fld_encounter_level').val());
 
-                            tinymce.remove('.tinymce');;
+                            tinymce.remove('.tinymce');
+                            //$('#hidden_dirty').addClass('dirty');
+                            makedirty();
                             $(this).dialog("close");
                         }
                     }
@@ -864,12 +875,20 @@
                 });
                 */
             }
-
+            /*
+            $('#btn_test').click(function () {
+                $('#hidden_dirty').addClass('dirty');
+            })
+            */
         }); //document.ready
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <%=username %>
+    <!--
+    <input type="button" value="test" id="btn_test" />
+    <input type="text" id="hidden_dirty" />
+    -->
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>When adding a new record, enter the name fields and then click on the <span class="btn btn-info">Submit</span> button.  Tabs will then be shown to allow you to add more data.</p>
         <p>Making changes to the data under the various tabs will not be actioned until the record is submitted. </p>
@@ -1063,11 +1082,11 @@
                     <div class="col-sm-8">
                         <select id="fld_encounter_level" name="fld_encounter_level" class="form-control" required="required">
                             <%                                                                                                                                            
-                                string[] noleveloptions = { };  
+                                //string[] noleveloptions = { };  
                                 Dictionary<string, string> encounter_leveloptions = new Dictionary<string, string>();
                                 encounter_leveloptions["type"] = "select";
                                 encounter_leveloptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(encounterAccessLevels, noleveloptions, encounter_leveloptions));
+                                Response.Write(Generic.Functions.buildselection(encounterAccessLevels, nooptions, encounter_leveloptions));
                             %>
                         </select>
                     </div>
@@ -1258,10 +1277,10 @@
                         <select id="fld_assigned_level" name="fld_assigned_level" class="form-control" required="required">
                             <%                                                                                                                                            
                                 //string[] noleveloptions = { };  
-                                //Dictionary<string, string> encounter_leveloptions = new Dictionary<string, string>();
-                                //encounter_leveloptions["type"] = "select";
-                                //encounter_leveloptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(encounterAccessLevels, noleveloptions, encounter_leveloptions));
+                                Dictionary<string, string> Allencounter_leveloptions = new Dictionary<string, string>();
+                                Allencounter_leveloptions["type"] = "select";
+                                Allencounter_leveloptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(AllencounterAccessLevels, nooptions, Allencounter_leveloptions));
                             %>
                         </select>
                     </div>

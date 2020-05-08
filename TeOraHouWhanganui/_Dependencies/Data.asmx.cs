@@ -25,7 +25,7 @@ namespace TeOraHouWhanganui._Dependencies
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void Person_name_autocomplete(string term)
+        public void Person_name_autocomplete(string term, string options)
         {
             List<PersonClass> PersonList = new List<PersonClass>();
 
@@ -36,6 +36,7 @@ namespace TeOraHouWhanganui._Dependencies
             SqlCommand cmd = new SqlCommand("person_name_autocomplete", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@search", SqlDbType.VarChar).Value = term;
+            cmd.Parameters.Add("@options", SqlDbType.VarChar).Value = options;
 
             cmd.Connection = con;
             try

@@ -100,6 +100,7 @@
     <Content Include="Community\_Dependencies\Images\FavIcon\mstile-310x310.png" />
     <Content Include="Community\_Dependencies\Images\FavIcon\mstile-70x70.png" />
     <Content Include="Default.aspx" />
+    <Content Include="Private\Administration\Access.aspx" />
     <Content Include="Private\Administration\Program.aspx" />
     <Content Include="Private\Administration\ProgramActivity.aspx" />
     <Content Include="Private\Default.aspx" />
@@ -201,6 +202,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Administration\Access.aspx.cs">
+      <DependentUpon>Access.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Administration\Access.aspx.designer.cs">
+      <DependentUpon>Access.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\Administration\Program.aspx.cs">
       <DependentUpon>Program.aspx</DependentUpon>

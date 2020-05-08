@@ -46,6 +46,7 @@ namespace TeOraHouWhanganui.Private
         public Dictionary<string, string> workerRoles = new Dictionary<string, string>();
         public Dictionary<string, string> assignmenttypes = new Dictionary<string, string>();
         public Dictionary<string, string> encounterAccessLevels = new Dictionary<string, string>();
+        public Dictionary<string, string> AllencounterAccessLevels = new Dictionary<string, string>();
         public Dictionary<string, string> YesNo = new Dictionary<string, string>();
 
         //public Dictionary<string, string> persons = new Dictionary<string, string>();
@@ -101,8 +102,16 @@ namespace TeOraHouWhanganui.Private
                     options.Add("storedprocedure", "");
                     options.Add("storedprocedurename", "");
                     options.Add("usevalues", "");
+                    options.Add("parameters", "notnegative");
                     //options.Add("insertblank", "start");
                     encounterAccessLevels = Functions.buildselectionlist(connectionString, "get_EncounterAccessLevels", options);
+
+                    options.Clear();
+                    options.Add("storedprocedure", "");
+                    options.Add("storedprocedurename", "");
+                    options.Add("usevalues", "");
+                    //options.Add("insertblank", "start");
+                    AllencounterAccessLevels = Functions.buildselectionlist(connectionString, "get_EncounterAccessLevels", options);
 
                     //options.Clear();
                     //options.Add("type", "uiselectable");
@@ -158,8 +167,8 @@ namespace TeOraHouWhanganui.Private
                     #region ENCOUNTERS
 
                     //-------------------------------ENCOUNTERS TAB------------------------------------------------------
-                    if (localfunctions.functions.AccessStringTest(username, "111"))
-                    {
+                    //if (localfunctions.functions.AccessStringTest(username, "111"))
+                    //{
 
                         html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
 
@@ -231,7 +240,7 @@ namespace TeOraHouWhanganui.Private
 
                         }
                         dr.Close();
-                    }
+                    //}
 
                     #endregion ENCOUNTERS
 
@@ -432,8 +441,13 @@ namespace TeOraHouWhanganui.Private
                     //-------------------------------ASSIGNED TAB------------------------------------------------------
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
                     //{
-
+                    Boolean allowedit = true;
                     if (!localfunctions.functions.AccessStringTest(username, "11"))
+                    {
+                        allowedit = false;
+                    }
+
+                    if (!localfunctions.functions.AccessStringTest(username, "1"))
                     {
                         show_assigned_level = " style=\"display:none\"";
                     }
@@ -441,7 +455,12 @@ namespace TeOraHouWhanganui.Private
                     html_tab += "<li><a data-target=\"#div_assigned\">Worker Assigments</a></li>";
 
                     html_assigned = "<thead>";
-                    html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th" + show_assigned_level + ">Level</th><th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th" + show_assigned_level + ">Level</th>";
+                    if(allowedit)
+                    {
+                        html_assigned += "<th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th>";
+                    }
+                    html_assigned += "</tr>";
                     html_assigned += "</thead>";
                     html_assigned += "<tbody>";
 
@@ -454,7 +473,10 @@ namespace TeOraHouWhanganui.Private
                     html_assigned += "<td></td>";
                     html_assigned += "<td></td>";
                     html_assigned += "<td" + show_assigned_level + "></td>"; //level
-                    html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
+                    if (allowedit)
+                    {
+                        html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
+                    }
                     html_assigned += "</tr>";
 
 
@@ -476,24 +498,29 @@ namespace TeOraHouWhanganui.Private
                         string AccessLevel = dr["AccessLevel"].ToString();
                         string AccessLevelDisplay = dr["AccessLevelDisplay"].ToString();
 
-                        html_assigned += "<tr id=\"assigned_" + entity_assigned_CTR + "\">";
-                        html_assigned += "<td style=\"text-align:center\"></td>";
-                        html_assigned += "<td>" + type + "</td>";
-                        html_assigned += "<td person_ctr=\"" + person_ctr + "\">" + person + "</td>";
-                        html_assigned += "<td>" + StartDate + "</td>";
-                        html_assigned += "<td>" + EndDate + "</td>";
-                        html_assigned += "<td>" + Note + "</td>";
-                        html_assigned += "<td" + show_assigned_level + " accesslevel=\"" + AccessLevel + "\">" + AccessLevelDisplay + "</td>";
-                        if (EndDate != "")
+                        if (AccessLevel != "-1" || allowedit)
                         {
-                            html_assigned += "<td></td>";
+                            html_assigned += "<tr id=\"assigned_" + entity_assigned_CTR + "\">";
+                            html_assigned += "<td style=\"text-align:center\"></td>";
+                            html_assigned += "<td>" + type + "</td>";
+                            html_assigned += "<td person_ctr=\"" + person_ctr + "\">" + person + "</td>";
+                            html_assigned += "<td>" + StartDate + "</td>";
+                            html_assigned += "<td>" + EndDate + "</td>";
+                            html_assigned += "<td>" + Note + "</td>";
+                            html_assigned += "<td" + show_assigned_level + " accesslevel=\"" + AccessLevel + "\">" + AccessLevelDisplay + "</td>";
+                            if (EndDate != "")
+                            {
+                                html_assigned += "<td></td>";
+                            }
+                            else
+                            {
+                                if (allowedit)
+                                {
+                                    html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
+                                }
+                            }
+                            html_assigned += "</tr>";
                         }
-                        else
-                        {
-                            html_assigned += "<td><a href=\"javascript:void(0)\" class=\"assignededit\" data-mode=\"edit\">Edit</td>";
-                        }
-                        html_assigned += "</tr>";
-
                     }
                     dr.Close();
 

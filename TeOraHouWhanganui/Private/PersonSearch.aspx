@@ -16,7 +16,7 @@
 
 
             $("#name").autocomplete({
-                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete")%>",
+                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete?options=Allow Create")%>",
                 minLength: 2,
                 select: function (event, ui) {
                     event.preventDefault();
