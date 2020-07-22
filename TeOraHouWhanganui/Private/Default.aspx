@@ -34,6 +34,9 @@
              Response.Write("<p><a href=\"administration/access.aspx\" class=\"btn btn-info\">Security Access</a></p>");
         }
     %>
+    <% 
+                 Response.Write("<p><a href=\"EventSearch.aspx\" class=\"btn btn-info\">Event Maintenance</a></p>");
+    %>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>

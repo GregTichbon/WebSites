@@ -1,4 +1,4 @@
-﻿<%@ Page Title="TOHW Person Maintenance" Language="C#" MasterPageFile="~/Private/Main.Master" AutoEventWireup="true" CodeBehind="PersonMaintenance.aspx.cs" Inherits="TeOraHouWhanganui.Private.PersonMaintenance" %>
+﻿<%@ Page validateRequest="false" Title="TOHW Person Maintenance" Language="C#" MasterPageFile="~/Private/Main.Master" AutoEventWireup="true" CodeBehind="PersonMaintenance.aspx.cs" Inherits="TeOraHouWhanganui.Private.PersonMaintenance" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
@@ -42,6 +42,8 @@
 
     <script type="text/javascript">
         var newctr = 0;
+        var mode = "<%=ViewState["person_ctr"]%>";
+        var lastdata = "";
 
         $(document).ready(function () {
             //Generic.Functions.googleanalyticstracking()%>
@@ -71,6 +73,18 @@
             $('#form1').areYouSure();
 
             $("#form1").validate();
+
+            var confirmvalue = '';
+            $('.confirm').focus(function () {
+                confirmvalue = $(this).val();
+            })
+            $('.confirm').change(function () {
+                if (mode != "new") {
+                    if (!confirm('Are you sure you want to change this field?')) {
+                        $(this).val(confirmvalue);
+                    }
+                }
+            })
 
             var canvas = $("#canvas"),
                 context = canvas.get(0).getContext("2d")//,
@@ -184,6 +198,65 @@
                 });
             })
 
+            $(document).on('click', '.send_text', function () {
+                phonenumber = $(this).closest('tr').find('td').eq(1).text();
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+                $("#dialog-sendtext").dialog({
+                    resizable: false,
+                    height: 250,
+                    width: mywidth,
+                    modal: true,
+                    buttons: {
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        },
+                        "Send": function () {
+                            $.post("posts.asmx/send_text", { PhoneNumber: phonenumber, Message: $('#tb_textmessage').val() }, function (data) {
+                                alert(data);
+                            },
+                                'html'
+                            );
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            })
+
+            $(document).on('click', '.send_email_system', function () {
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+                $("#dialog-sendemail").dialog({
+                    resizable: false,
+                    height: 400,
+                    width: mywidth,
+                    modal: true,
+                    buttons: {
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        },
+                        "Send": function () {
+                            alert("to do - send to: " + $('td:eq(1)', $(this).parents('tr')).text());
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            })
+
+            $(document).on('click', '.send_email_local', function () {
+                email = $('td:eq(1)', $(this).parents('tr')).text();
+                firstname = $('#tb_firstname').val();
+                knownas = $('#tb_knownas').val();
+                if (knownas == "") {
+                    knownas = firstname;
+                }
+                $(this).attr("href", "mailto:" + email + "?subject=Te Ora Hou Whanganui&body=Hi " + knownas);
+            })
+
             $(".nav-tabs a").click(function () {
                 $(this).tab('show');
             });
@@ -281,7 +354,7 @@
 
             $('.submit').click(function () { //Started creating functions so that I can group code together - see update_enrolement() - not yet tested
                 delim = String.fromCharCode(254);
-                
+
                 /*----------------------------------------------WORKER ROLE-----------------------------------------*/
                 $('#workerroletable > tbody > tr[maint="changed"]').each(function () {
                     tr_id = $(this).attr('id');
@@ -344,7 +417,7 @@
                     tr_id = $(this).attr('id');
                     tr_startdatetime = $(this).find('td:eq(1)').text();
                     tr_enddatetime = $(this).find('td:eq(2)').text();
-                    tr_narrative = $(this).find('td:eq(3)').text();
+                    tr_narrative = $(this).find('td:eq(3)').html();
                     tr_workers = $(this).find('td:eq(4)').attr('workerid');
                     tr_level = $(this).find('td:eq(5)').attr('encounteraccesslevel');
 
@@ -370,6 +443,10 @@
 
                 update_enrolement();
                 update_address();
+                update_phone();
+
+                $('#form1').removeClass('dirty');
+                $('#form2').removeClass('dirty');
 
             });  //.submit end
 
@@ -401,7 +478,8 @@
 
                     , open: function (type, data) {
                         //$(this).appendTo($('form')); // reinsert the dialog to the form   
-                       
+                        $("#form1 :button").prop("disabled", true);
+
                         var myarr = [];
                         var workersarray = workers.toString().split('|');
                         $.each(workersarray, function (index, value) {
@@ -412,12 +490,16 @@
                         $('#fld_encounter_worker').val(myarr);
                         $("#fld_encounter_worker").trigger("change");
 
+                        datalogger = setInterval(function () { datalog(tinyMCE.activeEditor.getContent()); }, 2000);
+
                     }
-                    /*
+                     
                     , close: function (event, ui) {
                         //$('#fld_encounter_worker').select2('destroy');
+                        clearInterval(datalogger);
+                        $("#form1 :button").prop("disabled", false);
                     }
-                    */
+                  
                     , appendTo: "#form2"
                 });
 
@@ -578,6 +660,7 @@
                 mode = $(this).data('mode');
                 if (mode == "add") {
                     $("#dialog_address").find(':input').val('');
+                    $("#geocode").val('Refresh');
                 } else {
                     tr = $(this).closest('tr');
 
@@ -620,7 +703,6 @@
                                 $(tr).find('td:first').attr("class", "inserted");
                             } else {
                                 $(tr).find('td:first').attr("class", "changed");
-
                             }
                             $(tr).attr('maint', 'changed');
 
@@ -629,7 +711,7 @@
                             $(tr).find('td').eq(2).text($('#fld_address_current option:selected').text());
                             $(tr).find('td').eq(2).attr('current', $('#fld_address_current').val());
                             $(tr).find('td').eq(3).text($('#fld_address_note').val());
-                            $(tr).find('td').eq(4).text($('#fld_address_coordinates').val());
+                            $(tr).find('td').eq(4).html('<a href="https://maps.google.com/?q=' + $('#fld_address_coordinates').val() + '" target="map">' + $('#fld_address_coordinates').val() + '</a>');
 
                             $(this).dialog("close");
                         }
@@ -652,7 +734,7 @@
             })
 
             function update_address() {
-                /*----------------------------------------------ENROLMENT-----------------------------------------*/
+                /*----------------------------------------------ADDRESS-----------------------------------------*/
                 delim = String.fromCharCode(254);
                 $('#addresstable > tbody > tr[maint="changed"]').each(function () {
 
@@ -682,6 +764,149 @@
                 });
                 */
             }
+
+            /* ========================================= EDIT PHONES ===========================================*/
+            $(document).on('click', '.phoneedit', function () {
+                mode = $(this).data('mode');
+                if (mode == "add") {
+                    $("#dialog_phone").find(':input').val('');
+                } else {
+                    tr = $(this).closest('tr');
+
+                    $('#fld_phone_number').val($(tr).find('td').eq(1).text());
+                    //$('#fld_phone_mobile').val($(tr).find('td').eq(2).attr('mobile'));
+                    //$('#fld_phone_own').val($(tr).find('td').eq(3).attr('own'));
+                    //$('#fld_phone_sendtexts').val($(tr).find('td').eq(4).attr('sendtexts'));
+                    $('#fld_phone_mobile').val($(tr).find('td').eq(2).text());
+                    $('#fld_phone_own').val($(tr).find('td').eq(3).text());
+                    $('#fld_phone_sendtexts').val($(tr).find('td').eq(4).text());
+                    $('#fld_phone_note').val($(tr).find('td').eq(6).text());
+                }
+                if ($('#fld_phone_mobile').val() == 'Yes') {
+                    $('#fld_phone_sendtexts').attr("disabled", false)
+                } else {
+                    $('#fld_phone_sendtexts').attr("disabled", true)
+                }
+
+
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+
+                $("#dialog_phone").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: mywidth,
+                    modal: true
+                    /*
+                    ,open: function (type, data) {
+                        $(this).appendTo($('form')); // reinsert the dialog to the form       
+                    }*/
+                    , appendTo: "#form2"
+                });
+
+
+                var myButtons = {
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                    },
+                    "Save": function () {
+                        if ($("#form2").valid()) {
+                            if (mode == "add") {
+                                tr = $('#div_phone > table > tbody tr:first').clone();
+                                $(tr).removeAttr('style');
+                                $('#div_phone > table > tbody > tr:last').after(tr);
+                                $(tr).attr('id', 'phone_new_' + get_newctr());
+                                $(tr).find('td:first').attr("class", "inserted");
+                            } else {
+                                $(tr).find('td:first').attr("class", "changed");
+                            }
+                            $(tr).attr('maint', 'changed');
+
+                            $(tr).find('td').eq(1).text($('#fld_phone_number').val());
+
+                            //$(tr).find('td').eq(2).text($('#fld_phone_mobile option:selected').text());
+                            //$(tr).find('td').eq(2).attr('mobile', $('#fld_phone_mobile').val());
+                            $(tr).find('td').eq(2).text($('#fld_phone_mobile').val());
+
+                            //$(tr).find('td').eq(3).text($('#fld_phone_own option:selected').text());
+                            //$(tr).find('td').eq(3).attr('own', $('#fld_phone_own').val());
+                            $(tr).find('td').eq(3).text($('#fld_phone_own').val());
+
+                            //$(tr).find('td').eq(4).text($('#fld_phone_sendtexts option:selected').text());
+                            //$(tr).find('td').eq(4).attr('sendtexts', $('#fld_phone_sendtexts').val());
+                            $(tr).find('td').eq(4).text($('#fld_phone_sendtexts').val());
+
+                            if ($('#fld_phone_sendtexts').val() == 'Yes') {
+                                $(tr).find('td').eq(5).html('<a class="send_text">Send</a>');
+                            } else {
+                                $(tr).find('td').eq(5).text('');
+                            }
+                            $(tr).find('td').eq(6).text($('#fld_phone_note').val());
+
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+
+                /*
+                if (mode != 'add') {
+                    myButtons["Delete"] = function () {
+                        if (window.confirm("Are you sure you want to delete this phone?")) {
+                            $(tr).find('td:first').attr("class", "deleted");
+                            $(tr).attr('maint', 'deleted');
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+                */
+
+                $("#dialog_phone").dialog('option', 'buttons', myButtons);
+            })
+
+            $('#fld_phone_mobile').change(function () {
+                if ($(this).val() == 'Yes') {
+                    $('#fld_phone_sendtexts').attr("disabled", false)
+                } else {
+                    $('#fld_phone_sendtexts').val('');
+                    $('#fld_phone_sendtexts').attr("disabled", true)
+                }
+            })
+
+            function update_phone() {
+                /*----------------------------------------------PHONE-----------------------------------------*/
+                delim = String.fromCharCode(254);
+                $('#phonetable > tbody > tr[maint="changed"]').each(function () {
+
+                    tr_id = $(this).attr('id');
+                    tr_number = $(this).find('td:eq(1)').text();
+                    tr_mobile = $(this).find('td:eq(2)').text()
+                    tr_own = $(this).find('td:eq(3)').text();
+                    tr_sendtext = $(this).find('td:eq(4)').text();
+                    tr_note = $(this).find('td:eq(6)').text();
+
+                    value = tr_number + delim + tr_mobile + delim + tr_own + delim + tr_sendtext + delim + tr_note;
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: tr_id,
+                        value: value
+                    }).appendTo('#form1');
+                });
+                 
+                $('#phonetable > tbody > tr[maint="deleted"]').each(function () {
+                    tr_id = $(this).attr('id') + '_delete';
+                    if (tr_id.substring(0, 3) != 'new') {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: tr_id,
+                            value: ""
+                        }).appendTo('#form1');
+                    }
+                });
+                
+            }
+
 
             /* ========================================= EDIT ASSIGNMENTS ===========================================*/
             $(document).on('click', '.assignededit', function () {
@@ -881,6 +1106,13 @@
             })
             */
         }); //document.ready
+
+        function datalog(data) {
+            if (data != lastdata && data.length > 20) {
+                console.log(data);
+            }
+            lastdata = data;
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -904,29 +1136,29 @@
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />
     </div>
+    <div class="bottomrighticon">
+        <asp:Button ID="btn_submit" runat="server" OnClick="btn_submit_Click" class="submit btn btn-info" Text="Submit" />
+    </div>
     <h1>Person Maintenance
     </h1>
-
-
-
     <div class="form-horizontal row">
         <div class="col-md-8">
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_firstname">First name</label>
                 <div class="col-md-6">
-                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control" value="<%:fld_firstname%>" maxlength="20" required="required" />
+                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control confirm" value="<%:fld_firstname%>" maxlength="20" required="required" />
                 </div>
             </div>
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_knownas">Known as</label>
                 <div class="col-md-6">
-                    <input id="fld_knownas" name="fld_knownas" type="text" class="form-control" value="<%:fld_knownas%>" maxlength="20" />
+                    <input id="fld_knownas" name="fld_knownas" type="text" class="form-control confirm" value="<%:fld_knownas%>" maxlength="20" />
                 </div>
             </div>
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_surname">Surname</label>
                 <div class="col-md-6">
-                    <input id="fld_surname" name="fld_surname" type="text" class="form-control" value="<%:fld_surname%>" maxlength="20" />
+                    <input id="fld_surname" name="fld_surname" type="text" class="form-control confirm" value="<%:fld_surname%>" maxlength="20" />
                 </div>
             </div>
         </div>
@@ -1093,6 +1325,109 @@
                 </div>
             </div>
 
+            <!-- ================================= PHONES TAB ===================================  -->
+            <div id="div_phone" class="tab-pane fade in">
+                <h3 class="tabheading">Phones</h3>
+                <table id="phonetable" class="table" style="width: 100%">
+                    <%= html_phones %>
+                </table>
+            </div>
+
+            <!-- ================================= PHONES DIALOG ===================================  -->
+            <div id="dialog_phone" title="Maintain Phones" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_phone_number">Number</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_phone_number" name="fld_phone_number" class="form-control" required="required" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_phone_mobile">Mobile</label>
+                    <div class="col-sm-8">
+                        <select id="fld_phone_mobile" name="fld_phone_mobile" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_phone_own">Own</label>
+                    <div class="col-sm-8">
+                        <select id="fld_phone_own" name="fld_phone_own" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                //Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                //YesNoOptions["type"] = "select";
+                                //YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_phone_sendtexts">Send Texts</label>
+                    <div class="col-sm-8">
+                        <select id="fld_phone_sendtexts" name="fld_phone_sendtexts" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                //Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                //YesNoOptions["type"] = "select";
+                                //YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                 </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_phone_note">Note</label>
+                    <div class="col-sm-8">
+                        <textarea id="fld_phone_note" name="fld_phone_note" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dialog-sendtext" title="Send Text" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="tb_textmessage">Message</label>
+                    <div class="col-sm-8">
+                        <textarea id="tb_textmessage" name="tb_textmessage" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================= EMAIL TAB ===================================  -->
+            <div id="div_email" class="tab-pane fade in">
+                <h3 class="tabheading">Email</h3>
+                <table id="emailtable" class="table" style="width: 100%">
+                    <%= html_email %>
+                </table>
+            </div>
+             <!-- ================================= EMAIL DIALOG ===================================  -->
+
+            <div id="dialog-sendemail" title="Send Email" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="tb_subject">Subject</label>
+                    <div class="col-sm-8">
+                        <input id="tb_subject" name="tb_subject" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="tb_body">Message</label>
+                    <div class="col-sm-8">
+                        <textarea id="tb_body" name="tb_body" class="form-control" rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            
             <!-- ================================= ADDRESSES TAB ===================================  -->
             <div id="div_address" class="tab-pane fade in">
                 <h3 class="tabheading">Addresss</h3>
@@ -1118,10 +1453,10 @@
                             <option value="">--- Please select ---</option>
                             <%                                                                                                                                            
                                 //string[] nooptions = { }; //temp
-                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
-                                YesNoOptions["type"] = "select";
-                                YesNoOptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                                //Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                //YesNoOptions["type"] = "select";
+                                //YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNoBit, nooptions, YesNoOptions));
                             %>
                         </select>
                     </div>
@@ -1136,7 +1471,7 @@
                  <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_address_coordinates">Google Co-ordinates</label>
                     <div class="col-sm-8">
-                        <input id="fld_address_coordinates" name="fld_address_coordinates" class="form-control" readonly="readonly" /> <input type="button" class="geocode btn btn-info" value="Refresh" />
+                        <input id="fld_address_coordinates" name="fld_address_coordinates" class="form-control" readonly="readonly" /> <input id="geocode" type="button" class="geocode btn btn-info" value="Refresh" />
                     </div>
                 </div>
             </div>
@@ -1202,6 +1537,14 @@
                         <textarea id="fld_workerrole_note" name="fld_workerrole_note" class="form-control tinymce"></textarea>
                     </div>
                 </div>
+            </div>
+
+            <!-- ================================= ATTENDANCE TAB ===================================  -->
+            <div id="div_attendance" class="tab-pane fade in">
+                <h3 class="tabheading">Attendance</h3>
+                <table id="attendancetable" class="table" style="width: 100%">
+                    <%= html_attendance %>
+                </table>
             </div>
 
             <!-- ================================= ASSIGNED TAB ===================================  -->
@@ -1289,18 +1632,6 @@
         </div>
         <!-- ================================= END OF TABS ===================================  -->
     </div>
-    <p></p>
-        <p></p>
-        <div class="form-group">
-            <div class="col-sm-4">
-            </div>
-            <div class="col-sm-8">
-                <asp:Button ID="btn_submit" runat="server" OnClick="btn_submit_Click" class="submit btn btn-info" Text="Submit" />
-            </div>
-        </div>
-        <br />
-        <br />
-        <br />
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
     <form id="form2">

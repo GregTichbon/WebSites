@@ -36,6 +36,9 @@ namespace TeOraHouWhanganui.Private
         public string html_assigned = "";
         public string show_assigned_level = "";
         public string html_addresses = "";
+        public string html_phones = "";
+        public string html_email = "";
+        public string html_attendance = "";
         public string photoalbumlink = "";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
@@ -47,6 +50,7 @@ namespace TeOraHouWhanganui.Private
         public Dictionary<string, string> assignmenttypes = new Dictionary<string, string>();
         public Dictionary<string, string> encounterAccessLevels = new Dictionary<string, string>();
         public Dictionary<string, string> AllencounterAccessLevels = new Dictionary<string, string>();
+        public Dictionary<string, string> YesNoBit = new Dictionary<string, string>();
         public Dictionary<string, string> YesNo = new Dictionary<string, string>();
 
         //public Dictionary<string, string> persons = new Dictionary<string, string>();
@@ -56,14 +60,14 @@ namespace TeOraHouWhanganui.Private
         {
             // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
             username = HttpContext.Current.User.Identity.Name.ToLower();
-            
+
             if (username == "")
             {
                 username = "toh\\gtichbon";   //localhost
             }
             //username = HttpContext.Current.User.Identity.Name.ToLower();
             //Username += "<br />" + Environment.UserName;
-            
+
             if (!IsPostBack)
             {
                 person_ctr = Request.QueryString["id"] ?? "";
@@ -131,9 +135,10 @@ namespace TeOraHouWhanganui.Private
                     assignmenttypes.Add("Youth", "");
                     assignmenttypes.Add("Worker", "");
 
-                    YesNo.Add("Yes", "1");
-                    YesNo.Add("No", "0");
-
+                    YesNoBit.Add("Yes", "1");
+                    YesNoBit.Add("No", "0");
+                    YesNo.Add("Yes", "Yes");
+                    YesNo.Add("No", "No");
 
                     SqlConnection con = new SqlConnection(connectionString);
 
@@ -158,7 +163,8 @@ namespace TeOraHouWhanganui.Private
                         fld_medical = dr["medical"].ToString();
                         fld_notes = dr["notes"].ToString();
                         fld_photoalbumlink = dr["photoalbumlink"].ToString();
-                        if(fld_photoalbumlink != "") {
+                        if (fld_photoalbumlink != "")
+                        {
                             photoalbumlink = "<a href=\"" + fld_photoalbumlink + "\" target=\"photos\">Google</a>";
                         }
                     }
@@ -170,76 +176,77 @@ namespace TeOraHouWhanganui.Private
                     //if (localfunctions.functions.AccessStringTest(username, "111"))
                     //{
 
-                        html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
+                    html_tab += "<li><a data-target=\"#div_encounter\">Encounters</a></li>";
 
-                        html_encounter = "<thead>";
-                        html_encounter += "<tr><th style=\"width:50px;text-align:center\"></th><th>Start Date/Time</th><th>End Date/Time</th><th style=\"width:50%\">Narrative</th><th>Worker(s)</th><th>Level</th><th style=\"width:100px\">Action / <a class=\"encounteredit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
-                        html_encounter += "</thead>";
-                        html_encounter += "<tbody>";
+                    html_encounter = "<thead>";
+                    html_encounter += "<tr><th style=\"width:50px;text-align:center\"></th><th>Start Date/Time</th><th>End Date/Time</th><th style=\"width:50%\">Narrative</th><th>Worker(s)</th><th>Level</th><th style=\"width:100px\">Action / <a class=\"encounteredit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_encounter += "</thead>";
+                    html_encounter += "<tbody>";
 
-                        //hidden row, used for creating new rows client side
-                        html_encounter += "<tr style=\"display:none\">";
+                    //hidden row, used for creating new rows client side
+                    html_encounter += "<tr style=\"display:none\">";
+                    html_encounter += "<td style=\"text-align:center\"></td>";
+                    html_encounter += "<td></td>";
+                    html_encounter += "<td></td>";
+                    html_encounter += "<td></td>";
+                    html_encounter += "<td></td>";
+                    html_encounter += "<td></td>";
+                    html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
+                    html_encounter += "</tr>";
+
+                    cmd.CommandText = "Get_Encounters";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+
+                        string Encounter_CTR = dr["Encounter_CTR"].ToString();
+                        string StartDateTime = Convert.ToDateTime(dr["StartDateTime"]).ToString("dd MMM yyyy HH:mm");
+                        string EndDateTime = Convert.ToDateTime(dr["EndDateTime"]).ToString("dd MMM yyyy HH:mm");
+                        string Narrative = dr["Narrative"].ToString();
+                        string Worker = dr["Worker"].ToString();
+                        string Encounteraccesslevel = dr["Encounteraccesslevel"].ToString();
+                        string EncounteraccesslevelDisplay = dr["EncounteraccesslevelDisplay"].ToString();
+                        string WorkerCTR = "";
+
+                        string WorkerDisplay = "";
+                        if (Worker != "")
+                        {
+                            string[] WorkerSplit = Worker.Split(Convert.ToChar(254));
+                            string delim1 = "";
+                            string delim2 = "";
+                            foreach (String thisWorker in WorkerSplit)
+                            {
+                                string[] thisWorkerSplit = thisWorker.Split(Convert.ToChar(253));
+                                WorkerCTR += delim1 + thisWorkerSplit[0];
+                                delim1 = "|";
+                                WorkerDisplay += delim2 + thisWorkerSplit[1];
+                                delim2 = "<br />";
+                            }
+                        }
+
+
+                        html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
                         html_encounter += "<td style=\"text-align:center\"></td>";
-                        html_encounter += "<td></td>";
-                        html_encounter += "<td></td>";
-                        html_encounter += "<td></td>";
-                        html_encounter += "<td></td>";
-                        html_encounter += "<td></td>";
-                        html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
+                        html_encounter += "<td>" + StartDateTime + "</td>";
+                        html_encounter += "<td>" + EndDateTime + "</td>";
+                        html_encounter += "<td>" + Narrative + "</td>";
+                        html_encounter += "<td workerid=\"" + WorkerCTR + "\">" + WorkerDisplay + "</td>";
+                        html_encounter += "<td encounteraccesslevel=\"" + Encounteraccesslevel + "\">" + EncounteraccesslevelDisplay + "</td>";
+                        if (Narrative == "Restricted")
+                        {
+                            html_encounter += "<td></td>";
+                        }
+                        else
+                        {
+                            html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
+                        }
                         html_encounter += "</tr>";
 
-                        cmd.CommandText = "Get_Encounters";
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-                        cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
-                        dr = cmd.ExecuteReader();
-                        while (dr.Read())
-                        {
-
-                            string Encounter_CTR = dr["Encounter_CTR"].ToString();
-                            string StartDateTime = Convert.ToDateTime(dr["StartDateTime"]).ToString("dd MMM yyyy HH:mm");
-                            string EndDateTime = Convert.ToDateTime(dr["EndDateTime"]).ToString("dd MMM yyyy HH:mm");
-                            string Narrative = dr["Narrative"].ToString();
-                            string Worker = dr["Worker"].ToString();
-                            string Encounteraccesslevel = dr["Encounteraccesslevel"].ToString();
-                            string EncounteraccesslevelDisplay = dr["EncounteraccesslevelDisplay"].ToString();
-                            string WorkerCTR = "";
-
-                            string WorkerDisplay = "";
-                            if (Worker != "")
-                            {
-                                string[] WorkerSplit = Worker.Split(Convert.ToChar(254));
-                                string delim1 = "";
-                                string delim2 = "";
-                                foreach (String thisWorker in WorkerSplit)
-                                {
-                                    string[] thisWorkerSplit = thisWorker.Split(Convert.ToChar(253));
-                                    WorkerCTR += delim1 + thisWorkerSplit[0];
-                                    delim1 = "|";
-                                    WorkerDisplay += delim2 + thisWorkerSplit[1];
-                                    delim2 = "<br />";
-                                }
-                            }
-                       
-
-                            html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
-                            html_encounter += "<td style=\"text-align:center\"></td>";
-                            html_encounter += "<td>" + StartDateTime + "</td>";
-                            html_encounter += "<td>" + EndDateTime + "</td>";
-                            html_encounter += "<td>" + Narrative + "</td>";
-                            html_encounter += "<td workerid=\"" + WorkerCTR + "\">" + WorkerDisplay + "</td>";
-                            html_encounter += "<td encounteraccesslevel=\"" + Encounteraccesslevel + "\">" + EncounteraccesslevelDisplay + "</td>";
-                            if(Narrative == "Restricted")
-                            {
-                                html_encounter += "<td></td>";
-                            } else
-                            {
-                                html_encounter += "<td><a href=\"javascript:void(0)\" class=\"encounteredit\" data-mode=\"edit\">Edit</td>";
-                            }
-                            html_encounter += "</tr>";
-
-                        }
-                        dr.Close();
+                    }
+                    dr.Close();
                     //}
 
                     #endregion ENCOUNTERS
@@ -249,7 +256,66 @@ namespace TeOraHouWhanganui.Private
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
                     //{
 
-                    html_tab += "<li><a data-target=\"#div_phone\">X Phones</a></li>";
+                    html_tab += "<li><a data-target=\"#div_phone\">Phones</a></li>";
+                    html_phones = "<thead>";
+                    html_phones += "<tr><th style=\"width:50px;text-align:center\"></th><th>Number</th><th>Mobile</th><th>Own</th><th>Send Texts</th><th>Send Now</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"phoneedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_phones += "</thead>";
+                    html_phones += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_phones += "<tr style=\"display:none\">";
+                    html_phones += "<td style=\"text-align:center\"></td>";
+                    html_phones += "<td></td>"; //Number
+                    html_phones += "<td></td>"; //Mobile
+                    html_phones += "<td></td>"; //Own
+                    html_phones += "<td></td>"; //Send Texts
+                    html_phones += "<td></td>"; //Send Now
+                    html_phones += "<td></td>"; //Note
+                    html_phones += "<td><a href=\"javascript:void(0)\" class=\"phoneedit\" data-mode=\"edit\">Edit</td>";
+                    html_phones += "</tr>";
+
+                    cmd.CommandText = "get_entity_phones";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string entity_phone_CTR = dr["entity_phone_ID"].ToString();
+                        string phone = dr["phone"].ToString();
+                        string mobile = dr["mobile"].ToString();
+                        string text = dr["text"].ToString();
+                        string sendnow = "";
+                        if (mobile == "Yes")
+                        {
+                            //if (sendtexts == "1")
+                            //{
+                            sendnow = "<a class=\"send_text\">Send</a>";
+                            //}
+                        }
+                        string own = dr["own"].ToString();
+                        string Note = dr["Note"].ToString();
+
+
+                        if (phone != "")
+                        {
+                            phone = "<a href=\"tel:" + phone + "\">" + phone + "</>";
+                        }
+
+                        html_phones += "<tr id=\"phone_" + entity_phone_CTR + "\">";
+                        html_phones += "<td style=\"text-align:center\"></td>";
+                        html_phones += "<td>" + phone + "</td>";
+                        //html_phones += "<td mobile=\"" + mobile + "\">" + YesNo.FirstOrDefault(x => x.Value == mobile).Key + "</td>";
+                        html_phones += "<td>" + mobile + "</td>";
+                        //html_phones += "<td own=\"" + own + "\">" + YesNo.FirstOrDefault(x => x.Value == own).Key + "</td>";
+                        html_phones += "<td>" + own + "</td>";
+                        //html_phones += "<td sendtexts=\"" + sendtexts + "\">" + YesNo.FirstOrDefault(x => x.Value == sendtexts).Key + "</td>";
+                        html_phones += "<td>" + text + "</td>";
+                        html_phones += "<td>" + sendnow + "</td>";
+                        html_phones += "<td>" + Note + "</td>";
+                        html_phones += "<td><a href=\"javascript:void(0)\" class=\"phoneedit\" data-mode=\"edit\">Edit</td>";
+                        html_phones += "</tr>";
+                    }
+                    dr.Close();
 
                     //}
 
@@ -312,12 +378,54 @@ namespace TeOraHouWhanganui.Private
                     #endregion INTERNET
 
                     #region EVENTS
-                    //-------------------------------EVENTS TAB------------------------------------------------------
+                    //-------------------------------ATTENDANCE TAB------------------------------------------------------
                     //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
                     //{
 
-                    html_tab += "<li><a data-target=\"#div_event\">X Events</a></li>";
+                    html_tab += "<li><a data-target=\"#div_attendance\">Attendance</a></li>";
 
+                    html_attendance = "<thead>";
+                    html_attendance += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Description</th><th>Attendance</th><th>Capacity</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"eventedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_attendance += "</thead>";
+                    html_attendance += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_attendance += "<tr style=\"display:none\">";
+                    html_attendance += "<td style=\"text-align:center\"></td>";
+                    html_attendance += "<td></td>"; //Date
+                    html_attendance += "<td></td>"; //Description
+                    //html_attendance += "<td></td>"; //Event Notes
+                    html_attendance += "<td></td>"; //Attendance
+                    html_attendance += "<td></td>"; //Capacity
+                    html_attendance += "<td></td>"; //Attendance Notes
+                    html_attendance += "<td><a href=\"javascript:void(0)\" class=\"eventedit\" data-mode=\"edit\">Edit</td>";
+                    html_attendance += "</tr>";
+
+                    cmd.CommandText = "get_entity_eventattendance";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string attendance_CTR = dr["attendance_CTR"].ToString();
+                        string description = dr["description"].ToString();
+                        string eventNotes = dr["EventNotes"].ToString();
+                        string attendance = dr["Attendance"].ToString();
+                        string attendanceNotes = dr["AttendanceNotes"].ToString();
+                        string capacity = dr["Capacity"].ToString();
+                        string date = dr["Date"].ToString();
+
+                        html_attendance += "<tr id=\"attendance_" + attendance_CTR + "\">";
+                        html_attendance += "<td style=\"text-align:center\"></td>";
+                        html_attendance += "<td nowrap>" + date + "</td>";
+                        html_attendance += "<td>" + description + "</td>";
+                        html_attendance += "<td>" + attendance + "</td>";
+                        html_attendance += "<td>" + capacity + "</td>";
+                        html_attendance += "<td>" + attendanceNotes + "</td>";
+                        html_attendance += "<td><a href=\"javascript:void(0)\" class=\"attendanceedit\" data-mode=\"edit\">Edit</td>";
+                        html_attendance += "</tr>";
+                    }
+                    dr.Close();
                     //}
 
                     #endregion EVENTS
@@ -368,7 +476,7 @@ namespace TeOraHouWhanganui.Private
                         html_addresses += "<tr id=\"address_" + entity_address_CTR + "\">";
                         html_addresses += "<td style=\"text-align:center\"></td>";
                         html_addresses += "<td>" + address + "</td>";
-                        html_addresses += "<td current=\"" + current + "\">" + YesNo.FirstOrDefault(x => x.Value == current).Key + "</td>";
+                        html_addresses += "<td current=\"" + current + "\">" + YesNoBit.FirstOrDefault(x => x.Value == current).Key + "</td>";
                         html_addresses += "<td>" + Note + "</td>";
                         html_addresses += "<td>" + googlelink + "</td>";
                         html_addresses += "<td><a href=\"javascript:void(0)\" class=\"addressedit\" data-mode=\"edit\">Edit</td>";
@@ -456,7 +564,7 @@ namespace TeOraHouWhanganui.Private
 
                     html_assigned = "<thead>";
                     html_assigned += "<tr><th style=\"width:50px;text-align:center\"></th><th>Type</th><th>Person</th><th>Start Date</th><th>End Date</th><th>Note</th><th" + show_assigned_level + ">Level</th>";
-                    if(allowedit)
+                    if (allowedit)
                     {
                         html_assigned += "<th style=\"width:100px\">Action / <a class=\"assignededit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th>";
                     }
@@ -608,14 +716,14 @@ namespace TeOraHouWhanganui.Private
                 else if (key.StartsWith("workerrole_"))
                 {
                     string person_workerrole_ctr = key.Substring(11);   //key length 
-                    //if (person_worker_ctr.EndsWith("_delete"))
-                    //{
-                    //    cmd.CommandText = "Delete_person_Worker";
-                    //    cmd.Parameters.Clear();
-                    //    cmd.Parameters.Add("@person_worker_ctr", SqlDbType.VarChar).Value = person_worker_ctr.Substring(0, person_worker_ctr.Length - 7);
-                    //}
-                    //else
-                    //{
+                                                                        //if (person_worker_ctr.EndsWith("_delete"))
+                                                                        //{
+                                                                        //    cmd.CommandText = "Delete_person_Worker";
+                                                                        //    cmd.Parameters.Clear();
+                                                                        //    cmd.Parameters.Add("@person_worker_ctr", SqlDbType.VarChar).Value = person_worker_ctr.Substring(0, person_worker_ctr.Length - 7);
+                                                                        //}
+                                                                        //else
+                                                                        //{
                     if (person_workerrole_ctr.StartsWith("new"))
                     {
                         person_workerrole_ctr = "new";
@@ -638,14 +746,14 @@ namespace TeOraHouWhanganui.Private
                 else if (key.StartsWith("encounter_"))
                 {
                     string encounter_ctr = key.Substring(10);   //key length 
-                    //if (encounter_ctr.EndsWith("_delete"))
-                    //{
-                    //    cmd.CommandText = "Delete_encounter";
-                    //    cmd.Parameters.Clear();
-                    //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
-                    //}
-                    //else
-                    //{
+                                                                //if (encounter_ctr.EndsWith("_delete"))
+                                                                //{
+                                                                //    cmd.CommandText = "Delete_encounter";
+                                                                //    cmd.Parameters.Clear();
+                                                                //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
+                                                                //}
+                                                                //else
+                                                                //{
                     if (encounter_ctr.StartsWith("new"))
                     {
                         encounter_ctr = "new";
@@ -670,14 +778,14 @@ namespace TeOraHouWhanganui.Private
                 else if (key.StartsWith("address_"))
                 {
                     string address_ctr = key.Substring(8);   //key length 
-                    //if (encounter_ctr.EndsWith("_delete"))
-                    //{
-                    //    cmd.CommandText = "Delete_address";
-                    //    cmd.Parameters.Clear();
-                    //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
-                    //}
-                    //else
-                    //{
+                                                             //if (encounter_ctr.EndsWith("_delete"))
+                                                             //{
+                                                             //    cmd.CommandText = "Delete_address";
+                                                             //    cmd.Parameters.Clear();
+                                                             //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
+                                                             //}
+                                                             //else
+                                                             //{
                     if (address_ctr.StartsWith("new"))
                     {
                         address_ctr = "new";
@@ -699,6 +807,39 @@ namespace TeOraHouWhanganui.Private
                         cmd.Parameters.Add("@longitude", SqlDbType.VarChar).Value = valuesSplit[3].Split(',')[1];
                     }
                     //}
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
+                }
+                else if (key.StartsWith("phone_"))
+                {
+                    string phone_ctr = key.Substring(6);   //key length 
+                    if (phone_ctr.EndsWith("_delete"))
+                    {
+                        cmd.CommandText = "Delete_phone";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@phone_ctr", SqlDbType.VarChar).Value = phone_ctr.Substring(0, phone_ctr.Length - 99);
+                    }
+                    else
+                    {
+                        if (phone_ctr.StartsWith("new"))
+                        {
+                            phone_ctr = "new";
+                        }
+
+                        string[] valuesSplit = Request.Form[key].Split('\x00FE');
+
+                        cmd.CommandText = "Update_person_phone";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                        cmd.Parameters.Add("@person_phone_ctr", SqlDbType.VarChar).Value = phone_ctr;
+                        cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                        cmd.Parameters.Add("@number", SqlDbType.VarChar).Value = valuesSplit[0];
+                        cmd.Parameters.Add("@mobile", SqlDbType.VarChar).Value = valuesSplit[1];
+                        cmd.Parameters.Add("@own", SqlDbType.VarChar).Value = valuesSplit[2];
+                        cmd.Parameters.Add("@text", SqlDbType.VarChar).Value = valuesSplit[3];
+                        cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
+                    }
                     con.Open();
                     cmd.ExecuteScalar().ToString();
                     con.Close();
@@ -735,3 +876,4 @@ namespace TeOraHouWhanganui.Private
         }
     }
 }
+

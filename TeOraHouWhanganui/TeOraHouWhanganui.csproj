@@ -43,6 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="Generic">
       <HintPath>..\Generic\bin\Debug\Generic.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -104,6 +107,7 @@
     <Content Include="Private\Administration\Program.aspx" />
     <Content Include="Private\Administration\ProgramActivity.aspx" />
     <Content Include="Private\Default.aspx" />
+    <Content Include="Private\EventSearch.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
     <Content Include="Private\Posts.asmx" />
@@ -231,6 +235,13 @@
     <Compile Include="Private\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Private\EventSearch.aspx.cs">
+      <DependentUpon>EventSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\EventSearch.aspx.designer.cs">
+      <DependentUpon>EventSearch.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\PersonMaintenance.aspx.cs">
       <DependentUpon>PersonMaintenance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -247,6 +258,12 @@
     </Compile>
     <Compile Include="Private\Posts.asmx.cs">
       <DependentUpon>Posts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\EncountersByPersonDate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EncountersByPersonDate.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Private\Reports\Default.aspx.cs">
@@ -341,7 +358,15 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Private\Reports\Crystal\EncountersByPersonDate.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EncountersByPersonDate.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

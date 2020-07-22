@@ -17,6 +17,14 @@ namespace TeOraHouWhanganui.Private
     public class Posts : System.Web.Services.WebService
     {
         [WebMethod]
+        public string send_text(string PhoneNumber, string Message)
+        {
+            //Generic.Functions gFunctions = new Generic.Functions();
+            //string response = gFunctions.SendRemoteMessage(PhoneNumber, Message, "TOH Whanganui Communications");
+            return "Not Yet Done"; // response;
+        }
+
+        [WebMethod]
         //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public google_geocodeClass googlegeocode(string address)    //you can't pass any querystring params
         {

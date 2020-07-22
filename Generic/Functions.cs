@@ -36,6 +36,80 @@ namespace Generic
         string UserName = "";
         string Password = "";
 
+        public static string buildJSobject(Dictionary<string, string> options)
+        {
+
+            /*
+            First field is the "Key" name 
+
+
+            var hotels = {
+                "hilton": { "name": "hilton hotel", address: "30 Totara St" },
+                "newton": { "name": "newton hotel", address: "32 Totara St" }
+            }
+            */
+            string obj = "";
+            switch (options["mode"])
+
+            {
+                case "sql":
+                    SqlConnection con = new SqlConnection(options["connectionstring"]);
+                    SqlCommand cmd;
+                    string sp = options["connectionstring"];
+                    cmd = new SqlCommand(sp, con);
+
+                    if (options["sqltype"] == "storedprocedure")
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                    }
+                    else
+                    {
+                        cmd.CommandType = CommandType.Text;
+                    }
+                    cmd.CommandText = options["sqltext"];
+                    cmd.Connection = con;
+                    try
+                    {
+                        con.Open();
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        string delim1 = "";
+                        while (dr.Read())
+                        {
+                            string delim2 = "";
+                            obj += delim1 + "\"" + dr[0] + "\": {";
+
+                            for (int f1 = 1; f1 < dr.FieldCount; f1++)
+                            {
+                                obj += delim2 + "\"" + dr.GetName(f1) + "\":\"" + dr[f1] + "\"";
+                                delim2 = ",";
+                            }
+                            obj += "}";
+                            delim1 = ",";
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                    }
+
+
+                    break;
+
+
+                default:
+                    break;
+            }
+
+
+            return "{" + obj + "}";
+        }
+
         public static google_geocodeClass google_geocode(string api_key, string address, Dictionary<string, string> options)
         {
 
@@ -128,7 +202,30 @@ namespace Generic
             return selectionlist;
         }
 
-        public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
+        public static string buildselection(string[] optionlist, string selectedoption, Dictionary<string, string> options)
+        {
+            Dictionary<string, string> DICToptionlist = new Dictionary<string, string>();
+            foreach(string option in optionlist)
+            {
+                DICToptionlist.Add(option, option);
+            }
+            string[] ARRAYselectedoption = new string[] { selectedoption };
+
+            return buildselection(DICToptionlist, ARRAYselectedoption, options);
+        }
+        public static string buildselection(string[,] optionlist, string selectedoption, Dictionary<string, string> options)
+        {
+            Dictionary<string, string> DICToptionlist = new Dictionary<string, string>();
+            for (int f1 = 0; f1 < optionlist.GetLength(0); f1++)
+            {
+                DICToptionlist.Add(optionlist[f1,0], optionlist[f1,1]);
+            }
+            string[] ARRAYselectedoption = new string[] { selectedoption };
+
+            return buildselection(DICToptionlist,ARRAYselectedoption, options);
+        }
+        
+            public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
         {
             string html = "";
 
