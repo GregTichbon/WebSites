@@ -39,6 +39,7 @@ namespace TeOraHouWhanganui.Private
         public string html_phones = "";
         public string html_email = "";
         public string html_attendance = "";
+        public string html_enrolments = "";
         public string photoalbumlink = "";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
@@ -52,6 +53,8 @@ namespace TeOraHouWhanganui.Private
         public Dictionary<string, string> AllencounterAccessLevels = new Dictionary<string, string>();
         public Dictionary<string, string> YesNoBit = new Dictionary<string, string>();
         public Dictionary<string, string> YesNo = new Dictionary<string, string>();
+        public Dictionary<string, string> programs = new Dictionary<string, string>();
+        public Dictionary<string, string> enrolmentstatus = new Dictionary<string, string>();
 
         //public Dictionary<string, string> persons = new Dictionary<string, string>();
 
@@ -117,6 +120,14 @@ namespace TeOraHouWhanganui.Private
                     //options.Add("insertblank", "start");
                     AllencounterAccessLevels = Functions.buildselectionlist(connectionString, "get_EncounterAccessLevels", options);
 
+                    options.Clear();
+                    options.Add("storedprocedure", "");
+                    options.Add("storedprocedurename", "");
+                    options.Add("usevalues", "");
+                    //options.Add("insertblank", "start");
+                    programs = Functions.buildselectionlist(connectionString, "get_Programs", options);
+
+
                     //options.Clear();
                     //options.Add("type", "uiselectable");
                     //options.Add("valuefield", "value");
@@ -139,6 +150,11 @@ namespace TeOraHouWhanganui.Private
                     YesNoBit.Add("No", "0");
                     YesNo.Add("Yes", "Yes");
                     YesNo.Add("No", "No");
+
+                    enrolmentstatus.Add("Current", "Current");
+                    enrolmentstatus.Add("Casual", "Casual");
+                    enrolmentstatus.Add("Finished", "Finished");
+                    enrolmentstatus.Add("Deceased", "Deceased");
 
                     SqlConnection con = new SqlConnection(connectionString);
 
@@ -169,6 +185,60 @@ namespace TeOraHouWhanganui.Private
                         }
                     }
                     dr.Close();
+
+                    #region ENROLEMENTS
+                    //-------------------------------ENROLMENT TAB------------------------------------------------------
+                    //if (Functions.accessstringtest(Session["UBC_AccessString"].ToString(), "1"))
+                    //{
+
+                    html_tab += "<li><a data-target=\"#div_enrolment\">Enrolments</a></li>";
+                    html_enrolments = "<thead>";
+                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_enrolments += "</thead>";
+                    html_enrolments += "<tbody>";
+
+                    //hidden row, used for creating new rows client side
+                    html_enrolments += "<tr style=\"display:none\">";
+                    html_enrolments += "<td style=\"text-align:center\"></td>";
+                    html_enrolments += "<td></td>"; //Program
+                    html_enrolments += "<td></td>"; //First Event
+                    html_enrolments += "<td></td>"; //Last Event
+                    html_enrolments += "<td></td>"; //Status
+                    html_enrolments += "<td></td>"; //Worker
+                    html_enrolments += "<td></td>"; //Note
+                    html_enrolments += "<td><a href=\"javascript:void(0)\" class=\"enrolmentedit\" data-mode=\"edit\">Edit</td>";
+                    html_enrolments += "</tr>";
+
+                    cmd.CommandText = "get_entity_enrolments";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string entity_enrolment_CTR = dr["ID"].ToString();
+                        string program = dr["programid"].ToString();
+                        string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");   
+                        string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
+                        string status = dr["enrolementstatus"].ToString();
+                        string worker = dr["worker"].ToString();
+                        string alwayspickup = dr["alwayspickup"].ToString();
+                        string note = dr["notes"].ToString();
+                        html_enrolments += "<tr id=\"enrolment_" + entity_enrolment_CTR + "\">";
+                        html_enrolments += "<td style=\"text-align:center\"></td>";
+                        html_enrolments += "<td>" + program + "</td>";
+                        html_enrolments += "<td>" + firstevent + "</td>";
+                        html_enrolments += "<td>" + lastevent + "</td>";
+                        html_enrolments += "<td>" + status + "</td>";
+                        html_enrolments += "<td>" + worker + "</td>";
+                        html_enrolments += "<td>" + note + "</td>";
+                        html_enrolments += "<td><a href=\"javascript:void(0)\" class=\"enrolmentedit\" data-mode=\"edit\">Edit</td>";
+                        html_enrolments += "</tr>";
+                    }
+                    dr.Close();
+
+                    //}
+
+                    #endregion ENROLEMENTS
 
                     #region ENCOUNTERS
 
@@ -320,6 +390,8 @@ namespace TeOraHouWhanganui.Private
                     //}
 
                     #endregion PHONE
+
+  
 
 
                     #region FINANCIAL

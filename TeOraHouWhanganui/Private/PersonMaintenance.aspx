@@ -1,4 +1,4 @@
-﻿<%@ Page validateRequest="false" Title="TOHW Person Maintenance" Language="C#" MasterPageFile="~/Private/Main.Master" AutoEventWireup="true" CodeBehind="PersonMaintenance.aspx.cs" Inherits="TeOraHouWhanganui.Private.PersonMaintenance" %>
+﻿<%@ Page ValidateRequest="false" Title="TOHW Person Maintenance" Language="C#" MasterPageFile="~/Private/Main.Master" AutoEventWireup="true" CodeBehind="PersonMaintenance.aspx.cs" Inherits="TeOraHouWhanganui.Private.PersonMaintenance" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
@@ -15,7 +15,7 @@
     <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
 
     <style>
-         .imagecontainer {
+        .imagecontainer {
             max-width: 800px;
             max-height: 800px;
             margin: 20px auto;
@@ -37,7 +37,6 @@
             border: 1px solid black;
             width: 1200px;
         }
-
     </style>
 
     <script type="text/javascript">
@@ -189,7 +188,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (result) {
-                        $('#fld_address_address').val(result.d.address.replace(/, /g,'\n'));
+                        $('#fld_address_address').val(result.d.address.replace(/, /g, '\n'));
                         $('#fld_address_coordinates').val(result.d.lat + "," + result.d.lng);
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -289,7 +288,7 @@
                 showClear: true,
                 viewDate: false,
                 useCurrent: true,
-                  
+
                 //,maxDate: moment().add(-1, 'year')
             });
 
@@ -352,7 +351,7 @@
                 }
             });
 
-            $('.submit').click(function () { //Started creating functions so that I can group code together - see update_enrolement() - not yet tested
+            $('.submit').click(function () { //Started creating functions so that I can group code together - see update_enrolment() - not yet tested
                 delim = String.fromCharCode(254);
 
                 /*----------------------------------------------WORKER ROLE-----------------------------------------*/
@@ -441,7 +440,7 @@
                 });
                 */
 
-                update_enrolement();
+                update_enrolment();
                 update_address();
                 update_phone();
 
@@ -485,7 +484,7 @@
                         $.each(workersarray, function (index, value) {
                             myarr.push(value);
                         });
-                         
+
                         $('#fld_encounter_worker').select2();
                         $('#fld_encounter_worker').val(myarr);
                         $("#fld_encounter_worker").trigger("change");
@@ -493,13 +492,13 @@
                         datalogger = setInterval(function () { datalog(tinyMCE.activeEditor.getContent()); }, 2000);
 
                     }
-                     
+
                     , close: function (event, ui) {
                         //$('#fld_encounter_worker').select2('destroy');
                         clearInterval(datalogger);
                         $("#form1 :button").prop("disabled", false);
                     }
-                  
+
                     , appendTo: "#form2"
                 });
 
@@ -893,7 +892,7 @@
                         value: value
                     }).appendTo('#form1');
                 });
-                 
+
                 $('#phonetable > tbody > tr[maint="deleted"]').each(function () {
                     tr_id = $(this).attr('id') + '_delete';
                     if (tr_id.substring(0, 3) != 'new') {
@@ -904,7 +903,7 @@
                         }).appendTo('#form1');
                     }
                 });
-                
+
             }
 
 
@@ -914,6 +913,7 @@
                 if (mode == "add") {
                     $("#dialog_assigned").find(':input').val('');
                     $("#dialog_assigned").find(':input').prop("disabled", false);
+                    $('#fld_assigned_level').val(4);
                 } else {
                     tr = $(this).closest('tr');
                     $('#fld_assigned_type').val($(tr).find('td').eq(1).text());
@@ -1069,10 +1069,10 @@
                 $("#dialog_enrolment").dialog('option', 'buttons', myButtons);
             })
 
-            function update_enrolement() {
+            function update_enrolment() {
                 /*----------------------------------------------ENROLMENT-----------------------------------------*/
                 delim = String.fromCharCode(254);
-                $('#enrolementtable > tbody > tr[maint="changed"]').each(function () {
+                $('#enrolmenttable > tbody > tr[maint="changed"]').each(function () {
 
                     tr_id = $(this).attr('id');
                     tr_program = $(this).find('td:eq(1)').text();
@@ -1088,7 +1088,7 @@
                     }).appendTo('#form1');
                 });
                 /*
-                $('#enrolementtable > tbody > tr[maint="deleted"]').each(function () {
+                $('#enrolmenttable > tbody > tr[maint="deleted"]').each(function () {
                     tr_id = $(this).attr('id') + '_delete';
                     if (tr_id.substring(0, 3) != 'new') {
                         $('<input>').attr({
@@ -1124,13 +1124,21 @@
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>When adding a new record, enter the name fields and then click on the <span class="btn btn-info">Submit</span> button.  Tabs will then be shown to allow you to add more data.</p>
         <p>Making changes to the data under the various tabs will not be actioned until the record is submitted. </p>
-        <p><b>Upload photo: </b> Click on the link and choose a photo from your computer or internet, crop it to the correct size and upload it.  It will be saved immediatly.</p>
+        <p><b>Upload photo: </b>Click on the link and choose a photo from your computer or internet, crop it to the correct size and upload it.  It will be saved immediatly.</p>
         <p><b>Addresses: </b>Enter an address and then <span class="btn btn-info">Refresh</span> to verify it against Google Maps.  This will also format the address properly and resolve the co-ordinates.  Generally, you only need to enter the number and the street. " Where there are Google co-ordinates a link will allow you to go to that address in Google Maps.</p>
-        <p><b>Encounters: </b> There are different levels of access given to Te Ora Hou workes.  Each worker is granted a level of between 1 and 4 for each person in the database.  They will only see the encounter notes where their access level is equal to or less than the level assigned to the encounter.  They may additionally see encounter notes where they have been recorded as a worker in that record.</p>
-        <p>The levels are</p><ul><li>1. Confidential</li><li>2. Highly sensitive</li><li>3. Sensitive</li><li>4. General</li></ul>
+        <p><b>Encounters: </b>There are different levels of access given to Te Ora Hou workes.  Each worker is granted a level of between 1 and 4 for each person in the database.  They will only see the encounter notes where their access level is equal to or less than the level assigned to the encounter.  They may additionally see encounter notes where they have been recorded as a worker in that record.</p>
+        <p>The levels are</p>
+        <ul>
+            <li>1. Confidential</li>
+            <li>2. Highly sensitive</li>
+            <li>3. Sensitive</li>
+            <li>4. General</li>
+        </ul>
         <p>Everyone has access to encounter notes at level 4.</p>
     </div>
-    <div id="dialog_fullphoto" title="Full Photo" style="display: none"><img id="fullphoto" src="x" /></div>
+    <div id="dialog_fullphoto" title="Full Photo" style="display: none">
+        <img id="fullphoto" src="x" />
+    </div>
     <div class="toprighticon">
         <input type="button" id="search" class="btn btn-info" value="Search" />
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
@@ -1242,10 +1250,79 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_photoalbumlink">Photo album link</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_photoalbumlink" name="fld_photoalbumlink" class="form-control" value="<%: fld_photoalbumlink %>" /> 
+                        <input type="text" id="fld_photoalbumlink" name="fld_photoalbumlink" class="form-control" value="<%: fld_photoalbumlink %>" />
                     </div>
                 </div>
 
+            </div>
+
+
+
+            <!-- ================================= ENROLEMENTS TAB ===================================  -->
+            <div id="div_enrolment" class="tab-pane fade in">
+                <h3 class="tabheading">Enrolments</h3>
+                <table id="enrolmenttable" class="table" style="width: 100%">
+                    <%= html_enrolments %>
+                </table>
+            </div>
+
+            <!-- ================================= ENROLEMENTS DIALOG ===================================  -->
+
+            <div id="dialog_enrolment" title="Maintain enrolments" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_enrolment_program">Program</label>
+                    <div class="col-sm-8">
+                        <select id="fld_enrolment_program" name="fld_enrolment_program" class="form-control" required="required">
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; 
+                                Dictionary<string, string> enrolment_programoptions = new Dictionary<string, string>();
+                                enrolment_programoptions["type"] = "select";
+                                enrolment_programoptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(programs, nooptions, enrolment_programoptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_enrolment_status">Status</label>
+                    <div class="col-sm-8">
+                        <select id="fld_enrolment_status" name="fld_enrolment_status" class="form-control" required="required">
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; 
+                                Dictionary<string, string> enrolment_statusoptions = new Dictionary<string, string>();
+                                enrolment_statusoptions["type"] = "select";
+                                enrolment_statusoptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(enrolmentstatus, nooptions, enrolment_statusoptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_enrolment_worker">Worker</label>
+                    <div class="col-sm-8">
+                        <select id="fld_enrolment_worker" name="fld_enrolment_worker" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_enrolment_note">Note</label>
+                    <div class="col-sm-8">
+                        <textarea id="fld_enrolment_note" name="fld_enrolment_note" class="form-control tinymce"></textarea>
+                    </div>
+                </div>
             </div>
 
             <!-- ================================= ENCOUNTERS TAB ===================================  -->
@@ -1348,7 +1425,7 @@
                             <option value="">--- Please select ---</option>
                             <%                                                                                                                                            
                                 //string[] nooptions = { }; //temp
-                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                //Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
                                 YesNoOptions["type"] = "select";
                                 YesNoOptions["valuefield"] = "value";
                                 Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
@@ -1371,7 +1448,7 @@
                         </select>
                     </div>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_phone_sendtexts">Send Texts</label>
                     <div class="col-sm-8">
                         <select id="fld_phone_sendtexts" name="fld_phone_sendtexts" class="form-control" required="required">
@@ -1385,7 +1462,7 @@
                             %>
                         </select>
                     </div>
-                 </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_phone_note">Note</label>
                     <div class="col-sm-8">
@@ -1410,7 +1487,7 @@
                     <%= html_email %>
                 </table>
             </div>
-             <!-- ================================= EMAIL DIALOG ===================================  -->
+            <!-- ================================= EMAIL DIALOG ===================================  -->
 
             <div id="dialog-sendemail" title="Send Email" style="display: none" class="form-horizontal">
                 <div class="form-group">
@@ -1427,7 +1504,7 @@
                 </div>
             </div>
 
-            
+
             <!-- ================================= ADDRESSES TAB ===================================  -->
             <div id="div_address" class="tab-pane fade in">
                 <h3 class="tabheading">Addresss</h3>
@@ -1444,7 +1521,7 @@
                         <textarea id="fld_address_address" name="fld_address_address" class="form-control" rows="6"></textarea>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_address_current">Current</label>
                     <div class="col-sm-8">
@@ -1468,10 +1545,11 @@
                         <textarea id="fld_address_note" name="fld_address_note" class="form-control"></textarea>
                     </div>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_address_coordinates">Google Co-ordinates</label>
                     <div class="col-sm-8">
-                        <input id="fld_address_coordinates" name="fld_address_coordinates" class="form-control" readonly="readonly" /> <input id="geocode" type="button" class="geocode btn btn-info" value="Refresh" />
+                        <input id="fld_address_coordinates" name="fld_address_coordinates" class="form-control" readonly="readonly" />
+                        <input id="geocode" type="button" class="geocode btn btn-info" value="Refresh" />
                     </div>
                 </div>
             </div>
@@ -1551,9 +1629,9 @@
             <div id="div_assigned" class="tab-pane fade in">
                 <h3 class="tabheading">Assigned Workers</h3>
                 <span>Record workers that are assigned to this person.</span>
-            <table id="assignedtable" class="table" style="width: 100%">
-                <%= html_assigned %>
-            </table>
+                <table id="assignedtable" class="table" style="width: 100%">
+                    <%= html_assigned %>
+                </table>
             </div>
 
             <!-- ================================= ASSIGNED DIALOG ===================================  -->
