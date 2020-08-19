@@ -7,9 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cemeteries._Dependencies {
+namespace TeOraHouWhanganui._Dependencies {
     
     
-    public partial class Data {
+    public partial class data {
     }
 }

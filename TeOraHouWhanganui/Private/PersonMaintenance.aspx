@@ -732,6 +732,7 @@
                 $("#dialog_address").dialog('option', 'buttons', myButtons);
             })
 
+            
             function update_address() {
                 /*----------------------------------------------ADDRESS-----------------------------------------*/
                 delim = String.fromCharCode(254);
@@ -1008,12 +1009,17 @@
                 mode = $(this).data('mode');
                 if (mode == "add") {
                     $("#dialog_enrolment").find(':input').val('');
+                    //$("#dialog_enrolment").find(':input').prop("disabled", false);
+                    $('#fld_enrolment_program').prop("disabled", false);
                 } else {
                     tr = $(this).closest('tr');
-                    $('#fld_enrolment_program').val($(tr).find('td').eq(1).text());
-                    $('#fld_enrolment_status').val($(tr).find('td').eq(2).text());
-                    $('#fld_enrolment_notes').val($(tr).find('td').eq(3).html());
-                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(5).data('enrolmentaccesslevel'));
+                    $('#fld_enrolment_program').prop("disabled", true);
+
+                    $('#fld_enrolment_program').val($(tr).find('td').eq(1).attr('programid'));
+                    $('#fld_enrolment_status').val($(tr).find('td').eq(4).text());
+                    $('#fld_enrolment_worker').val($(tr).find('td').eq(5).attr('worker'));
+                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(6).attr('alwayspickup'));
+                    $('#fld_enrolment_note').val($(tr).find('td').eq(7).text());
                 }
 
                 mywidth = $(window).width() * .95;
@@ -1046,16 +1052,25 @@
 
                             }
                             $(tr).attr('maint', 'changed');
-                            $(tr).find('td').eq(1).text($('#fld_enrolment_program').val());
-                            $(tr).find('td').eq(2).text($('#fld_enrolment_status').val());
-                            $(tr).find('td').eq(3).text($('#fld_enrolment_notes').val());
-                            $(tr).find('td').eq(4).text($('#fld_enrolment_alwayspickup').val());
+                            $(tr).find('td').eq(1).text($('#fld_enrolment_program option:selected').text());
+                            $(tr).find('td').eq(1).attr('programid', $('#fld_enrolment_program').val());
+
+                            $(tr).find('td').eq(4).text($('#fld_enrolment_status option:selected').text());
+                            //$(tr).find('td').eq(4).attr('status', $('#fld_enrolment_status').val());
+
+                            $(tr).find('td').eq(5).text($('#fld_enrolment_worker option:selected').text());
+                            $(tr).find('td').eq(5).attr('worker', $('#fld_enrolment_worker').val());
+
+                            $(tr).find('td').eq(6).text($('#fld_enrolment_alwayspickup option:selected').text());
+                            $(tr).find('td').eq(6).attr('alwayspickup', $('#fld_enrolment_alwayspickup').val());
+
+                            $(tr).find('td').eq(7).text($('#fld_enrolment_note').val());
 
                             $(this).dialog("close");
                         }
                     }
                 }
-
+               /*
                 if (mode != 'add') {
                     myButtons["Delete"] = function () {
                         if (window.confirm("Are you sure you want to delete this enrolment?")) {
@@ -1065,7 +1080,7 @@
                         }
                     }
                 }
-
+                */
                 $("#dialog_enrolment").dialog('option', 'buttons', myButtons);
             })
 
@@ -1075,12 +1090,13 @@
                 $('#enrolmenttable > tbody > tr[maint="changed"]').each(function () {
 
                     tr_id = $(this).attr('id');
-                    tr_program = $(this).find('td:eq(1)').text();
-                    tr_status = $(this).find('td:eq(2)').text();
-                    tr_notes = $(this).find('td:eq(3)').text();
-                    tr_alwayspickup = $(this).find('td:eq(4)').attr('workerid');
+                    tr_program = $(this).find('td:eq(1)').attr('programid');
+                    tr_status = $(this).find('td:eq(4)').text();
+                    tr_worker = $(this).find('td:eq(5)').attr('worker');
+                    tr_alwayspickup = $(this).find('td:eq(6)').attr('alwayspickup');
+                    tr_note = $(this).find('td:eq(7)').text();
 
-                    value = tr_program + delim + tr_status + delim + tr_notes + delim + tr_alwayspickup;
+                    value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -1258,7 +1274,7 @@
 
 
 
-            <!-- ================================= ENROLEMENTS TAB ===================================  -->
+            <!-- ================================= ENROLMENTS TAB ===================================  -->
             <div id="div_enrolment" class="tab-pane fade in">
                 <h3 class="tabheading">Enrolments</h3>
                 <table id="enrolmenttable" class="table" style="width: 100%">
@@ -1266,7 +1282,7 @@
                 </table>
             </div>
 
-            <!-- ================================= ENROLEMENTS DIALOG ===================================  -->
+            <!-- ================================= ENROLMENTS DIALOG ===================================  -->
 
             <div id="dialog_enrolment" title="Maintain enrolments" style="display: none" class="form-horizontal">
                 <div class="form-group">
@@ -1299,6 +1315,22 @@
                     </div>
                 </div>
 
+                 <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_enrolment_alwayspickup">Always Pickup</label>
+                    <div class="col-sm-8">
+                        <select id="fld_enrolment_alwayspickup" name="fld_enrolment_alwayspickup" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                                //string[] nooptions = { }; //temp
+                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNoBit, nooptions, YesNoOptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_enrolment_worker">Worker</label>
                     <div class="col-sm-8">
@@ -1306,10 +1338,9 @@
                             <option value="">--- Please select ---</option>
                             <%                                                                                                                                            
                                 //string[] nooptions = { }; //temp
-                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
                                 YesNoOptions["type"] = "select";
                                 YesNoOptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                                Response.Write(Generic.Functions.buildselection(YesNoBit, nooptions, YesNoOptions));
                             %>
                         </select>
                     </div>

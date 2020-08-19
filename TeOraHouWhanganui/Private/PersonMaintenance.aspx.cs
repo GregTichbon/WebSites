@@ -146,7 +146,7 @@ namespace TeOraHouWhanganui.Private
                     assignmenttypes.Add("Youth", "");
                     assignmenttypes.Add("Worker", "");
 
-                    YesNoBit.Add("Yes", "1");
+                    YesNoBit.Add("Yes", "1");  //SQL returns 1 or 0 but toString() changes it to True or False
                     YesNoBit.Add("No", "0");
                     YesNo.Add("Yes", "Yes");
                     YesNo.Add("No", "No");
@@ -193,7 +193,7 @@ namespace TeOraHouWhanganui.Private
 
                     html_tab += "<li><a data-target=\"#div_enrolment\">Enrolments</a></li>";
                     html_enrolments = "<thead>";
-                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Always Pickup</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_enrolments += "</thead>";
                     html_enrolments += "<tbody>";
 
@@ -205,6 +205,7 @@ namespace TeOraHouWhanganui.Private
                     html_enrolments += "<td></td>"; //Last Event
                     html_enrolments += "<td></td>"; //Status
                     html_enrolments += "<td></td>"; //Worker
+                    html_enrolments += "<td></td>"; //Always pickup
                     html_enrolments += "<td></td>"; //Note
                     html_enrolments += "<td><a href=\"javascript:void(0)\" class=\"enrolmentedit\" data-mode=\"edit\">Edit</td>";
                     html_enrolments += "</tr>";
@@ -216,7 +217,8 @@ namespace TeOraHouWhanganui.Private
                     while (dr.Read())
                     {
                         string entity_enrolment_CTR = dr["ID"].ToString();
-                        string program = dr["programid"].ToString();
+                        string programid = dr["programid"].ToString();
+                        string programname = dr["programname"].ToString();
                         string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");   
                         string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
                         string status = dr["enrolementstatus"].ToString();
@@ -225,11 +227,12 @@ namespace TeOraHouWhanganui.Private
                         string note = dr["notes"].ToString();
                         html_enrolments += "<tr id=\"enrolment_" + entity_enrolment_CTR + "\">";
                         html_enrolments += "<td style=\"text-align:center\"></td>";
-                        html_enrolments += "<td>" + program + "</td>";
+                        html_enrolments += "<td programid=\"" + programid + "\">" + programname + "</td>";
                         html_enrolments += "<td>" + firstevent + "</td>";
                         html_enrolments += "<td>" + lastevent + "</td>";
                         html_enrolments += "<td>" + status + "</td>";
-                        html_enrolments += "<td>" + worker + "</td>";
+                        html_enrolments += "<td worker=\"" + worker + "\">" + YesNoBit.FirstOrDefault(x => x.Value == worker).Key + "</td>";
+                        html_enrolments += "<td alwayspickup=\"" + alwayspickup + "\">" + YesNoBit.FirstOrDefault(x => x.Value == alwayspickup).Key + "</td>";
                         html_enrolments += "<td>" + note + "</td>";
                         html_enrolments += "<td><a href=\"javascript:void(0)\" class=\"enrolmentedit\" data-mode=\"edit\">Edit</td>";
                         html_enrolments += "</tr>";
@@ -912,6 +915,40 @@ namespace TeOraHouWhanganui.Private
                         cmd.Parameters.Add("@text", SqlDbType.VarChar).Value = valuesSplit[3];
                         cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
                     }
+                    con.Open();
+                    cmd.ExecuteScalar().ToString();
+                    con.Close();
+                }
+                else if (key.StartsWith("enrolment_"))
+                {
+                    string enrolment_ctr = key.Substring(10);   //key length 
+                                                                //if (enrolment_ctr.EndsWith("_delete"))
+                                                                //{
+                                                                //    cmd.CommandText = "Delete_enrolment";
+                                                                //    cmd.Parameters.Clear();
+                                                                //    cmd.Parameters.Add("@enrolment_ctr", SqlDbType.VarChar).Value = enrolment.Substring(0, enrolment_ctr.Length - ???);
+                                                                //}
+                                                                //else
+                                                                //{
+                    if (enrolment_ctr.StartsWith("new"))
+                    {
+                        enrolment_ctr = "new";
+                    }
+
+                    string[] valuesSplit = Request.Form[key].Split('\x00FE');
+
+                    //value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note;
+
+                    cmd.CommandText = "Update_person_enrolment";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@enrolment_ctr", SqlDbType.VarChar).Value = enrolment_ctr;
+                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                    cmd.Parameters.Add("@programid", SqlDbType.VarChar).Value = valuesSplit[0];
+                    cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = valuesSplit[1];
+                    cmd.Parameters.Add("@worker", SqlDbType.VarChar).Value = valuesSplit[2];
+                    cmd.Parameters.Add("@alwayspickup", SqlDbType.VarChar).Value = valuesSplit[3];
+                    cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
+                    //}
                     con.Open();
                     cmd.ExecuteScalar().ToString();
                     con.Close();

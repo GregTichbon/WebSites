@@ -107,6 +107,7 @@
     <Content Include="Private\Administration\Program.aspx" />
     <Content Include="Private\Administration\ProgramActivity.aspx" />
     <Content Include="Private\Default.aspx" />
+    <Content Include="Private\EventMaintenance.aspx" />
     <Content Include="Private\EventSearch.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
@@ -115,6 +116,8 @@
     <Content Include="Private\Reports\Report.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
+    <None Include="TestAndPlay\offline.manifest" />
+    <Content Include="TestAndPlay\offline1.aspx" />
     <Content Include="XDefault.aspx" />
     <Content Include="Login\Default.aspx" />
     <Content Include="XPersonMaintenance.aspx" />
@@ -124,6 +127,7 @@
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="_Dependencies\Data.asmx" />
+    <Content Include="_Dependencies\data.aspx" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-144x144.png" />
@@ -235,6 +239,13 @@
     <Compile Include="Private\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Private\EventMaintenance.aspx.cs">
+      <DependentUpon>EventMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\EventMaintenance.aspx.designer.cs">
+      <DependentUpon>EventMaintenance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\EventSearch.aspx.cs">
       <DependentUpon>EventSearch.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -286,6 +297,13 @@
     </Compile>
     <Compile Include="TestAndPlay\LongRunning1.aspx.designer.cs">
       <DependentUpon>LongRunning1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestAndPlay\offline1.aspx.cs">
+      <DependentUpon>offline1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestAndPlay\offline1.aspx.designer.cs">
+      <DependentUpon>offline1.aspx</DependentUpon>
     </Compile>
     <Compile Include="XDefault.aspx.cs">
       <DependentUpon>XDefault.aspx</DependentUpon>
@@ -341,6 +359,13 @@
       <DependentUpon>Data.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="_Dependencies\data.aspx.cs">
+      <DependentUpon>data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_Dependencies\data.aspx.designer.cs">
+      <DependentUpon>data.aspx</DependentUpon>
+    </Compile>
     <Compile Include="_Dependencies\functions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +396,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

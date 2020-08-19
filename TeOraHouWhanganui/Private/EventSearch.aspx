@@ -32,18 +32,46 @@
             });
 
             $('#btn_search').click(function (e) {
-                e.preventDefault();
-                $('#div_results').html('get events that match via Ajax and add a link to create new event');
+                $('#results').empty();
+
+                //var formData = $('form').serialize();
+
+                //var formValues = new FormData();
+                //formValues.append("mode", "test");
+                //formData = $(formValues).serialize();
+                //var form = document.getElementById('form1');
+                //console.log(form);
+                //var formData = new FormData(form);
+
+                var formData = new FormData();
+                formData.append('mode', 'eventsearch');
+                formData.append('fld_program', $('#fld_program').val());
+                formData.append('fld_date', $('#fld_date').val());
+
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: '../_dependencies/data.aspx', // the url where we want to POST
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false,  // tell jQuery not to set contentType
+                    data: formData,
+                    //dataType: 'html', // what type of data do we expect back from the server
+                    success: function (result) {
+                        $('#div_results').html(result);
+                    },
+                    error: function (xhr, status) {
+                        alert('error');
+
+                    }
+                });
             })
 
         });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <input name="mode" value="test" type="hidden" />
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>Coming soon</p>
-
-
     </div>
     <div class="toprighticon">
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
@@ -53,14 +81,14 @@
     </h1>
     <div class="form-horizontal">
         <div class="form-group">
-            <label class="control-label col-sm-4" for="name">Program</label>
+            <label class="control-label col-sm-4" for="fld_program">Program</label>
             <div class="col-sm-8">
-                <select id="fld_gender" name="fld_gender" class="form-control">
+                <select id="fld_program" name="fld_program" class="form-control">
                     <option value="">--- Please select ---</option>
                     <% 
                         Dictionary<string, string> programoptions = new Dictionary<string, string>();
                         programoptions["type"] = "select";
-                        programoptions["valuefield"] = "label";
+                        programoptions["valuefield"] = "value";
                         Response.Write(Generic.Functions.buildselection(programs, nooptions, programoptions));
                     %>
                 </select>
@@ -69,10 +97,10 @@
     </div>
     <div class="form-horizontal">
         <div class="form-group">
-            <label class="control-label col-sm-4" for="date">Date</label>
+            <label class="control-label col-sm-4" for="fld_date">Date</label>
             <div class="col-sm-8">
                 <div class="input-group standarddate">
-                    <input id="date" name="date" placeholder="eg: 23 Jun 1985" type="text" class="form-control" required="required" />
+                    <input id="fld_date" name="fld_date" placeholder="eg: 23 Jun 1985" type="text" class="form-control" required="required" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -84,9 +112,10 @@
         <div class="col-sm-4">
         </div>
         <div class="col-sm-8">
-            <input type="submit" id="btn_search" class="submit btn btn-info" value="Search" />
+            <input type="button" id="btn_search" class="btn btn-info" value="Search" />
         </div>
     </div>
+
     <div id="div_results"></div>
 
 

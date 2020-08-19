@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic", "Generic\Generic.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeOraHouWhanganui", "TeOraHouWhanganui\TeOraHouWhanganui.csproj", "{09A7C8BC-E2F0-4C41-8D0B-5670A2E14895}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cemeteries", "Cemeteries\Cemeteries.csproj", "{2FFF62D8-906A-46D8-85E1-EAC4129F1ABD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleService", "VehicleService\VehicleService.csproj", "{513B6B43-522A-4565-A1BF-5B1465544D47}"
 EndProject
 Global
@@ -39,10 +37,6 @@ Global
 		{09A7C8BC-E2F0-4C41-8D0B-5670A2E14895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09A7C8BC-E2F0-4C41-8D0B-5670A2E14895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09A7C8BC-E2F0-4C41-8D0B-5670A2E14895}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FFF62D8-906A-46D8-85E1-EAC4129F1ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FFF62D8-906A-46D8-85E1-EAC4129F1ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FFF62D8-906A-46D8-85E1-EAC4129F1ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FFF62D8-906A-46D8-85E1-EAC4129F1ABD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Release|Any CPU.ActiveCfg = Release|Any CPU

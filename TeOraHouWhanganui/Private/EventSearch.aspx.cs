@@ -25,9 +25,11 @@ namespace TeOraHouWhanganui.Private
             options.Clear();
             options.Add("storedprocedure", "");
             options.Add("storedprocedurename", "");
+            options.Add("parameters", "|countevents|");
             options.Add("usevalues", "");
             //options.Add("insertblank", "start");
             programs = Functions.buildselectionlist(connectionString, "get_programs", options);
         }
+
     }
 }
