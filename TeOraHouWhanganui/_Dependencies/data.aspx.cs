@@ -41,23 +41,24 @@ namespace TeOraHouWhanganui._Dependencies
                         if (dr.HasRows)
                         {
 
-                            html = "<table class=\"table\"><thead><tr><th nowrap>Program</th><th>Description</th><th nowrap>Date</th></tr></thead><tbody>";
+                            html = "<table class=\"table\"><thead><tr><th nowrap>Program</th><th>Description</th><th nowrap>Date</th><th></th></tr></thead><tbody>";
 
                             while (dr.Read())
                             {
+                                string eventid = dr["ID"].ToString();
                                 string program = dr["ProgramName"].ToString();
                                 string description = dr["description"].ToString();
                                 //string date = Functions.formatdate( dr["attendance"].ToString(),"D MMM yyyy");
                                 string daterange = dr["daterange"].ToString();
 
-                                html += "<tr><td nowrap>" + program + "</td><td>" + description + "</td><td nowrap>" + daterange + "</td></tr>";
+                                html += "<tr><td nowrap>" + program + "</td><td>" + description + "</td><td nowrap>" + daterange + "</td><td class=\"event\" eventid=\"" + eventid + "\"><a href=\"javascript: void(0)\">View</a></td></tr>";
 
                             }
                             html += "</tbody></table>";
                         }
                         dr.Close();
 
-                        cmd.ExecuteScalar();
+                        //cmd.ExecuteScalar();
                         con.Close();
 
                     }

@@ -25,15 +25,16 @@ namespace TeOraHouWhanganui._Dependencies
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void Person_name_autocomplete(string term, string options)
+        //public List<CustomerClass> Customer_name_autocomplete(string term, string options)
+        public void Customer_name_autocomplete(string term, string options)
         {
-            List<PersonClass> PersonList = new List<PersonClass>();
+            List<CustomerClass> CustomerList = new List<CustomerClass>();
 
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
             String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(connectionString);
 
-            SqlCommand cmd = new SqlCommand("person_name_autocomplete", con);
+            SqlCommand cmd = new SqlCommand("Customer_name_autocomplete", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@search", SqlDbType.VarChar).Value = term;
             cmd.Parameters.Add("@options", SqlDbType.VarChar).Value = options;
@@ -47,12 +48,12 @@ namespace TeOraHouWhanganui._Dependencies
                 {
                     while (dr.Read())
                     {
-                        PersonList.Add(new PersonClass
+                        CustomerList.Add(new CustomerClass
                         {
-                            person_ctr = dr["person_ctr"].ToString(),
+                            customer_ctr = dr["Customer_ctr"].ToString(),
                             name = dr["name"].ToString(),
                             label = dr["name"].ToString(),
-                            value = dr["person_ctr"].ToString()
+                            value = dr["Customer_ctr"].ToString()
                         });
                     }
 
@@ -68,14 +69,14 @@ namespace TeOraHouWhanganui._Dependencies
                 con.Close();
                 con.Dispose();
             }
-
+            //return CustomerList;
             JavaScriptSerializer JS = new JavaScriptSerializer();
-            Context.Response.Write(JS.Serialize(PersonList));
+            Context.Response.Write(JS.Serialize(CustomerList));
 
         }
-        public class PersonClass
+        public class CustomerClass
         {
-            public string person_ctr;
+            public string customer_ctr;
             public string name;
             public string label;
             public string value;

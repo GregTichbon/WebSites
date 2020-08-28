@@ -12,7 +12,7 @@ namespace VehicleService
         public string headerimage = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-            headerimage = ResolveUrl("~/_Dependencies/Images/TOHWlogo.png");
+            headerimage = ResolveUrl("~/_Dependencies/Images/CampbellAutoRepairs.png");
 
         }
     }

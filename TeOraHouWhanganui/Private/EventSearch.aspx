@@ -1,4 +1,4 @@
-﻿<%@ Page Title="TOHW Event Search" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="EventSearch.aspx.cs" Inherits="TeOraHouWhanganui.Private.EventSearch" %>
+﻿<%@ Page Title="TOHW Event Search" Language="C#" MasterPageFile="~/Private/Main.Master" AutoEventWireup="true" CodeBehind="EventSearch.aspx.cs" Inherits="TeOraHouWhanganui.Private.EventSearch" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
@@ -29,6 +29,12 @@
                 viewDate: false,
                 useCurrent: true
                 //,maxDate: moment().add(-1, 'year')
+            });
+
+            $(document).on('click', '.event', function () {
+                id = $(this).attr('eventid');
+                window.open("<%=ResolveUrl("EventMaintenance.aspx")%>?id=" + id); //, "Event");
+                //window.location.href = "<%=ResolveUrl("EventMaintenance.aspx")%>?id=" + id;
             });
 
             $('#btn_search').click(function (e) {

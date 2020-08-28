@@ -14,17 +14,20 @@
                 window.location.href = "<%=ResolveUrl("~/private/default.aspx")%>";
             });
 
-
+    
             $("#name").autocomplete({
-                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete?options=Allow Create")%>",
+                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Customer_name_autocomplete?options=Allow Create")%>",
                 minLength: 2,
                 select: function (event, ui) {
+                    console.log(ui);
                     event.preventDefault();
                     $('#name').val("");
                     selected = ui.item;
-                    window.open("PersonMaintenance.aspx?id=" + selected.person_ctr, "_self");
+                    window.open("CustomerMaintenance.aspx?id=" + selected.customer_ctr, "_self");
                 }
             })
+
+
 
         });
     </script>
@@ -33,7 +36,7 @@
  <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
      <p>Start typing any part of the name, you will need at least 2 characters.</p> 
      <p>The more that you type the more accurate your search will become and the less options will be shown.</p>
-     <p>To choose a record simply click on the name or choose "Create a new person"</p>
+     <p>To choose a record simply click on the name or choose "Create a new customer"</p>
      <p>You should always do a thorogh search before adding a new record.</p>
 
 
@@ -42,7 +45,7 @@
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />
     </div>
-    <h1>Person Search
+    <h1>Customer Search
     </h1>
     <div class="form-horizontal">
         <div class="form-group">

@@ -85,8 +85,8 @@
                 }
             })
 
-            var canvas = $("#canvas"),
-                context = canvas.get(0).getContext("2d")//,
+            var canvas = $("#canvas") 
+            var context = canvas.get(0).getContext("2d") 
 
             $('#getphoto').click(function () {
                 mywidth = $(window).width() * .95;

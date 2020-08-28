@@ -43,6 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Generic">
+      <HintPath>..\Generic\bin\Debug\Generic.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -67,14 +70,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CustomerMaintenance.aspx" />
     <Content Include="CustomerSearch.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="ImageUpload.aspx" />
     <Content Include="Import.aspx" />
     <Content Include="Imports\CampbellContacts.xml" />
+    <Content Include="VehicleMaintenance.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
+    <Content Include="_Dependencies\bootstrap.css" />
     <Content Include="_Dependencies\Data.asmx" />
+    <Content Include="_Dependencies\Images\CampbellAutoRepairs.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-144x144.png" />
@@ -95,17 +103,22 @@
     <Content Include="_Dependencies\Images\FavIcon\mstile-310x150.png" />
     <Content Include="_Dependencies\Images\FavIcon\mstile-310x310.png" />
     <Content Include="_Dependencies\Images\FavIcon\mstile-70x70.png" />
-    <Content Include="_Dependencies\Images\Logo.png" />
     <Content Include="_Dependencies\Images\pencil.png" />
     <Content Include="_Dependencies\Images\processing_16x16.gif" />
     <Content Include="_Dependencies\Images\qm.png" />
     <Content Include="_Dependencies\Images\Scissors.png" />
     <Content Include="_Dependencies\Images\star.png" />
-    <Content Include="_Dependencies\Images\TOHWLogo.png" />
     <Content Include="_Dependencies\Main.css" />
     <Content Include="_Dependencies\Main.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerMaintenance.aspx.cs">
+      <DependentUpon>CustomerMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CustomerMaintenance.aspx.designer.cs">
+      <DependentUpon>CustomerMaintenance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CustomerSearch.aspx.cs">
       <DependentUpon>CustomerSearch.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -119,6 +132,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ImageUpload.aspx.cs">
+      <DependentUpon>ImageUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ImageUpload.aspx.designer.cs">
+      <DependentUpon>ImageUpload.aspx</DependentUpon>
     </Compile>
     <Compile Include="Import.aspx.cs">
       <DependentUpon>Import.aspx</DependentUpon>
@@ -135,6 +155,13 @@
       <DependentUpon>Main.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VehicleMaintenance.aspx.cs">
+      <DependentUpon>VehicleMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VehicleMaintenance.aspx.designer.cs">
+      <DependentUpon>VehicleMaintenance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="_Dependencies\Data.asmx.cs">
       <DependentUpon>Data.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -144,6 +171,7 @@
   <ItemGroup>
     <Content Include="Main.Master" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\campbellautorepairs.com.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
