@@ -47,6 +47,9 @@
       <HintPath>..\Generic\bin\Debug\Generic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -76,12 +79,15 @@
     <Content Include="ImageUpload.aspx" />
     <Content Include="Import.aspx" />
     <Content Include="Imports\CampbellContacts.xml" />
+    <Content Include="Main.aspx" />
+    <Content Include="Test1.aspx" />
     <Content Include="VehicleMaintenance.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="_Dependencies\bootstrap.css" />
     <Content Include="_Dependencies\Data.asmx" />
+    <Content Include="_Dependencies\Data.aspx" />
     <Content Include="_Dependencies\Images\CampbellAutoRepairs.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
@@ -110,6 +116,7 @@
     <Content Include="_Dependencies\Images\star.png" />
     <Content Include="_Dependencies\Main.css" />
     <Content Include="_Dependencies\Main.js" />
+    <Content Include="_Dependencies\Posts.asmx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerMaintenance.aspx.cs">
@@ -147,6 +154,13 @@
     <Compile Include="Import.aspx.designer.cs">
       <DependentUpon>Import.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Main.aspx.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Main.aspx.designer.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Main.Master.cs">
       <DependentUpon>Main.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -154,7 +168,21 @@
     <Compile Include="Main.Master.designer.cs">
       <DependentUpon>Main.Master</DependentUpon>
     </Compile>
+    <Compile Include="onePage.Master.cs">
+      <DependentUpon>onePage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="onePage.Master.designer.cs">
+      <DependentUpon>onePage.Master</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test1.aspx.cs">
+      <DependentUpon>Test1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test1.aspx.designer.cs">
+      <DependentUpon>Test1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="VehicleMaintenance.aspx.cs">
       <DependentUpon>VehicleMaintenance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -166,10 +194,23 @@
       <DependentUpon>Data.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="_Dependencies\Data.aspx.cs">
+      <DependentUpon>Data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_Dependencies\Data.aspx.designer.cs">
+      <DependentUpon>Data.aspx</DependentUpon>
+    </Compile>
     <Compile Include="_Dependencies\functions.cs" />
+    <Compile Include="_Dependencies\MainClass.cs" />
+    <Compile Include="_Dependencies\Posts.asmx.cs">
+      <DependentUpon>Posts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main.Master" />
+    <Content Include="onePage.Master" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\campbellautorepairs.com.pubxml" />
     <None Include="Web.Debug.config">

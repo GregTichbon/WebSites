@@ -71,8 +71,15 @@
                 $(".prev span").text(y);
             });
 
-            $('.submit').click(function () {
+            $('.submitX').click(function () {
+                window.parent.test();
+                //window.close();
 
+            });
+
+            $("form").submit(function (e) {
+                window.parent.test();
+                e.preventDefault();
             });
 
 

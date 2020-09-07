@@ -53,6 +53,7 @@
                 formData.append('mode', 'eventsearch');
                 formData.append('fld_program', $('#fld_program').val());
                 formData.append('fld_date', $('#fld_date').val());
+                formData.append('fld_description', $('#fld_description').val());
 
                 $.ajax({
                     type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
@@ -100,17 +101,22 @@
                 </select>
             </div>
         </div>
-    </div>
-    <div class="form-horizontal">
+   
         <div class="form-group">
             <label class="control-label col-sm-4" for="fld_date">Date</label>
             <div class="col-sm-8">
                 <div class="input-group standarddate">
-                    <input id="fld_date" name="fld_date" placeholder="eg: 23 Jun 1985" type="text" class="form-control" required="required" />
+                    <input id="fld_date" name="fld_date" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="fld_description">Description contains</label>
+            <div class="col-sm-8">
+                <input type="text" id="fld_description" name="fld_description" class="form-control" />
             </div>
         </div>
     </div>

@@ -36,13 +36,12 @@ namespace TeOraHouWhanganui._Dependencies
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@program", SqlDbType.VarChar).Value = Request.Form["fld_program"];
                         cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = Request.Form["fld_date"];
+                        cmd.Parameters.Add("@description", SqlDbType.VarChar).Value = Request.Form["fld_description"];
                         con.Open();
                         dr = cmd.ExecuteReader();
+                        html = "<table class=\"table\"><thead><tr><th nowrap>Program</th><th>Description</th><th>Attendance</th><th nowrap>Date</th><th class=\"event\" eventid=\"new\"><a>Add</a></th></tr></thead><tbody>";
                         if (dr.HasRows)
                         {
-
-                            html = "<table class=\"table\"><thead><tr><th nowrap>Program</th><th>Description</th><th nowrap>Date</th><th></th></tr></thead><tbody>";
-
                             while (dr.Read())
                             {
                                 string eventid = dr["ID"].ToString();
@@ -50,12 +49,13 @@ namespace TeOraHouWhanganui._Dependencies
                                 string description = dr["description"].ToString();
                                 //string date = Functions.formatdate( dr["attendance"].ToString(),"D MMM yyyy");
                                 string daterange = dr["daterange"].ToString();
+                                string attendance = dr["attendance"].ToString();
 
-                                html += "<tr><td nowrap>" + program + "</td><td>" + description + "</td><td nowrap>" + daterange + "</td><td class=\"event\" eventid=\"" + eventid + "\"><a href=\"javascript: void(0)\">View</a></td></tr>";
+                                html += "<tr><td nowrap>" + program + "</td><td>" + description + "</td><td>" + attendance + "</td><td nowrap>" + daterange + "</td><td class=\"event\" eventid=\"" + eventid + "\"><a href=\"javascript: void(0)\">View</a></td></tr>";
 
                             }
-                            html += "</tbody></table>";
                         }
+                        html += "</tbody></table>";
                         dr.Close();
 
                         //cmd.ExecuteScalar();

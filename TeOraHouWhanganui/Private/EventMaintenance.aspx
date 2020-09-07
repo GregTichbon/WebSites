@@ -9,14 +9,15 @@
 
     <script type="text/javascript">
 
-        var event_ctr = "<%=ViewState["person_ctr"]%>";
+        var event_ctr = "<%=ViewState["event_ctr"]%>";
 
         $(document).ready(function () {
             //Generic.Functions.googleanalyticstracking()%>
 
             if (event_ctr != 'new') {
-                $('#fld_program').prop("readonly", true);
-            }
+                $('#fld_program option:not(:selected)').prop('disabled', true);
+                $('#div_control').show();
+            } 
 
 
             function makedirty() {
@@ -248,16 +249,19 @@
             </div>
         </div>
     </div>
-    Show ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" checked type="checkbox" value="Current" />
-    Current&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Casual" />
-    Casual&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Finished" />
-    Finished&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Deceased" />
-    Deceased<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="attendancefilter" type="checkbox" value="Attended" />
-    Attended
+    <div id="div_control" style="display:none">
+        Show ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" checked type="checkbox" value="Current" />
+        Current&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Casual" />
+        Casual&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Finished" />
+        Finished&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Deceased" />
+        Deceased<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="attendancefilter" type="checkbox" value="Attended" />
+        Attended
     <p id="counter"></p>
+    </div>
     <table class="table table-striped">
         <%= html_attendance %>
-        </table>
+    </table>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>

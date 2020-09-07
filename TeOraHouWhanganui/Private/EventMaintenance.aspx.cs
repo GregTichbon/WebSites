@@ -82,8 +82,8 @@ namespace TeOraHouWhanganui.Private
                                 dr.Read();
                                 fld_programid[0] = dr["programid"].ToString();
                                 fld_description = dr["Description"].ToString();
-                                fld_startdate = Functions.formatdate(dr["EventDate"].ToString(), "dd MMM yyyy");
-                                fld_enddate = Functions.formatdate(dr["EventEndDate"].ToString(), "dd MMM yyyy");
+                                fld_startdate = Functions.formatdate(dr["EventDate"].ToString(), "dd MMM yyyy HH:mm");
+                                fld_enddate = Functions.formatdate(dr["EventEndDate"].ToString(), "dd MMM yyyy HH:mm");
                                 fld_note = dr["Notes"].ToString();
                                 fld_attendanceentrycomplete = dr["AttendanceEntryComplete"].ToString();
                                 fld_money = dr["Money"].ToString();
