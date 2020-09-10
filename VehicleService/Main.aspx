@@ -15,8 +15,8 @@
             //Generic.Functions.googleanalyticstracking()%>
 
             //function makedirty() {
-                ////$('#hidden_dirty').addClass('dirty');
-                //$('#form1').addClass('dirty');
+            ////$('#hidden_dirty').addClass('dirty');
+            //$('#form1').addClass('dirty');
             //}
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
@@ -56,7 +56,6 @@
                 }
             })
 
-
             $(document).on('click', '.vehicleedit', function () {
                 customer_vehicle_ctr = $(this).attr('link');
                 $('#customer_vehicle_ctr').val(customer_vehicle_ctr);
@@ -72,49 +71,42 @@
                         $('#vehicle_registration').val(data.registration);
                         $('#vehicle_description').val(data.description);
                         $('#vehicle_note').val(data.vehiclenote);
+                        get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
                     });
-                    get_customer_vehicle_activity(customer_vehicle_ctr);
+
                 }
                 $('#section_vehicle').show();
             });
 
-            $(document).on('click', '.vehicleactivityedit', function () {
-                customer_vehicleactivity_ctr = $(this).attr('link');
-                $('#customer_vehicle_ctr').val(customer_vehicle_ctr);
+            $(document).on('click', '.vehicle_activityedit', function () {
+                vehicle_activity_ctr = $(this).attr('link');
+                $('#vehicle_activity_ctr').val(vehicle_activity_ctr);
                 $('#section_vehicle').hide();
-
-                /*
-                if (customer_vehicle_ctr == 'new') {
-                    $('#vehicle_ctr').val('new');
-                    $('#vehicle_registration').val('');
-                    $('#vehicle_description').val('');
-                    $('#vehicle_note').val('');
+                if (vehicle_activity_ctr == 'new') {
+                    $('#vehicle_activity_ctr').val('new');
+                    $('#vehicle_activity_date').val('');
+                    $('#vehicle_activity_detail').val('');
                 } else {
-                    $.getJSON("/_Dependencies/data.asmx/get_customer_vehicle?id=" + customer_vehicle_ctr, function (data) {
-                        $('#vehicle_ctr').val(data.vehicle_ctr);
-                        $('#vehicle_registration').val(data.registration);
-                        $('#vehicle_description').val(data.description);
-                        $('#vehicle_note').val(data.vehiclenote);
+                    $.getJSON("/_Dependencies/data.asmx/get_vehicle_activity?id=" + vehicle_activity_ctr, function (data) {
+                        //$('#vehicle_activity_ctr').val(data.vehicle_activity_ctr);
+                        $('#vehicle_activity_date').val(data.date);
+                        $('#vehicle_activity_detail').val(data.detail);
                     });
-                    get_customer_vehicle_activity(customer_vehicle_ctr);
                 }
-                */
-                $('#section_vehicleactivity').show();
+
+                $('.vehicle_description').html('Greg was here');
+                $('#section_vehicle_activity').show();
             });
-
-
 
             $("#form1").validate();
 
-            $('.datetime').datetimepicker({
-                format: 'D MMM YYYY HH:mm',
+            $('.date').datetimepicker({
+                format: 'D MMM YYYY',
                 extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
                 //daysOfWeekDisabled: [0, 6],
                 showClear: true,
                 viewDate: false,
-                useCurrent: true,
-                stepping: 15
-
+                useCurrent: true
                 //,maxDate: moment().add(-1, 'year')
             });
 
@@ -188,10 +180,54 @@
                 $(".prev span").text(y);
             });
 
-            $('#btn_vehiclesubmit').click(function () {
+            $('#btn_customersubmit').click(function () {
+                alert('to do');
+            });
 
+            $('#btn_customercancel').click(function () {
+                $('#section_customer').hide();
+                $('#section_customersearch').show();
+            });
+
+            $('#btn_vehiclecancel').click(function () {
                 $('#section_vehicle').hide();
+                $('#section_customer').show();
+            });
 
+            $('#btn_vehicle_activitysubmit').click(function () {
+                $('#section_vehicle_activity').hide();
+                var arForm = $("#form_vehicle_activity")
+                    .find("input,textarea,select,hidden")
+                    .not("[id^='__']")
+                    .serializeArray();
+
+                arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                var formData = JSON.stringify({ formVars: arForm });
+
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: '/_dependencies/posts.asmx/update_vehicle_activity', // the url where we want to POST
+                    contentType: "application/json; charset=utf-8",
+                    data: formData,
+                    dataType: 'json', // what type of data do we expect back from the server
+                    async: false,
+                    success: function (result) {
+                    },
+                    error: function (xhr, status) {
+                        alert('error');
+                    }
+                });
+                get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                $('#section_vehicle').show();
+            });
+
+            $('#btn_vehicle_activitycancel').click(function () {
+                $('#section_vehicle_activity').hide();
+                $('#section_vehicle').show();
+            });
+
+            $('#btn_vehiclesubmit').click(function () {
+                $('#section_vehicle').hide();
                 var arForm = $("#form_vehicle")
                     .find("input,textarea,select,hidden")
                     .not("[id^='__']")
@@ -227,16 +263,13 @@
                 });
         }
 
-        function get_customer_vehicle_activity(customer_vehicle_ctr) {
-            $.post("/_Dependencies/data.aspx", { mode: "get_customer_vehicle_activity", customer_vehicle_ctr: customer_vehicle_ctr })
+        function get_vehicle_activities(customer_ctr, vehicle_ctr) {
+            $.post("/_Dependencies/data.aspx", { mode: "get_vehicle_activities", customer_ctr: customer_ctr, vehicle_ctr: vehicle_ctr })
                 .done(function (data) {
-                    $("#div_vehicleactivity").html(data);
+                    $("#div_vehicleactivities").html(data);
                 });
         }
 
-        function test() {
-            alert(1);
-        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -267,6 +300,7 @@
                 <input type="button" id="menu" class="btn btn-info" value="MENU" />
             </div>
             <div class="bottomrighticon">
+                <input id="btn_customercancel" type="button" class="btn btn-info" value="Cancel" />
                 <input id="btn_customersubmit" type="button" class="btn btn-info" value="Submit" />
             </div>
             <h1>Customer Maintenance
@@ -382,18 +416,19 @@
 
     <div id="section_vehicle" style="display: none">
         <form id="form_vehicle">
-              <input type="hidden" id="vehicle_ctr" name="vehicle_ctr" />
-              <input type="hidden" id="customer_vehicle_ctr" name="customer_vehicle_ctr" />
+            <input type="hidden" id="vehicle_ctr" name="vehicle_ctr" />
+            <input type="hidden" id="customer_vehicle_ctr" name="customer_vehicle_ctr" />
             <div class="toprighticon">
                 <input type="button" id="vehicleassistance" class="btn btn-info" value="Assistance" />
             </div>
             <div class="bottomrighticon">
+                <input type="button" id="btn_vehiclecancel" class="btn btn-info" value="Cancel" />
                 <input type="button" id="btn_vehiclesubmit" class="btn btn-info" value="Submit" />
             </div>
             <h1>Vehicle Maintenance
             </h1>
 
-           <span class="customer_name"></span>
+            <span class="customer_name"></span>
             <div class="row">
                 <div class="col-sm-4 form-group">
                     <label>Registration</label>
@@ -432,7 +467,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-target="#div_vehiclegeneral">General</a></li>
                     <li><a data-target="#div_vehiclenote">Note</a></li>
-                    <li><a data-target="#div_vehicleactivity">Activity</a></li>
+                    <li><a data-target="#div_vehicleactivities">Activity</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- ================================= GENERAL TAB ===================================  -->
@@ -456,7 +491,7 @@
                         </div>
                     </div>
                     <!-- ================================= ACTIVITY TAB ===================================  -->
-                    <div id="div_vehicleactivity" class="tab-pane fade in">
+                    <div id="div_vehicleactivities" class="tab-pane fade in">
                     </div>
                     <!-- ================================= END OF TABS ===================================  -->
                 </div>
@@ -465,29 +500,41 @@
     </div>
     <!--section vehicle maintenance-->
 
-    <div id="section_vehicleactivity" style="display: none">
-        <form id="form_vehicleactivity">
-              <input type="hidden" id="vehicleactivity_ctr" name="vehicle_ctr" />
+    <div id="section_vehicle_activity" style="display: none">
+        <form id="form_vehicle_activity">
+            <input type="hidden" id="vehicle_activity_ctr" name="vehicle_activity_ctr" />
             <div class="toprighticon">
-                <input type="button" id="vehicleactivityassistance" class="btn btn-info" value="Assistance" />
+                <input type="button" id="vehicle_activityassistance" class="btn btn-info" value="Assistance" />
             </div>
             <div class="bottomrighticon">
-                <input type="button" id="btn_vehicleactivitysubmit" class="btn btn-info" value="Submit" />
+                <input type="button" id="btn_vehicle_activitycancel" class="btn btn-info" value="Cancel" />
+                <input type="button" id="btn_vehicle_activitysubmit" class="btn btn-info" value="Submit" />
             </div>
-            <h1>Vehicle Maintenance
+            <h1>Vehicle Activity
             </h1>
-
-           <span class="customer_name"></span>
-            <div class="row">
-                <div class="col-sm-4 form-group">
-                    <label>Date</label>
-                    <input type="text" id="vehicleactivity_date" name="vehicleactivity_date" class="form-control" required />
+            <span class="customer_name"></span><span class="vehicle_description"></span>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="vehicle_activity_date" class="control-label col-sm-4">Date</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date" id="div_vehicle_activity_date">
+                            <input id="vehicle_activity_date" name="vehicle_activity_date" required class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="vehicle_activity_detail">Detail</label>
+                    <div class="col-sm-8">
+                        <textarea id="vehicle_activity_detail" rows="10" name="vehicle_activity_detail" class="form-control" required></textarea>
+                    </div>
                 </div>
             </div>
-
         </form>
     </div>
-    <!--section vehicleactivity maintenance-->
+    <!--section vehicle_activity maintenance-->
 
 
 

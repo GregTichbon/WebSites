@@ -48,6 +48,34 @@ namespace VehicleService._Dependencies
             //Context.Response.Write(response);
             //return (response.ToString() );
         }
+
+
+        [WebMethod]
+        public void update_vehicle_activity(NameValue[] formVars)
+        {
+            //dynamic response = new JObject();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("update_vehicle_activity", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@vehicle_activity_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_activity_ctr");
+                cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_ctr");
+                cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = formVars.Form("vehicle_activity_date");
+                cmd.Parameters.Add("@detail", SqlDbType.VarChar).Value = formVars.Form("vehicle_activity_detail");
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+            //string x = formVars.Form("test1");
+            //response.test = x;
+            //Context.Response.Write(response);
+            //return (response.ToString() );
+        }
     }
     
 }

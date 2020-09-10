@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Generic;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -157,6 +158,39 @@ namespace TeOraHouWhanganui._Dependencies
             }
             dr.Close();
             Context.Response.Write(vehicle);
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        //public List<CustomerClass> Customer_name_autocomplete(string term, string options)
+        public void get_vehicle_activity(string id)
+        {
+            dynamic vehicle_activity = new JObject();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_vehicle_activity";
+            cmd.Parameters.Add("@vehicle_activity_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                dr.Read();
+                //fld_customertype_ctr[0] = dr["customertype_ctr"].ToString();
+                vehicle_activity.vehicle_ctr = dr["vehicle_ctr"].ToString();
+                vehicle_activity.date = Functions.formatdate(dr["date"].ToString(),"dd MMM yyyy");
+                vehicle_activity.detail = dr["detail"].ToString();
+            }
+            dr.Close();
+            Context.Response.Write(vehicle_activity);
 
         }
 
