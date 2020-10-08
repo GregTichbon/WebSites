@@ -80,6 +80,7 @@
     <Content Include="Import.aspx" />
     <Content Include="Imports\CampbellContacts.xml" />
     <Content Include="Main.aspx" />
+    <Content Include="MakeModelMaintenance.aspx" />
     <Content Include="Test1.aspx" />
     <Content Include="VehicleMaintenance.aspx" />
     <Content Include="Web.config" />
@@ -109,6 +110,7 @@
     <Content Include="_Dependencies\Images\FavIcon\mstile-310x150.png" />
     <Content Include="_Dependencies\Images\FavIcon\mstile-310x310.png" />
     <Content Include="_Dependencies\Images\FavIcon\mstile-70x70.png" />
+    <Content Include="_Dependencies\Images\key.png" />
     <Content Include="_Dependencies\Images\pencil.png" />
     <Content Include="_Dependencies\Images\processing_16x16.gif" />
     <Content Include="_Dependencies\Images\qm.png" />
@@ -167,6 +169,13 @@
     </Compile>
     <Compile Include="Main.Master.designer.cs">
       <DependentUpon>Main.Master</DependentUpon>
+    </Compile>
+    <Compile Include="MakeModelMaintenance.aspx.cs">
+      <DependentUpon>MakeModelMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MakeModelMaintenance.aspx.designer.cs">
+      <DependentUpon>MakeModelMaintenance.aspx</DependentUpon>
     </Compile>
     <Compile Include="onePage.Master.cs">
       <DependentUpon>onePage.Master</DependentUpon>

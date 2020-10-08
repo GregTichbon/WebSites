@@ -19,7 +19,7 @@ namespace VehicleService
         public Dictionary<string, string> customertypes = new Dictionary<string, string>();
         public Dictionary<string, string> wofcycles = new Dictionary<string, string>();
         public Dictionary<string, string> vehicletypes = new Dictionary<string, string>();
-        public Dictionary<string, string> vehiclemodels = new Dictionary<string, string>();
+        public Dictionary<string, string> vehicleakemodels = new Dictionary<string, string>();
         protected void Page_Load(object sender, EventArgs e)
         {
             // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
@@ -41,7 +41,7 @@ namespace VehicleService
             //options.Add("parameters", "|countcustomers|");
             options.Add("usevalues", "");
             //options.Add("insertblank", "start");
-            //customertypes = Functions.buildselectionlist(connectionString, "get_customertypes", options);
+            customertypes = Functions.buildselectionlist(connectionString, "get_customertypes", options);
 
             options.Clear();
             options.Add("storedprocedure", "");
@@ -57,7 +57,7 @@ namespace VehicleService
             //options.Add("parameters", "|countcustomers|");
             options.Add("usevalues", "");
             //options.Add("insertblank", "start");
-            vehiclemodels = Functions.buildselectionlist(connectionString, "get_vehiclemodels", options);
+            vehicleakemodels = Functions.buildselectionlist(connectionString, "get_vehiclemakemodels", options);
 
 
         }

@@ -27,6 +27,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Text.RegularExpressions;
 
+
 namespace Generic
 {
     public class Functions
@@ -35,6 +36,20 @@ namespace Generic
         string Port = "";
         string UserName = "";
         string Password = "";
+
+        public static string show_requestform(HttpRequest formvars, Dictionary<string, string> options)
+        {
+            string output = "";
+            foreach (string key in formvars.Form.Keys)
+            {
+                if(!key.StartsWith("__"))
+                {
+                    output += key + "=" + formvars[key] + "<br />";
+                }
+
+            }
+            return output;
+        }
 
         public static string buildJSobject(Dictionary<string, string> options)
         {
@@ -168,7 +183,13 @@ namespace Generic
                 cmd.CommandText = cmdtext;
             }
 
-            cmd.Connection = con;
+            string optionlabel = "label";
+            if (options.ContainsKey("label"))
+            {
+                optionlabel = options["label"];
+            }
+
+                cmd.Connection = con;
             try
             {
                 con.Open();
@@ -180,10 +201,15 @@ namespace Generic
                     string Value = "";
                     while (dr.Read())
                     {
-                        Label = dr["label"].ToString();
+                        Label = dr[optionlabel].ToString();
                         if (options.ContainsKey("usevalues"))
                         {
-                            Value = dr["value"].ToString();
+                            string optionvalue = "value";
+                            if(options["usevalues"] != "")
+                            {
+                                optionvalue = options["usevalues"];
+                            }
+                            Value = dr[optionvalue].ToString();
                         }
                         selectionlist.Add(Label, Value);
                     }
@@ -213,19 +239,20 @@ namespace Generic
 
             return buildselection(DICToptionlist, ARRAYselectedoption, options);
         }
+
         public static string buildselection(string[,] optionlist, string selectedoption, Dictionary<string, string> options)
         {
             Dictionary<string, string> DICToptionlist = new Dictionary<string, string>();
             for (int f1 = 0; f1 < optionlist.GetLength(0); f1++)
             {
-                DICToptionlist.Add(optionlist[f1,0], optionlist[f1,1]);
+                DICToptionlist.Add(optionlist[f1, 0], optionlist[f1, 1]);
             }
             string[] ARRAYselectedoption = new string[] { selectedoption };
 
-            return buildselection(DICToptionlist,ARRAYselectedoption, options);
+            return buildselection(DICToptionlist, ARRAYselectedoption, options);
         }
-        
-            public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
+
+        public static string buildselection(Dictionary<string, string> optionlist, string[] selectedoption, Dictionary<string, string> options)
         {
             string html = "";
 
@@ -425,8 +452,7 @@ namespace Generic
             mail.Body = emailhtml;
             client.Send(mail);
         }
-
-
+        
         public void sendemailV2(string host, string emailfrom, string emailfromname, string password, string emailsubject, string emailtext, string emailhtml, string emailRecipient, string emailbcc, string replyto)
         {
             //Must pass both text and html!!

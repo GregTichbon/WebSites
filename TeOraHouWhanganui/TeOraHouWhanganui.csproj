@@ -46,12 +46,16 @@
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Web, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="Generic">
       <HintPath>..\Generic\bin\Debug\Generic.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -107,15 +111,19 @@
     <Content Include="Private\Administration\Program.aspx" />
     <Content Include="Private\Administration\ProgramActivity.aspx" />
     <Content Include="Private\Default.aspx" />
+    <Content Include="Private\EmployeeMaintenance.aspx" />
     <Content Include="Private\EventMaintenance.aspx" />
     <Content Include="Private\EventSearch.aspx" />
     <Content Include="Private\PersonMaintenance.aspx" />
     <Content Include="Private\PersonSearch.aspx" />
     <Content Include="Private\Posts.asmx" />
+    <Content Include="Private\Reports\Attendance.aspx" />
+    <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
+    <Content Include="_Dependencies\Posts.asmx" />
     <None Include="TestAndPlay\offline.manifest" />
     <Content Include="TestAndPlay\offline1.aspx" />
     <Content Include="XDefault.aspx" />
@@ -239,6 +247,13 @@
     <Compile Include="Private\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Private\EmployeeMaintenance.aspx.cs">
+      <DependentUpon>EmployeeMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\EmployeeMaintenance.aspx.designer.cs">
+      <DependentUpon>EmployeeMaintenance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\EventMaintenance.aspx.cs">
       <DependentUpon>EventMaintenance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -271,11 +286,43 @@
       <DependentUpon>Posts.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Private\Reports\Attendance.aspx.cs">
+      <DependentUpon>Attendance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Attendance.aspx.designer.cs">
+      <DependentUpon>Attendance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\Reports\Crystal\EncountersByPersonDate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EncountersByPersonDate.rpt</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\EncounterSummary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EncounterSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\Simple1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Simple1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\testNoData.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>testNoData.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\Viewer.aspx.cs">
+      <DependentUpon>Viewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\Viewer.aspx.designer.cs">
+      <DependentUpon>Viewer.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\Reports\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -367,6 +414,11 @@
       <DependentUpon>data.aspx</DependentUpon>
     </Compile>
     <Compile Include="_Dependencies\functions.cs" />
+    <Compile Include="_Dependencies\MainClass.cs" />
+    <Compile Include="_Dependencies\Posts.asmx.cs">
+      <DependentUpon>Posts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main.Master" />
@@ -387,6 +439,18 @@
     <EmbeddedResource Include="Private\Reports\Crystal\EncountersByPersonDate.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EncountersByPersonDate.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Reports\Crystal\EncounterSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EncounterSummary.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Reports\Crystal\Simple1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Simple1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Reports\Crystal\testNoData.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>testNoData.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

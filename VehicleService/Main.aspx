@@ -7,6 +7,12 @@
     <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
 
+    <style>
+        h1, h2, h3, h4 {
+            display: inline;
+        }
+    </style>
+
 
     <script type="text/javascript">
         var newctr = 0;
@@ -31,6 +37,16 @@
                 window.location.href = "<%=ResolveUrl("~/default.aspx")%>";
             });
 
+            $('.key').click(function () {
+                lockable = $(this).parent().parent().find('.lockable');
+                disabled = $(lockable).prop('disabled');
+                if (disabled == true) {
+                    $(lockable).prop('disabled', false);
+                } else {
+                    $(lockable).prop('disabled', true);
+                }
+            })
+
             $('#customersearch').click(function () {
                 $('#section_customer').hide();
                 $('#section_customersearch').show();
@@ -50,28 +66,56 @@
                     $.getJSON("/_Dependencies/data.asmx/get_customer?id=" + customer_ctr, function (data) {
                         $('#customer_name').val(data.name);
                         $('.customer_name').html(data.name);
+                        $('#customer_firstname').val(data.firstname);
+                        $('#customer_surname').val(data.surname);
+                        $('#customer_knownas').val(data.knownas);
+                        $('#customer_address').val(data.address);
+                        $('#customer_customertype').val(data.customertype_ctr);
+                        $('#customer_emailaddress').val(data.emailaddress);
+                        $('#customer_mobilephone').val(data.mobilephone);
+                        $('#customer_homephone').val(data.homephone);
+                        $('#customer_workphone').val(data.workphone);
+                        $('#customer_note').val(data.note);
                     });
                     get_customer_vehicles(customer_ctr);
                     $('#section_customer').show();
                 }
             })
 
+            $('#vehicle_registration').change(function () {
+                $('#vehicle_registration').val($('#vehicle_registration').val().toUpperCase());
+            });
+
             $(document).on('click', '.vehicleedit', function () {
                 customer_vehicle_ctr = $(this).attr('link');
                 $('#customer_vehicle_ctr').val(customer_vehicle_ctr);
                 $('#section_customer').hide();
                 if (customer_vehicle_ctr == 'new') {
+                    $('#vehicle_registration').prop('disabled', false);
                     $('#vehicle_ctr').val('new');
                     $('#vehicle_registration').val('');
                     $('#vehicle_description').val('');
+                    $('#vehicle_wof_cycle').val('');
+                    $('#vehicle_wof_due').val('');
+                    $('#vehicle_year').val('');
+                    $('#vehicle_odometer').val('');
+                    $('#vehicle_vehiclemodel').val('');
                     $('#vehicle_note').val('');
                 } else {
+                    $('#vehicle_registration').prop('disabled', true);
                     $.getJSON("/_Dependencies/data.asmx/get_customer_vehicle?id=" + customer_vehicle_ctr, function (data) {
                         $('#vehicle_ctr').val(data.vehicle_ctr);
                         $('#vehicle_registration').val(data.registration);
                         $('#vehicle_description').val(data.description);
+                        $('#vehicle_wof_cycle').val(data.wof_cycle);
+                        $('#vehicle_wof_due').val(data.wof_due);
+                        $('#vehicle_year').val(data.year);
+                        $('#vehicle_odometer').val(data.odometer);
+                        $('#vehicle_vehiclemodel').val(data.vehiclemodel);
+                        $('#vehicle_vehicletype').val(data.vehicletype);
                         $('#vehicle_note').val(data.vehiclenote);
                         get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                        get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
                     });
 
                 }
@@ -94,9 +138,37 @@
                     });
                 }
 
-                $('.vehicle_description').html('Greg was here');
+                $('.vehicle_description').html($('#vehicle_registration').val() + ' - ' + $('#vehicle_vehiclemodel option:selected').text() + ' - ' + $('#vehicle_vehicletype option:selected').text());
                 $('#section_vehicle_activity').show();
             });
+
+            $(document).on('click', '.vehicle_followupedit', function () {
+                vehicle_followup_ctr = $(this).attr('link');
+                $('#vehicle_followup_ctr').val(vehicle_followup_ctr);
+                $('#section_vehicle').hide();
+                if (vehicle_followup_ctr == 'new') {
+                    $('#vehicle_followup_ctr').val('new');
+                    $('#vehicle_followup_entrydate').val('');
+                    $('#vehicle_followup_detail').val('');
+                    $('#vehicle_followup_followupdate').val('');
+                    $('#vehicle_followup_actioneddate').val('');
+                    $('#vehicle_followup_actioneddetail').val('');
+                } else {
+                    $.getJSON("/_Dependencies/data.asmx/get_vehicle_followup?id=" + vehicle_followup_ctr, function (data) {
+                        //$('#vehicle_followup_ctr').val(data.vehicle_followup_ctr);
+                        $('#vehicle_followup_entrydate').val(data.entrydate);
+                        $('#vehicle_followup_detail').val(data.detail);
+                        $('#vehicle_followup_followupdate').val(data.followupdate);
+                        $('#vehicle_followup_actioneddate').val(data.actioneddate);
+                        $('#vehicle_followup_actioneddetail').val(data.actioneddetail);
+                    });
+                }
+
+                $('.vehicle_description').html($('#vehicle_registration').val() + ' - ' + $('#vehicle_vehiclemodel option:selected').text() + ' - ' + $('#vehicle_vehicletype option:selected').text());
+                $('#section_vehicle_followup').show();
+            });
+
+
 
             $("#form1").validate();
 
@@ -181,7 +253,32 @@
             });
 
             $('#btn_customersubmit').click(function () {
-                alert('to do');
+                //$('#section_vehicle_activity').hide();
+                var arForm = $("#form_customer")
+                    .find("input,textarea,select,hidden")
+                    .not("[id^='__']")
+                    .serializeArray();
+
+                //arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                var formData = JSON.stringify({ formVars: arForm });
+
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: '/_dependencies/posts.asmx/update_customer', // the url where we want to POST
+                    contentType: "application/json; charset=utf-8",
+                    data: formData,
+                    dataType: 'json', // what type of data do we expect back from the server
+                    async: false,
+                    success: function (result) {
+                    },
+                    error: function (xhr, status) {
+                        alert('error');
+                    }
+                });
+                $('#section_customer').hide();
+                $('#section_customersearch').show();
+                //get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                //$('#section_vehicle').show();
             });
 
             $('#btn_customercancel').click(function () {
@@ -223,6 +320,40 @@
 
             $('#btn_vehicle_activitycancel').click(function () {
                 $('#section_vehicle_activity').hide();
+                $('#section_vehicle').show();
+            });
+
+
+
+            $('#btn_vehicle_followupsubmit').click(function () {
+                $('#section_vehicle_followup').hide();
+                var arForm = $("#form_vehicle_followup")
+                    .find("input,textarea,select,hidden")
+                    .not("[id^='__']")
+                    .serializeArray();
+
+                arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                var formData = JSON.stringify({ formVars: arForm });
+
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: '/_dependencies/posts.asmx/update_vehicle_followup', // the url where we want to POST
+                    contentType: "application/json; charset=utf-8",
+                    data: formData,
+                    dataType: 'json', // what type of data do we expect back from the server
+                    async: false,
+                    success: function (result) {
+                    },
+                    error: function (xhr, status) {
+                        alert('error');
+                    }
+                });
+                get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                $('#section_vehicle').show();
+            });
+
+            $('#btn_vehicle_followupcancel').click(function () {
+                $('#section_vehicle_followup').hide();
                 $('#section_vehicle').show();
             });
 
@@ -269,17 +400,24 @@
                     $("#div_vehicleactivities").html(data);
                 });
         }
+        function get_vehicle_followups(customer_ctr, vehicle_ctr) {
+            $.post("/_Dependencies/data.aspx", { mode: "get_vehicle_followups", customer_ctr: customer_ctr, vehicle_ctr: vehicle_ctr })
+                .done(function (data) {
+                    $("#div_vehiclefollowups").html(data);
+                });
+        }
 
     </script>
+   
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div id="section_customersearch">
-        <h1>Customer Search
-        </h1>
+        <h2>Customer Search
+        </h2><hr />
         <div class="form-horizontal">
             <div class="form-group">
-                <label class="control-label col-sm-4" for="customersearch_name">Name</label>
+                <label class="control-label col-sm-4" for="customersearch_name">Name / Registration</label>
                 <div class="col-sm-8">
                     <input id="customersearch_name" name="customersearch_name" type="text" class="form-control" />
                 </div>
@@ -303,19 +441,21 @@
                 <input id="btn_customercancel" type="button" class="btn btn-info" value="Cancel" />
                 <input id="btn_customersubmit" type="button" class="btn btn-info" value="Submit" />
             </div>
-            <h1>Customer Maintenance
-            </h1>
+            <h2>Customer Maintenance</h2> <h3 class="customer_name"></h3><hr />
 
-
+             
             <div class="form-horizontal">
-
+                <!--
+                 <h3 class="customer_name"></h3>
+               
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="customer_name">Name</label>
                     <div class="col-sm-8">
                         <input type="text" id="customer_name" name="customer_name" class="form-control" required />
                     </div>
-                </div>
 
+                </div>
+                    -->
                 <!------------------------------------------ TABS ------------------------------------------------------------>
 
                 <div class="form-horizontal">
@@ -328,6 +468,12 @@
                         <!-- ================================= GENERAL TAB ===================================  -->
                         <div id="div_general" class="tab-pane fade in active">
                             <!--<h3 class="navbar"><span class="navbar-brand">General</span></h3>-->
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="customer_name">Organisation Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="customer_name" name="customer_name" class="form-control" required />
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_firstname">First name</label>
                                 <div class="col-sm-8">
@@ -425,31 +571,33 @@
                 <input type="button" id="btn_vehiclecancel" class="btn btn-info" value="Cancel" />
                 <input type="button" id="btn_vehiclesubmit" class="btn btn-info" value="Submit" />
             </div>
-            <h1>Vehicle Maintenance
-            </h1>
+            <h2>Vehicle Maintenance
+            </h2>
 
-            <span class="customer_name"></span>
+            <h3 class="customer_name"></h3><hr />
             <div class="row">
                 <div class="col-sm-4 form-group">
                     <label>Registration</label>
-                    <input type="text" id="vehicle_registration" name="vehicle_registration" class="form-control" maxlength="6" required />
+                    <div class="input-group">
+                        <input type="text" id="vehicle_registration" name="vehicle_registration" class="form-control lockable" disabled="disabled" maxlength="6" required /><span class="input-group-addon"><img src="_Dependencies/Images/key.png" class="key locked" /></span>
+                    </div>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label>Make/Model</label>
-                    <select id="vehicle_model" name="vehicle_model" class="form-control" required="required">
+                    <select id="vehicle_vehiclemodel" name="vehicle_vehiclemodel" class="form-control" required="required">
                         <option value="">--- Please select ---</option>
                         <% 
-                            Dictionary<string, string> vehiclemodeloptions = new Dictionary<string, string>();
-                            vehiclemodeloptions["type"] = "select";
-                            vehiclemodeloptions["valuefield"] = "value";
-                            Response.Write(Generic.Functions.buildselection(vehiclemodels, nooptions, vehiclemodeloptions));
+                            Dictionary<string, string> vehiclemakemodeloptions = new Dictionary<string, string>();
+                            vehiclemakemodeloptions["type"] = "select";
+                            vehiclemakemodeloptions["valuefield"] = "value";
+                            Response.Write(Generic.Functions.buildselection(vehicleakemodels, nooptions, vehiclemakemodeloptions));
                         %>
-                    </select>
+                    </select><a href="MakeModelMaintenance.aspx" target="makemodel">Maintain</a>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label>Type</label>
 
-                    <select id="vehicle_type" name="vehicle_type" class="form-control" required="required">
+                    <select id="vehicle_vehicletype" name="vehicle_vehicletype" class="form-control" required="required">
                         <option value="">--- Please select ---</option>
                         <% 
                             Dictionary<string, string> vehicletypeoptions = new Dictionary<string, string>();
@@ -468,6 +616,7 @@
                     <li class="active"><a data-target="#div_vehiclegeneral">General</a></li>
                     <li><a data-target="#div_vehiclenote">Note</a></li>
                     <li><a data-target="#div_vehicleactivities">Activity</a></li>
+                    <li><a data-target="#div_vehiclefollowups">Followup</a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- ================================= GENERAL TAB ===================================  -->
@@ -479,8 +628,43 @@
                                 <textarea id="vehicle_description" rows="6" name="vehicle_description" class="form-control"></textarea>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="vehicle_wof_cycle">WOF Cycle</label>
+                            <div class="col-sm-8">
+                                <select id="vehicle_wof_cycle" name="vehicle_wof_cycle" class="form-control">
+                                    <option value="">--- Please select ---</option>
+                                    <option value="6">6 monthly</option>
+                                    <option value="12">Annualy</option>
+                                    <option value="0">N/A</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicle_wof_due" class="control-label col-sm-4">WOF Due</label>
+                            <div class="col-sm-8">
+                                <div class="input-group date" id="div_vehicle_wof_due">
+                                    <input id="vehicle_wof_due" name="vehicle_wof_due" required class="form-control">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="vehicle_odometer">Odometer</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="vehicle_odometer" name="vehicle_odometer" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="vehicle_year">Year</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="vehicle_year" name="vehicle_year" class="form-control" />
+                            </div>
+                        </div>
                     </div>
                     <!-- ================================= NOTE TAB ===================================  -->
+
                     <div id="div_vehiclenote" class="tab-pane fade in">
                         <!--<h3 class="tabheading">Note</h3>-->
                         <div class="form-group">
@@ -492,6 +676,9 @@
                     </div>
                     <!-- ================================= ACTIVITY TAB ===================================  -->
                     <div id="div_vehicleactivities" class="tab-pane fade in">
+                    </div>
+                    <!-- ================================= FOLLOWUP TAB ===================================  -->
+                    <div id="div_vehiclefollowups" class="tab-pane fade in">
                     </div>
                     <!-- ================================= END OF TABS ===================================  -->
                 </div>
@@ -510,9 +697,9 @@
                 <input type="button" id="btn_vehicle_activitycancel" class="btn btn-info" value="Cancel" />
                 <input type="button" id="btn_vehicle_activitysubmit" class="btn btn-info" value="Submit" />
             </div>
-            <h1>Vehicle Activity
-            </h1>
-            <span class="customer_name"></span><span class="vehicle_description"></span>
+            <h2>Vehicle Activity
+            </h2>
+            <h3 class="customer_name"></h3> <h4 class="vehicle_description"></h4><hr />
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="vehicle_activity_date" class="control-label col-sm-4">Date</label>
@@ -536,7 +723,72 @@
     </div>
     <!--section vehicle_activity maintenance-->
 
+    <div id="section_vehicle_followup" style="display: none">
+        <form id="form_vehicle_followup">
+            <input type="hidden" id="vehicle_followup_ctr" name="vehicle_followup_ctr" />
+            <div class="toprighticon">
+                <input type="button" id="vehicle_followupassistance" class="btn btn-info" value="Assistance" />
+            </div>
+            <div class="bottomrighticon">
+                <input type="button" id="btn_vehicle_followupcancel" class="btn btn-info" value="Cancel" />
+                <input type="button" id="btn_vehicle_followupsubmit" class="btn btn-info" value="Submit" />
+            </div>
+            <h2>Vehicle followup
+            </h2>
+            <h3 class="customer_name"></h3> <h4 class="vehicle_description"></h4><hr />
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="vehicle_followup_entrydate" class="control-label col-sm-4">Entry Date</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date" id="div_vehicle_followup_entrydate">
+                            <input id="vehicle_followup_entrydate" name="vehicle_followup_entrydate" required class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="vehicle_followup_followupdate" class="control-label col-sm-4">Followup Date</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date" id="div_vehicle_followup_followupdate">
+                            <input id="vehicle_followup_followupdate" name="vehicle_followup_followupdate" required class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="vehicle_followup_detail">Detail</label>
+                    <div class="col-sm-8">
+                        <textarea id="vehicle_followup_detail" rows="10" name="vehicle_followup_detail" class="form-control" required></textarea>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label for="vehicle_followup_actioneddate" class="control-label col-sm-4">Actioned Date</label>
+                    <div class="col-sm-8">
+                        <div class="input-group date" id="div_vehicle_followup_actioneddate">
+                            <input id="vehicle_followup_actioneddate" name="vehicle_followup_actioneddate" required class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="vehicle_followup_actioneddetail">Actioned Detail</label>
+                    <div class="col-sm-8">
+                        <textarea id="vehicle_followup_actioneddetail" rows="10" name="vehicle_followup_actioneddetail" class="form-control" required></textarea>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+    <!--section vehicle_followup maintenance-->
 
 
 </asp:Content>

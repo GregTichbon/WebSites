@@ -101,7 +101,7 @@ namespace TeOraHouWhanganui._Dependencies
             {
                 dr.Read();
                 //fld_customertype_ctr[0] = dr["customertype_ctr"].ToString();
-                customer.name = dr["name"].ToString();
+                customer.name = dr["fullname"].ToString();
                 customer.firstname = dr["firstname"].ToString();
                 customer.surname = dr["surname"].ToString();
                 customer.knownas = dr["knownas"].ToString();
@@ -111,6 +111,7 @@ namespace TeOraHouWhanganui._Dependencies
                 customer.homephone = dr["homephone"].ToString();
                 customer.workphone = dr["workphone"].ToString();
                 customer.note = dr["note"].ToString();
+                customer.customertype_ctr = dr["customertype_ctr"].ToString();
                 customer.xeroid = dr["xeroid"].ToString();
             }
             dr.Close();
@@ -146,6 +147,12 @@ namespace TeOraHouWhanganui._Dependencies
                 vehicle.registration = dr["registration"].ToString();
                 vehicle.description = dr["description"].ToString();
                 vehicle.vehiclenote = dr["vehiclenote"].ToString();
+                vehicle.vehiclemodel = dr["vehiclemodel_ctr"].ToString();
+                vehicle.vehicletype = dr["vehicletype_ctr"].ToString();
+                vehicle.wof_cycle = dr["wof_cycle"].ToString();
+                vehicle.wof_due = Functions.formatdate(dr["wof_due"].ToString(), "dd MMM yyyy");
+                vehicle.year = dr["year"].ToString();
+                vehicle.odometer = dr["odometer"].ToString();
                 /*
                 vehicle.address = dr["address"].ToString();
                 vehicle.emailaddress = dr["emailaddress"].ToString();
@@ -191,6 +198,42 @@ namespace TeOraHouWhanganui._Dependencies
             }
             dr.Close();
             Context.Response.Write(vehicle_activity);
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        //public List<CustomerClass> Customer_name_autocomplete(string term, string options)
+        public void get_vehicle_followup(string id)
+        {
+            dynamic vehicle_followup = new JObject();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_vehicle_followup";
+            cmd.Parameters.Add("@vehicle_followup_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                dr.Read();
+                //fld_customertype_ctr[0] = dr["customertype_ctr"].ToString();
+                vehicle_followup.vehicle_ctr = dr["vehicle_ctr"].ToString();
+                vehicle_followup.entrydate = Functions.formatdate(dr["entrydate"].ToString(), "dd MMM yyyy");
+                vehicle_followup.detail = dr["detail"].ToString();
+                vehicle_followup.followupdate = Functions.formatdate(dr["followupdate"].ToString(), "dd MMM yyyy");
+                vehicle_followup.actioneddate = Functions.formatdate(dr["actioneddate"].ToString(), "dd MMM yyyy");
+                vehicle_followup.actioneddetail = dr["actioneddetail"].ToString();
+            }
+            dr.Close();
+            Context.Response.Write(vehicle_followup);
 
         }
 

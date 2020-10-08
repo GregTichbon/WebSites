@@ -28,6 +28,10 @@ namespace TeOraHouWhanganui._Dependencies
 
             switch (mode)
             {
+                case "get_employee_periods":
+                    get_employee_periods();
+                    break;
+
                 case "eventsearch":
                  
                     using (SqlConnection con = new SqlConnection(connectionString))
@@ -116,6 +120,46 @@ namespace TeOraHouWhanganui._Dependencies
                     break;
                 
             }
+        }
+        protected string get_employee_periods()
+        {
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            string person_ctr = Request.Form["person_ctr"];
+            html = "<table class=\"table table-condensed\" style=\"width:100%\">";
+            html += "<thead>";
+            html += "<tr><th>Start Date</th><th>End Date</th><th>Position</th><th style=\"width:100px\">Action / <a class=\"employeeperiodedit\" employee_ctr=\"new\">Add</a></th></tr>";
+            html += "</thead>";
+            html += "<tbody>";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("get_employee_periods", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    string employee_CTR = dr["employee_CTR"].ToString();
+                    string startdate = Functions.formatdate(dr["startdate"].ToString(), "d MMM yyyy");
+                    string enddate = Functions.formatdate(dr["enddate"].ToString(), "d MMM yyyy");
+                    string position = dr["position"].ToString();
+
+                    html += "<tr>";
+                    html += "<td>" + startdate + "</td>";
+                    html += "<td>" + enddate + "</td>";
+                    html += "<td>" + position + "</td>";
+                    html += "<td><a employee_ctr=\"" + employee_CTR + "\" class=\"employeeperiodedit\">Edit</td>";
+                    html += "</tr>";
+                }
+                dr.Close();
+                con.Close();
+            }
+            html += "</tbody></table>";
+            return (html);
         }
     }
 }
