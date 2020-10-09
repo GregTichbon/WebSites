@@ -37,6 +37,7 @@
     <% 
                  Response.Write("<p><a href=\"EventSearch.aspx\" class=\"btn btn-info\">Event Maintenance</a></p>");
     %>
+     <p><a href="reports" class="btn btn-info">Reports</a></p>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Attendance.aspx.cs" Inherits="TeOraHouWhanganui.Private.Reports.Attendance" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="AttendanceStatistics.aspx.cs" Inherits="TeOraHouWhanganui.Private.Reports.AttendanceStatistics" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
@@ -22,11 +22,9 @@
 
                 //,maxDate: moment().add(-1, 'year')
             });
-
             $('#menu').click(function () {
                 window.location.href = "<%=ResolveUrl("default.aspx")%>";
             });
-
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -37,7 +35,6 @@
             })
 
             $("#form1").validate();
-
         }); //document.ready
 
     </script>
@@ -49,7 +46,7 @@
     <input type="text" id="hidden_dirty" />
     -->
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
-        <p></p>
+        <p>Still working on this report ... showing duplicate records where enrolled in more than one program, also unsure of first and last event.</p>
     </div>
 
     <div class="toprighticon">
@@ -57,7 +54,7 @@
         <button id="menu" type="button" class="btn btn-info">MENU</button>
     </div>
 
-    <h1>Event Attendance
+    <h1>Attendance Statistics
     </h1>
     <div class="form-horizontal">
         <div class="row">
@@ -82,6 +79,11 @@
                 </div>
             </div>
 
+            <div class="col-sm-4 form-group">
+                <label class="control-label">Program</label>
+                <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:tohwConnectionString %>" SelectCommand="SELECT [ID], [ProgramName] FROM [Program] ORDER BY [ProgramName]"></asp:SqlDataSource>
+                <asp:ListBox CssClass="form-control" runat="server" ID="fld_programs" SelectionMode="Multiple" ConnectionString="<%$ ConnectionStrings:tohwConnectionString %>" SelectCommand="SELECT [ID], [ProgramName] FROM [Program] ORDER BY [ProgramName]" DataSourceID="SqlDataSource1" DataTextField="ProgramName" DataValueField="ID"></asp:ListBox>
+            </div>
             <div class="col-sm-4 form-group">
                 <label class="control-label"></label>
                 <div class="input-group">

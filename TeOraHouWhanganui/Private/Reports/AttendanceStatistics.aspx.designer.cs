@@ -10,7 +10,7 @@
 namespace TeOraHouWhanganui.Private.Reports {
     
     
-    public partial class Attendance {
+    public partial class AttendanceStatistics {
         
         /// <summary>
         /// fld_datefrom control.
@@ -29,6 +29,24 @@ namespace TeOraHouWhanganui.Private.Reports {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox fld_dateto;
+        
+        /// <summary>
+        /// SqlDataSource1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
+        
+        /// <summary>
+        /// fld_programs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListBox fld_programs;
         
         /// <summary>
         /// btn_submit control.

@@ -460,7 +460,7 @@ namespace TeOraHouWhanganui.Private
                     html_tab += "<li><a data-target=\"#div_attendance\">Attendance</a></li>";
 
                     html_attendance = "<thead>";
-                    html_attendance += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Description</th><th>Attendance</th><th>Capacity</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"eventedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_attendance += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Program</th><th>Description</th><th>Attendance</th><th>Capacity</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"eventedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_attendance += "</thead>";
                     html_attendance += "<tbody>";
 
@@ -468,6 +468,7 @@ namespace TeOraHouWhanganui.Private
                     html_attendance += "<tr style=\"display:none\">";
                     html_attendance += "<td style=\"text-align:center\"></td>";
                     html_attendance += "<td></td>"; //Date
+                    html_attendance += "<td></td>"; //Program
                     html_attendance += "<td></td>"; //Description
                     //html_attendance += "<td></td>"; //Event Notes
                     html_attendance += "<td></td>"; //Attendance
@@ -484,6 +485,7 @@ namespace TeOraHouWhanganui.Private
                     {
                         string attendance_CTR = dr["attendance_CTR"].ToString();
                         string description = dr["description"].ToString();
+                        string program = dr["programname"].ToString();
                         string eventNotes = dr["EventNotes"].ToString();
                         string attendance = dr["Attendance"].ToString();
                         string attendanceNotes = dr["AttendanceNotes"].ToString();
@@ -493,6 +495,7 @@ namespace TeOraHouWhanganui.Private
                         html_attendance += "<tr id=\"attendance_" + attendance_CTR + "\">";
                         html_attendance += "<td style=\"text-align:center\"></td>";
                         html_attendance += "<td nowrap>" + date + "</td>";
+                        html_attendance += "<td>" + program + "</td>";
                         html_attendance += "<td>" + description + "</td>";
                         html_attendance += "<td>" + attendance + "</td>";
                         html_attendance += "<td>" + capacity + "</td>";

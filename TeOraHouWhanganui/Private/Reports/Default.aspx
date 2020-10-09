@@ -35,6 +35,11 @@
     <p><a href="Report.aspx?id=WorkerAccessLevelsWorker">Worker Access Levels - by Worker</a></p>
     <p><a href="Report.aspx?id=WorkerAccessLevelsYouth">Worker Access Levels - by Youth</a></p>
     <p><a href="Report.aspx?id=Everyone">Everyone</a></p>
+    <p><a href="Attendance.aspx">All Attendance in a period</a></p>
+    <p><a href="AttendanceStatistics.aspx">Attendance Statistics for specified programs in a period</a></p>
+    <p></p>
+    <p><a href="../Default.aspx">Menu</a></p>
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>

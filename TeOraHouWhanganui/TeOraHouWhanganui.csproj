@@ -118,6 +118,7 @@
     <Content Include="Private\PersonSearch.aspx" />
     <Content Include="Private\Posts.asmx" />
     <Content Include="Private\Reports\Attendance.aspx" />
+    <Content Include="Private\Reports\AttendanceStatistics.aspx" />
     <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
@@ -292,6 +293,13 @@
     </Compile>
     <Compile Include="Private\Reports\Attendance.aspx.designer.cs">
       <DependentUpon>Attendance.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Reports\AttendanceStatistics.aspx.cs">
+      <DependentUpon>AttendanceStatistics.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\AttendanceStatistics.aspx.designer.cs">
+      <DependentUpon>AttendanceStatistics.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\Reports\Crystal\EncountersByPersonDate.cs">
       <AutoGen>True</AutoGen>
