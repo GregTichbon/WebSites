@@ -12,7 +12,7 @@ using System.Configuration;
 
 namespace TeOraHouWhanganui._Dependencies
 {
-  
+
     public partial class data : System.Web.UI.Page
     {
         public string html = "";
@@ -32,8 +32,15 @@ namespace TeOraHouWhanganui._Dependencies
                     get_employee_periods();
                     break;
 
+                case "get_roster_workers":
+                    get_roster_workers();
+                    break;
+
+                case "get_roster_persons":
+                    get_roster_persons();
+                    break;
+
                 case "eventsearch":
-                 
                     using (SqlConnection con = new SqlConnection(connectionString))
                     using (SqlCommand cmd = new SqlCommand("Get_Events", con))
                     {
@@ -56,17 +63,13 @@ namespace TeOraHouWhanganui._Dependencies
                                 string attendance = dr["attendance"].ToString();
 
                                 html += "<tr><td nowrap>" + program + "</td><td>" + description + "</td><td>" + attendance + "</td><td nowrap>" + daterange + "</td><td class=\"event\" eventid=\"" + eventid + "\"><a href=\"javascript: void(0)\">View</a></td></tr>";
-
                             }
                         }
                         html += "</tbody></table>";
                         dr.Close();
-
-                        //cmd.ExecuteScalar();
                         con.Close();
-
                     }
-               
+
 
 
 
@@ -118,7 +121,36 @@ namespace TeOraHouWhanganui._Dependencies
                     */
 
                     break;
-                
+                case "rostersearch":
+
+                    using (SqlConnection con = new SqlConnection(connectionString))
+                    using (SqlCommand cmd = new SqlCommand("Get_Rosters", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = Request.Form["fld_date"];
+                        cmd.Parameters.Add("@detail", SqlDbType.VarChar).Value = Request.Form["fld_detail"];
+                        con.Open();
+                        dr = cmd.ExecuteReader();
+                        html = "<table class=\"table\"><thead><tr><th>Date/Time</th><th nowrap>Detail</th><th class=\"roster\" rosterid=\"new\"><a>Add</a></th></tr></thead><tbody>";
+                        if (dr.HasRows)
+                        {
+                            while (dr.Read())
+                            {
+                                string rosterid = dr["roster_ctr"].ToString();
+                                string detail = dr["detail"].ToString();
+                                string daterange = dr["daterange"].ToString();
+
+                                html += "<tr><td nowrap>" + daterange + "</td><td>" + detail + "</td><td class=\"roster\" rosterid=\"" + rosterid + "\"><a href=\"javascript: void(0)\">View</a></td></tr>";
+
+                            }
+                        }
+                        html += "</tbody></table>";
+                        dr.Close();
+                        con.Close();
+
+                    }
+
+                    break;
             }
         }
         protected string get_employee_periods()
@@ -158,6 +190,138 @@ namespace TeOraHouWhanganui._Dependencies
                 dr.Close();
                 con.Close();
             }
+            html += "</tbody></table>";
+            return (html);
+        }
+
+        protected string get_roster_workers()
+        {
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            string roster_ctr = Request.Form["id"];
+            html = "<h3>Worker</h3><table class=\"table\"><thead>";
+            html += "<tr><th>Name</th><th>Date/Time</th><th>Status</th><th>Notes</th><th><a class=\"workeredit\">Add</a></th></tr>";
+            html += "</thead>";
+            html += "<tbody>";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+
+                using (SqlCommand cmd = new SqlCommand("get_roster_workers", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@roster_ctr", SqlDbType.VarChar).Value = roster_ctr;
+
+                    con.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        while (dr.Read())
+                        {
+                            string roster_worker_ctr = dr["roster_worker_ctr"].ToString();
+                            //string roster_ctr = dr["roster_ctr"].ToString();
+                            string worker_ctr = dr["worker_ctr"].ToString();
+                            string workername = dr["workername"].ToString();
+
+                            string DateTimeStart = dr["DateTimeStart"].ToString();
+                            string DateTimeEnd = dr["DateTimeEnd"].ToString();
+                            string Notes = dr["Notes"].ToString();
+                            string DateTimeStartActual = dr["DateTimeStartActual"].ToString();
+                            string DateTimeEndActual = dr["DateTimeEndActual"].ToString();
+                            string Status = dr["Status"].ToString();
+                            string WorkNotes = dr["WorkNotes"].ToString();
+                            string DateRange = dr["DateRange"].ToString();
+
+                            //string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");
+                            //string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
+
+
+                            html += "<tr data-id=\"" + roster_worker_ctr + "\" worker_ctr=\"" + worker_ctr + "\">";
+                            //html += "<td style=\"text-align:center\"></td>";
+                            html += "<td>" + workername + "</td>";
+                            html += "<td>" + DateRange + "</td>";
+                            html += "<td>" + Status + "</td>";
+                            html += "<td>" + Notes + "</td>";
+
+                            html += "<td><a class=\"workeredit\">Edit</a></td>";
+                            html += "</tr>";
+                        }
+                    }
+                    dr.Close();
+                    con.Close();
+
+                }
+            }
+
+            html += "</tbody></table>";
+            return (html);
+        }
+
+        protected string get_roster_persons()
+        {
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            string roster_ctr = Request.Form["id"];
+            html = "<h3>Youth</h3><table class=\"table\"><thead>";
+            html += "<tr><th>Name</th><th>Date/Time</th><th>Status</th><th>Notes</th><th><a class=\"personedit\">Add</a></th></tr>";
+            html += "</thead>";
+            html += "<tbody>";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+
+                using (SqlCommand cmd = new SqlCommand("get_roster_persons", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@roster_ctr", SqlDbType.VarChar).Value = roster_ctr;
+
+                    con.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        while (dr.Read())
+                        {
+                            string roster_person_ctr = dr["roster_person_ctr"].ToString();
+                            //string roster_ctr = dr["roster_ctr"].ToString();
+                            string person_ctr = dr["person_ctr"].ToString();
+                            string personname = dr["personname"].ToString();
+
+                            string DateTimeStart = dr["DateTimeStart"].ToString();
+                            string DateTimeEnd = dr["DateTimeEnd"].ToString();
+                            string Notes = dr["Notes"].ToString();
+                            string DateTimeStartActual = dr["DateTimeStartActual"].ToString();
+                            string DateTimeEndActual = dr["DateTimeEndActual"].ToString();
+                            string Status = dr["Status"].ToString();
+                            string WorkNotes = dr["WorkNotes"].ToString();
+                            string DateRange = dr["DateRange"].ToString();
+
+                            //string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");
+                            //string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
+
+
+                            html += "<tr data-id=\"" + roster_person_ctr + "\" person_ctr=\"" + person_ctr + "\">";
+                            //html += "<td style=\"text-align:center\"></td>";
+                            html += "<td>" + personname + "</td>";
+                            html += "<td>" + DateRange + "</td>";
+                            html += "<td>" + Status + "</td>";
+                            html += "<td>" + Notes + "</td>";
+
+                            html += "<td><a class=\"personedit\">Edit</a></td>";
+                            html += "</tr>";
+                        }
+                    }
+                    dr.Close();
+                    con.Close();
+
+                }
+            }
+
             html += "</tbody></table>";
             return (html);
         }

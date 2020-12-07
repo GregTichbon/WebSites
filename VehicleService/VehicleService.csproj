@@ -81,6 +81,7 @@
     <Content Include="Imports\CampbellContacts.xml" />
     <Content Include="Main.aspx" />
     <Content Include="MakeModelMaintenance.aspx" />
+    <Content Include="Portal.aspx" />
     <Content Include="Test1.aspx" />
     <Content Include="VehicleMaintenance.aspx" />
     <Content Include="Web.config" />
@@ -119,6 +120,7 @@
     <Content Include="_Dependencies\Main.css" />
     <Content Include="_Dependencies\Main.js" />
     <Content Include="_Dependencies\Posts.asmx" />
+    <Content Include="_SQL.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerMaintenance.aspx.cs">
@@ -183,6 +185,13 @@
     </Compile>
     <Compile Include="onePage.Master.designer.cs">
       <DependentUpon>onePage.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Portal.aspx.cs">
+      <DependentUpon>Portal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Portal.aspx.designer.cs">
+      <DependentUpon>Portal.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test1.aspx.cs">

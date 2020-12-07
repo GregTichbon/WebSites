@@ -25,6 +25,7 @@ namespace TeOraHouWhanganui._Dependencies
     public class Data : System.Web.Services.WebService
     {
 
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         //public List<CustomerClass> Customer_name_autocomplete(string term, string options)
@@ -113,6 +114,7 @@ namespace TeOraHouWhanganui._Dependencies
                 customer.note = dr["note"].ToString();
                 customer.customertype_ctr = dr["customertype_ctr"].ToString();
                 customer.xeroid = dr["xeroid"].ToString();
+                customer.guid = dr["guid"].ToString();
             }
             dr.Close();
             Context.Response.Write(customer);
@@ -151,6 +153,7 @@ namespace TeOraHouWhanganui._Dependencies
                 vehicle.vehicletype = dr["vehicletype_ctr"].ToString();
                 vehicle.wof_cycle = dr["wof_cycle"].ToString();
                 vehicle.wof_due = Functions.formatdate(dr["wof_due"].ToString(), "dd MMM yyyy");
+                vehicle.registration_due = Functions.formatdate(dr["registration_due"].ToString(), "dd MMM yyyy");
                 vehicle.year = dr["year"].ToString();
                 vehicle.odometer = dr["odometer"].ToString();
                 /*

@@ -20,6 +20,59 @@ namespace TeOraHouWhanganui._Dependencies
     [System.Web.Script.Services.ScriptService]   //GREG  -  THIS IS REQUIRED FOR POSTS
     public class Posts : System.Web.Services.WebService
     {
+       
+
+        [WebMethod]
+        public void update_roster_worker(NameValue[] formVars)
+        {
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("update_roster_worker", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@roster_worker_ctr", SqlDbType.VarChar).Value = formVars.Form("roster_worker_ctr");
+                cmd.Parameters.Add("@roster_ctr", SqlDbType.VarChar).Value = formVars.Form("roster_ctr");
+                cmd.Parameters.Add("@worker_ctr", SqlDbType.VarChar).Value = formVars.Form("fld_worker_worker");
+                cmd.Parameters.Add("@datetimestart", SqlDbType.VarChar).Value = formVars.Form("fld_worker_datetimestart");
+                cmd.Parameters.Add("@datetimeend", SqlDbType.VarChar).Value = formVars.Form("fld_worker_datetimeend");
+                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = formVars.Form("fld_worker_note");
+                cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = formVars.Form("fld_worker_status");
+                cmd.Parameters.Add("@datetimestartactual", SqlDbType.VarChar).Value = formVars.Form("fld_worker_datetimestartactual");
+                cmd.Parameters.Add("@datetimeendactual", SqlDbType.VarChar).Value = formVars.Form("fld_worker_datetimeendactual");
+                cmd.Parameters.Add("@worknote", SqlDbType.VarChar).Value = formVars.Form("fld_worker_worknote");
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
+        [WebMethod]
+        public void update_roster_person(NameValue[] formVars)
+        {
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("update_roster_person", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@roster_person_ctr", SqlDbType.VarChar).Value = formVars.Form("roster_person_ctr");
+                cmd.Parameters.Add("@roster_ctr", SqlDbType.VarChar).Value = formVars.Form("roster_ctr");
+                cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = formVars.Form("person_ctr");
+                cmd.Parameters.Add("@datetimestart", SqlDbType.VarChar).Value = formVars.Form("fld_person_datetimestart");
+                cmd.Parameters.Add("@datetimeend", SqlDbType.VarChar).Value = formVars.Form("fld_person_datetimeend");
+                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = formVars.Form("fld_person_note");
+                cmd.Parameters.Add("@status", SqlDbType.VarChar).Value = formVars.Form("fld_person_status");
+                cmd.Parameters.Add("@datetimestartactual", SqlDbType.VarChar).Value = formVars.Form("fld_person_datetimestartactual");
+                cmd.Parameters.Add("@datetimeendactual", SqlDbType.VarChar).Value = formVars.Form("fld_person_datetimeendactual");
+                cmd.Parameters.Add("@worknote", SqlDbType.VarChar).Value = formVars.Form("fld_person_worknote");
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
 
         [WebMethod]
         public void update_employee(NameValue[] formVars)

@@ -64,7 +64,7 @@ namespace TeOraHouWhanganui.Private.Reports
                                 //    html += dr.GetValue(f1).ToString();
                                 //    html += "</td>";
                                 //}
-                                html += "<td>" + dr["name"] + "</td><td><img src=\"../images/" + dr["entity_ctr"] + ".jpg\"></td>";
+                                html += "<td><a href=\"../personmaintenance.aspx?id=" + dr["Entity_CTR"] + "\">" + dr["name"] + "</a></td><td><img style=\"width:400px\" src=\"../images/" + dr["entity_ctr"] + ".jpg\"></td>";
                                 html += "</tr>";
                             }
                         }

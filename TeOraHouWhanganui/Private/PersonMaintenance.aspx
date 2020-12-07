@@ -12,7 +12,9 @@
     <!--<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.dirtyforms/2.0.0/jquery.dirtyforms.min.js"></script>-->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
 
-    <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
+    <!--<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>-->
+    <script src="https://cdn.tiny.cloud/1/0rm57f61mkhtljml272kg6rniw3zjw84hmu9q5zoyebn7sb2/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
 
     <style>
         .imagecontainer {
@@ -478,7 +480,8 @@
                     , open: function (type, data) {
                         //$(this).appendTo($('form')); // reinsert the dialog to the form   
                         $("#form1 :button").prop("disabled", true);
-
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+ 
                         var myarr = [];
                         var workersarray = workers.toString().split('|');
                         $.each(workersarray, function (index, value) {
@@ -497,6 +500,7 @@
                         //$('#fld_encounter_worker').select2('destroy');
                         clearInterval(datalogger);
                         $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
                     }
 
                     , appendTo: "#form2"
@@ -603,10 +607,16 @@
                     height: 600,
                     width: mywidth,
                     modal: true
-                    /*
-                    ,open: function (type, data) {
-                        $(this).appendTo($('form')); // reinsert the dialog to the form       
-                    }*/
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
                     , appendTo: "#form2"
                 });
 
@@ -680,10 +690,16 @@
                     height: 600,
                     width: mywidth,
                     modal: true
-                    /*
-                    ,open: function (type, data) {
-                        $(this).appendTo($('form')); // reinsert the dialog to the form       
-                    }*/
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
                     , appendTo: "#form2"
                 });
 
@@ -799,10 +815,16 @@
                     height: 600,
                     width: mywidth,
                     modal: true
-                    /*
-                    ,open: function (type, data) {
-                        $(this).appendTo($('form')); // reinsert the dialog to the form       
-                    }*/
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
                     , appendTo: "#form2"
                 });
 
@@ -944,10 +966,16 @@
                     height: 600,
                     width: mywidth,
                     modal: true
-                    /*
-                    ,open: function (type, data) {
-                        $(this).appendTo($('form')); // reinsert the dialog to the form       
-                    }*/
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
                     , appendTo: "#form2"
                 });
 
@@ -1031,8 +1059,18 @@
                     resizable: false,
                     height: 600,
                     width: mywidth,
-                    modal: true,
-                    appendTo: "#form2"
+                    modal: true
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
+                    , appendTo: "#form2"
                 });
 
                 var myButtons = {
@@ -1269,6 +1307,15 @@
                         <input type="text" id="fld_photoalbumlink" name="fld_photoalbumlink" class="form-control" value="<%: fld_photoalbumlink %>" />
                     </div>
                 </div>
+
+                 <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_windowsuser">Windows User</label>
+                    <div class="col-sm-8">
+                        <input readonly="readonly" type="text" id="fld_windowsuser" name="fld_windowsuser" class="form-control" value="<%: fld_windowsuser %>" />
+                    </div>
+                </div>   
+
+
 
             </div>
 

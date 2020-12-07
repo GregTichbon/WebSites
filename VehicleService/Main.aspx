@@ -11,6 +11,10 @@
         h1, h2, h3, h4 {
             display: inline;
         }
+
+        input[required], select[required], textarea[required] {
+            border: 3px solid
+        }
     </style>
 
 
@@ -31,6 +35,26 @@
                     width: 800,
                     modal: true
                 });
+            })
+
+            $('#makemodelrefresh').click(function () {
+                alert('to do');
+            })
+
+            $('#vehicle_followup_actioneddate').change(function () {
+                if ($(this).val() != "") {
+                    $('#vehicle_followup_actioneddetail').prop('required', true);
+                } else {
+                    $('#vehicle_followup_actioneddetail').prop('required', false);
+                }
+            })
+
+            $('#vehicle_followup_actioneddetail').change(function () {
+                if ($(this).val() != "") {
+                    $('#vehicle_followup_actioneddate').prop('required', true);
+                } else {
+                    $('#vehicle_followup_actioneddate').prop('required', false);
+                }
             })
 
             $('#menu').click(function () {
@@ -76,6 +100,7 @@
                         $('#customer_homephone').val(data.homephone);
                         $('#customer_workphone').val(data.workphone);
                         $('#customer_note').val(data.note);
+                        $('#customer_guid').val(data.guid);
                     });
                     get_customer_vehicles(customer_ctr);
                     $('#section_customer').show();
@@ -97,6 +122,7 @@
                     $('#vehicle_description').val('');
                     $('#vehicle_wof_cycle').val('');
                     $('#vehicle_wof_due').val('');
+                    $('#vehicle_registration_due').val('');
                     $('#vehicle_year').val('');
                     $('#vehicle_odometer').val('');
                     $('#vehicle_vehiclemodel').val('');
@@ -109,6 +135,7 @@
                         $('#vehicle_description').val(data.description);
                         $('#vehicle_wof_cycle').val(data.wof_cycle);
                         $('#vehicle_wof_due').val(data.wof_due);
+                        $('#vehicle_registration_due').val(data.registration_due);
                         $('#vehicle_year').val(data.year);
                         $('#vehicle_odometer').val(data.odometer);
                         $('#vehicle_vehiclemodel').val(data.vehiclemodel);
@@ -169,8 +196,10 @@
             });
 
 
-
-            $("#form1").validate();
+            form_customer = $("#form_customer").validate();
+            form_vehicle = $("#form_vehicle").validate();
+            form_vehicle_activity = $("#form_vehicle_activity").validate();
+            form_vehicle_followup = $("#form_vehicle_followup").validate();
 
             $('.date').datetimepicker({
                 format: 'D MMM YYYY',
@@ -253,72 +282,80 @@
             });
 
             $('#btn_customersubmit').click(function () {
-                //$('#section_vehicle_activity').hide();
-                var arForm = $("#form_customer")
-                    .find("input,textarea,select,hidden")
-                    .not("[id^='__']")
-                    .serializeArray();
+                if ($("#form_customer").valid()) {
+                //if (form_customer.valid()) {
+                    //$('#section_vehicle_activity').hide();
+                    var arForm = $("#form_customer")
+                        .find("input,textarea,select,hidden")
+                        .not("[id^='__']")
+                        .serializeArray();
 
-                //arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
-                var formData = JSON.stringify({ formVars: arForm });
+                    //arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                    var formData = JSON.stringify({ formVars: arForm });
 
-                $.ajax({
-                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                    url: '/_dependencies/posts.asmx/update_customer', // the url where we want to POST
-                    contentType: "application/json; charset=utf-8",
-                    data: formData,
-                    dataType: 'json', // what type of data do we expect back from the server
-                    async: false,
-                    success: function (result) {
-                    },
-                    error: function (xhr, status) {
-                        alert('error');
-                    }
-                });
-                $('#section_customer').hide();
-                $('#section_customersearch').show();
-                //get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
-                //$('#section_vehicle').show();
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/_dependencies/posts.asmx/update_customer', // the url where we want to POST
+                        contentType: "application/json; charset=utf-8",
+                        data: formData,
+                        dataType: 'json', // what type of data do we expect back from the server
+                        async: false,
+                        success: function (result) {
+                        },
+                        error: function (xhr, status) {
+                            alert('error');
+                        }
+                    });
+                    $('#section_customer').hide();
+                    $('#section_customersearch').show();
+                    //get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                    //$('#section_vehicle').show();
+                }
             });
 
             $('#btn_customercancel').click(function () {
+                form_customer.resetForm();
                 $('#section_customer').hide();
                 $('#section_customersearch').show();
             });
 
             $('#btn_vehiclecancel').click(function () {
+                form_vehicle.resetForm();
                 $('#section_vehicle').hide();
                 $('#section_customer').show();
             });
 
             $('#btn_vehicle_activitysubmit').click(function () {
-                $('#section_vehicle_activity').hide();
-                var arForm = $("#form_vehicle_activity")
-                    .find("input,textarea,select,hidden")
-                    .not("[id^='__']")
-                    .serializeArray();
+                if ($("#form_vehicle_activity").valid()) {
+                    $('#section_vehicle_activity').hide();
+                    var arForm = $("#form_vehicle_activity")
+                        .find("input,textarea,select,hidden")
+                        .not("[id^='__']")
+                        .serializeArray();
 
-                arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
-                var formData = JSON.stringify({ formVars: arForm });
+                    arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                    var formData = JSON.stringify({ formVars: arForm });
 
-                $.ajax({
-                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                    url: '/_dependencies/posts.asmx/update_vehicle_activity', // the url where we want to POST
-                    contentType: "application/json; charset=utf-8",
-                    data: formData,
-                    dataType: 'json', // what type of data do we expect back from the server
-                    async: false,
-                    success: function (result) {
-                    },
-                    error: function (xhr, status) {
-                        alert('error');
-                    }
-                });
-                get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
-                $('#section_vehicle').show();
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/_dependencies/posts.asmx/update_vehicle_activity', // the url where we want to POST
+                        contentType: "application/json; charset=utf-8",
+                        data: formData,
+                        dataType: 'json', // what type of data do we expect back from the server
+                        async: false,
+                        success: function (result) {
+                        },
+                        error: function (xhr, status) {
+                            alert('error');
+                        }
+                    });
+                    get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                    $('#section_vehicle').show();
+                }
             });
 
             $('#btn_vehicle_activitycancel').click(function () {
+                form_vehicle_activity.resetForm();
                 $('#section_vehicle_activity').hide();
                 $('#section_vehicle').show();
             });
@@ -326,64 +363,69 @@
 
 
             $('#btn_vehicle_followupsubmit').click(function () {
-                $('#section_vehicle_followup').hide();
-                var arForm = $("#form_vehicle_followup")
-                    .find("input,textarea,select,hidden")
-                    .not("[id^='__']")
-                    .serializeArray();
+                if ($("#form_vehicle_followup").valid()) {
+                    $('#section_vehicle_followup').hide();
+                    var arForm = $("#form_vehicle_followup")
+                        .find("input,textarea,select,hidden")
+                        .not("[id^='__']")
+                        .serializeArray();
 
-                arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
-                var formData = JSON.stringify({ formVars: arForm });
+                    arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                    var formData = JSON.stringify({ formVars: arForm });
 
-                $.ajax({
-                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                    url: '/_dependencies/posts.asmx/update_vehicle_followup', // the url where we want to POST
-                    contentType: "application/json; charset=utf-8",
-                    data: formData,
-                    dataType: 'json', // what type of data do we expect back from the server
-                    async: false,
-                    success: function (result) {
-                    },
-                    error: function (xhr, status) {
-                        alert('error');
-                    }
-                });
-                get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
-                $('#section_vehicle').show();
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/_dependencies/posts.asmx/update_vehicle_followup', // the url where we want to POST
+                        contentType: "application/json; charset=utf-8",
+                        data: formData,
+                        dataType: 'json', // what type of data do we expect back from the server
+                        async: false,
+                        success: function (result) {
+                        },
+                        error: function (xhr, status) {
+                            alert('error');
+                        }
+                    });
+                    get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                    $('#section_vehicle').show();
+                }
             });
 
             $('#btn_vehicle_followupcancel').click(function () {
+                form_vehicle_followup.resetForm();
                 $('#section_vehicle_followup').hide();
                 $('#section_vehicle').show();
             });
 
             $('#btn_vehiclesubmit').click(function () {
-                $('#section_vehicle').hide();
-                var arForm = $("#form_vehicle")
-                    .find("input,textarea,select,hidden")
-                    .not("[id^='__']")
-                    .serializeArray();
+                $('#vehicle_registration').prop('disabled', false);
+                if ($("#form_vehicle").valid()) {
+                    $('#section_vehicle').hide();
+                    var arForm = $("#form_vehicle")
+                        .find("input,textarea,select,hidden")
+                        .not("[id^='__']")
+                        .serializeArray();
 
-                arForm.push({ name: 'customer_ctr', value: $('#customer_ctr').val() });
-                var formData = JSON.stringify({ formVars: arForm });
+                    arForm.push({ name: 'customer_ctr', value: $('#customer_ctr').val() });
+                    var formData = JSON.stringify({ formVars: arForm });
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/_dependencies/posts.asmx/update_vehicle', // the url where we want to POST
+                        contentType: "application/json; charset=utf-8",
+                        data: formData,
+                        dataType: 'json', // what type of data do we expect back from the server
+                        async: false,
+                        success: function (result) {
+                        },
+                        error: function (xhr, status) {
+                            alert('error');
+                        }
+                    });
+                    customer_ctr = $('#customer_ctr').val();
+                    get_customer_vehicles(customer_ctr);
 
-                $.ajax({
-                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                    url: '/_dependencies/posts.asmx/update_vehicle', // the url where we want to POST
-                    contentType: "application/json; charset=utf-8",
-                    data: formData,
-                    dataType: 'json', // what type of data do we expect back from the server
-                    async: false,
-                    success: function (result) {
-                    },
-                    error: function (xhr, status) {
-                        alert('error');
-                    }
-                });
-                customer_ctr = $('#customer_ctr').val();
-                get_customer_vehicles(customer_ctr);
-
-                $('#section_customer').show();
+                    $('#section_customer').show();
+                }
             });
         }); //document.ready
 
@@ -408,13 +450,14 @@
         }
 
     </script>
-   
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div id="section_customersearch">
         <h2>Customer Search
-        </h2><hr />
+        </h2>
+        <hr />
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-sm-4" for="customersearch_name">Name / Registration</label>
@@ -441,9 +484,11 @@
                 <input id="btn_customercancel" type="button" class="btn btn-info" value="Cancel" />
                 <input id="btn_customersubmit" type="button" class="btn btn-info" value="Submit" />
             </div>
-            <h2>Customer Maintenance</h2> <h3 class="customer_name"></h3><hr />
+            <h2>Customer Maintenance</h2>
+            <h3 class="customer_name"></h3>
+            <hr />
 
-             
+
             <div class="form-horizontal">
                 <!--
                  <h3 class="customer_name"></h3>
@@ -471,7 +516,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_name">Organisation Name</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_name" name="customer_name" class="form-control" required />
+                                    <input type="text" id="customer_name" name="customer_name" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -489,7 +534,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_knownas">Known as</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_knownas" name="customer_knownas" class="form-control" required />
+                                    <input type="text" id="customer_knownas" name="customer_knownas" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -515,26 +560,33 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_emailaddress">Email address</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_emailaddress" name="customer_emailaddress" class="form-control" required />
+                                    <input type="text" id="customer_emailaddress" name="customer_emailaddress" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_mobilephone">Mobile phone</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_mobilephone" name="customer_mobilephone" class="form-control" required />
+                                    <input type="text" id="customer_mobilephone" name="customer_mobilephone" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_homephone">Home phone</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_homephone" name="customer_homephone" class="form-control" required />
+                                    <input type="text" id="customer_homephone" name="customer_homephone" class="form-control" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-sm-4" for="customer_workphone">Work phone</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="customer_workphone" name="customer_workphone" class="form-control" required />
+                                    <input type="text" id="customer_workphone" name="customer_workphone" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="customer_guid">GUID</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="customer_guid" disabled="disabled" class="form-control" />
+                                    
                                 </div>
                             </div>
                         </div>
@@ -574,7 +626,8 @@
             <h2>Vehicle Maintenance
             </h2>
 
-            <h3 class="customer_name"></h3><hr />
+            <h3 class="customer_name"></h3>
+            <hr />
             <div class="row">
                 <div class="col-sm-4 form-group">
                     <label>Registration</label>
@@ -592,7 +645,7 @@
                             vehiclemakemodeloptions["valuefield"] = "value";
                             Response.Write(Generic.Functions.buildselection(vehicleakemodels, nooptions, vehiclemakemodeloptions));
                         %>
-                    </select><a href="MakeModelMaintenance.aspx" target="makemodel">Maintain</a>
+                    </select><a href="MakeModelMaintenance.aspx" target="makemodel">Maintain</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="makemodelrefresh">Refresh</a>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label>Type</label>
@@ -643,7 +696,18 @@
                             <label for="vehicle_wof_due" class="control-label col-sm-4">WOF Due</label>
                             <div class="col-sm-8">
                                 <div class="input-group date" id="div_vehicle_wof_due">
-                                    <input id="vehicle_wof_due" name="vehicle_wof_due" required class="form-control">
+                                    <input id="vehicle_wof_due" name="vehicle_wof_due" class="form-control">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicle_registration_due" class="control-label col-sm-4">Registration Due</label>
+                            <div class="col-sm-8">
+                                <div class="input-group date" id="div_vehicle_registration_due">
+                                    <input id="vehicle_registration_due" name="vehicle_registration_due" class="form-control">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -699,7 +763,9 @@
             </div>
             <h2>Vehicle Activity
             </h2>
-            <h3 class="customer_name"></h3> <h4 class="vehicle_description"></h4><hr />
+            <h3 class="customer_name"></h3>
+            <h4 class="vehicle_description"></h4>
+            <hr />
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="vehicle_activity_date" class="control-label col-sm-4">Date</label>
@@ -735,7 +801,9 @@
             </div>
             <h2>Vehicle followup
             </h2>
-            <h3 class="customer_name"></h3> <h4 class="vehicle_description"></h4><hr />
+            <h3 class="customer_name"></h3>
+            <h4 class="vehicle_description"></h4>
+            <hr />
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="vehicle_followup_entrydate" class="control-label col-sm-4">Entry Date</label>
@@ -770,7 +838,7 @@
                     <label for="vehicle_followup_actioneddate" class="control-label col-sm-4">Actioned Date</label>
                     <div class="col-sm-8">
                         <div class="input-group date" id="div_vehicle_followup_actioneddate">
-                            <input id="vehicle_followup_actioneddate" name="vehicle_followup_actioneddate" required class="form-control">
+                            <input id="vehicle_followup_actioneddate" name="vehicle_followup_actioneddate" class="form-control">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -780,7 +848,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="vehicle_followup_actioneddetail">Actioned Detail</label>
                     <div class="col-sm-8">
-                        <textarea id="vehicle_followup_actioneddetail" rows="10" name="vehicle_followup_actioneddetail" class="form-control" required></textarea>
+                        <textarea id="vehicle_followup_actioneddetail" rows="10" name="vehicle_followup_actioneddetail" class="form-control"></textarea>
                     </div>
                 </div>
 

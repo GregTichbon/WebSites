@@ -37,6 +37,8 @@ namespace Generic
         string UserName = "";
         string Password = "";
 
+        
+
         public static string show_requestform(HttpRequest formvars, Dictionary<string, string> options)
         {
             string output = "";
@@ -1577,8 +1579,7 @@ namespace Generic
         }
 
     }
-
-
+    
     /*
             public static gw_Result PXPost(string cardholder, string cardnumber, string amount, string expirydate, string narrative)
             {

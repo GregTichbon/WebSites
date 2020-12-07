@@ -23,6 +23,7 @@ namespace TeOraHouWhanganui.Private
         public string fld_dietary;
         public string fld_medical;
         public string fld_notes;
+        public string fld_windowsuser;
         public string fld_birthdate;
         public string fld_photoalbumlink;
         public string[] fld_gender = new string[1];
@@ -183,6 +184,7 @@ namespace TeOraHouWhanganui.Private
                         {
                             photoalbumlink = "<a href=\"" + fld_photoalbumlink + "\" target=\"photos\">Google</a>";
                         }
+                        fld_windowsuser = dr["windowsuser"].ToString();
                     }
                     dr.Close();
 
@@ -744,6 +746,7 @@ namespace TeOraHouWhanganui.Private
             cmd.Parameters.Add("@medical", SqlDbType.VarChar).Value = Request.Form["fld_medical"].Trim();
             cmd.Parameters.Add("@dietary", SqlDbType.VarChar).Value = Request.Form["fld_dietary"].Trim();
             cmd.Parameters.Add("@notes", SqlDbType.VarChar).Value = Request.Form["fld_notes"].Trim();
+            cmd.Parameters.Add("@windowsuser", SqlDbType.VarChar).Value = Request.Form["fld_windowsuser"].Trim();
 
             cmd.Connection = con;
             //try

@@ -26,6 +26,87 @@ namespace TeOraHouWhanganui._Dependencies
     {
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_roster_worker(string id)
+        {
+            dynamic roster_worker = new JObject();
+         
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_roster_worker";
+            cmd.Parameters.Add("@roster_worker_ctr", SqlDbType.VarChar).Value = id; 
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                dr.Read();
+                roster_worker.Roster_CTR = dr["Roster_CTR"].ToString();
+                roster_worker.Worker_CTR = dr["Worker_CTR"].ToString();
+                roster_worker.DateTimeStart = Functions.formatdate(dr["DateTimeStart"].ToString(), "dd MMM yyyy HH:mm");
+                roster_worker.DateTimeEnd = Functions.formatdate(dr["DateTimeEnd"].ToString(), "dd MMM yyyy HH:mm");
+                roster_worker.Note = dr["Notes"].ToString();
+                roster_worker.DateTimeStartActual = Functions.formatdate(dr["DateTimeStartActual"].ToString(), "dd MMM yyyy HH:mm");
+                roster_worker.DateTimeEndActual = Functions.formatdate(dr["DateTimeEndActual"].ToString(), "dd MMM yyyy HH:mm");
+                roster_worker.Status = dr["Status"].ToString();
+                roster_worker.WorkNotes = dr["WorkNotes"].ToString();
+                roster_worker.workername = dr["workername"].ToString();
+                roster_worker.DateRange = dr["DateRange"].ToString();
+            }
+            dr.Close();
+            
+            Context.Response.Write(roster_worker);
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_roster_person(string id)
+        {
+            dynamic roster_person = new JObject();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_roster_person";
+            cmd.Parameters.Add("@roster_person_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                dr.Read();
+                roster_person.Roster_CTR = dr["Roster_CTR"].ToString();
+                roster_person.Person_CTR = dr["person_CTR"].ToString();
+                roster_person.DateTimeStart = Functions.formatdate(dr["DateTimeStart"].ToString(), "dd MMM yyyy HH:mm");
+                roster_person.DateTimeEnd = Functions.formatdate(dr["DateTimeEnd"].ToString(), "dd MMM yyyy HH:mm");
+                roster_person.Note = dr["Notes"].ToString();
+                roster_person.DateTimeStartActual = Functions.formatdate(dr["DateTimeStartActual"].ToString(), "dd MMM yyyy HH:mm");
+                roster_person.DateTimeEndActual = Functions.formatdate(dr["DateTimeEndActual"].ToString(), "dd MMM yyyy HH:mm");
+                roster_person.Status = dr["Status"].ToString();
+                roster_person.WorkNotes = dr["WorkNotes"].ToString();
+                roster_person.personname = dr["personname"].ToString();
+                roster_person.DateRange = dr["DateRange"].ToString();
+            }
+            dr.Close();
+
+            Context.Response.Write(roster_person);
+
+        }
+
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public void get_employee(string id)
         {
             dynamic employee = new JObject();

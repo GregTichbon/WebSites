@@ -122,6 +122,9 @@
     <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
+    <Content Include="Private\RosterMaintenance.aspx" />
+    <Content Include="Private\RosterSearch.aspx" />
+    <Content Include="Private\UpdateGeoCodes.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
     <Content Include="_Dependencies\Posts.asmx" />
@@ -345,6 +348,27 @@
     </Compile>
     <Compile Include="Private\Reports\Report.aspx.designer.cs">
       <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\RosterMaintenance.aspx.cs">
+      <DependentUpon>RosterMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\RosterMaintenance.aspx.designer.cs">
+      <DependentUpon>RosterMaintenance.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\RosterSearch.aspx.cs">
+      <DependentUpon>RosterSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\RosterSearch.aspx.designer.cs">
+      <DependentUpon>RosterSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\UpdateGeoCodes.aspx.cs">
+      <DependentUpon>UpdateGeoCodes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\UpdateGeoCodes.aspx.designer.cs">
+      <DependentUpon>UpdateGeoCodes.aspx</DependentUpon>
     </Compile>
     <Compile Include="TestAndPlay\LongRunning1.aspx.cs">
       <DependentUpon>LongRunning1.aspx</DependentUpon>

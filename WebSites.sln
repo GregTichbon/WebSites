@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeOraHouWhanganui", "TeOraH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleService", "VehicleService\VehicleService.csproj", "{513B6B43-522A-4565-A1BF-5B1465544D47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAccounts", "SimpleAccounts\SimpleAccounts.csproj", "{C4062624-EAD0-4FD8-BC39-601BE79F0883}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{513B6B43-522A-4565-A1BF-5B1465544D47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

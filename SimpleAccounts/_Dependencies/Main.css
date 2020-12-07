@@ -1,0 +1,90 @@
+﻿
+
+/*help icon*/
+#assistanceicon {
+    border-style: none;
+    border-color: inherit;
+    border-width: 0;
+    position: fixed;
+    top: 5px;
+    right: 15px;
+    z-index: 9999;
+}
+/*page help*/
+#pagehelp {
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+:required {
+    border-color: darkblue;
+}
+
+.error {
+    color:red;
+}
+
+.toprighticon {
+    border-style: none;
+    border-color: inherit;
+    border-width: 0;
+    position: fixed;
+    top: 5px;
+    right: 15px;
+    z-index: 9999;
+}
+
+.bottomrighticon {
+    border-style: none;
+    border-color: inherit;
+    border-width: 0;
+    position: fixed;
+    bottom: 5px;
+    right: 15px;
+    z-index: 9999;
+}
+
+.changed {
+    content: url('Images/pencil.png');
+}
+
+.deleted {
+    content: url('Images/scissors.png');
+}
+
+.inserted {
+    content: url('Images/star.png');
+}
+
+.dependantrequired {
+    border: 1px solid red;
+}
+
+body {
+    background-color: greenyellow;
+}
+
+.container {
+    background-color: greenyellow;
+    width:100%;
+}
+
+.jumbotron {
+    background-color: green;
+}
+
+
+.tabheading {
+    color: black;
+    background-color: darksalmon;
+    width: 100%;
+}
+
+.ui-checkboxradio-label.ui-corner-all.ui-button.ui-widget.ui-checkboxradio-checked.ui-state-active {
+    background: #4cff00;
+    !important;
+}
+
+.ui-autocomplete-loading {
+    background: white url('Images/processing_16x16.gif') right no-repeat;
+}

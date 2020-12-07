@@ -1,0 +1,28 @@
+﻿select dbo.get_customer_name(C.customer_ctr,'includename'), CT.CustomerType, 
+C.Address, C.EmailAddress, C.MobilePhone, C.HomePhone, C.WorkPhone, C.note, 
+dbo.get_vehicle_description(CV.Vehicle_CTR,'full'), V.odometer, V.WOF_Cycle
+from 
+customer_vehicle CV
+inner join Customer C on C.Customer_CTR = CV.Customer_CTR
+left outer join CustomerType CT on CT.CustomerType_CTR = C.CustomerType_CTR
+inner join Vehicle V on V.Vehicle_CTR = CV.Vehicle_CTR
+order by dbo.get_customer_name(C.customer_ctr,'includename')
+
+select dbo.get_vehicle_description(VF.Vehicle_CTR,'full'), VF.EntryDate, VF.FollowupDate, VF.Detail, VF.actionedDate, VF.ActionedDetail,
+dbo.get_customer_name(CV.customer_ctr,'includename'), 
+C.Address, C.EmailAddress, C.MobilePhone, C.HomePhone, C.WorkPhone, C.note 
+from Vehicle_followup VF
+left outer join Customer_Vehicle CV on CV.Vehicle_CTR = VF.Vehicle_ctr
+left outer join Customer C on C.Customer_CTR = CV.Customer_CTR
+order by VF.FollowupDate
+
+select dbo.get_vehicle_description(VF.Vehicle_CTR,'full'), VF.EntryDate, VF.FollowupDate, VF.Detail, VF.actionedDate, VF.ActionedDetail,
+dbo.get_customer_name(CV.customer_ctr,'includename'), 
+C.Address, C.EmailAddress, C.MobilePhone, C.HomePhone, C.WorkPhone, C.note 
+from Vehicle_followup VF
+left outer join Customer_Vehicle CV on CV.Vehicle_CTR = VF.Vehicle_ctr
+left outer join Customer C on C.Customer_CTR = CV.Customer_CTR
+where VF.FollowupDate >= getdate()
+order by dbo.get_customer_name(C.customer_ctr,'includename'), dbo.get_vehicle_description(VF.Vehicle_CTR,'full'), VF.FollowupDate
+
+where not actioned or all for history
