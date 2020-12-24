@@ -14,72 +14,24 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
     public partial class Viewer : System.Web.UI.Page
     {
         ReportDocument rpt;
-        protected void Page_Load(object sender, EventArgs e)
+        public string html = "";
+
+        protected void Page_Init(object sender, EventArgs e)
         {
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
-
-            string r = Request.QueryString["id"];
-           
-            string report;
-            DataSet ds = new DataSet();
-            rpt = new ReportDocument();
-
-
-            switch (r)
+            if (!IsPostBack)
             {
-                case "1":
-                    SqlConnection con1 = new SqlConnection(strConnString);
-                    SqlDataAdapter adp1 = new SqlDataAdapter("Report_Encounters", con1);
+                string r = Request.QueryString["id"] + "";
 
-                    adp1.Fill(ds);
-                    report = Server.MapPath("~/private/reports/crystal/EncountersByPersonDate.rpt");
-                    rpt.Load(report);
-                    rpt.SetDataSource(ds.Tables["Table"]);
+                switch (r)
+                {
+                    case "1":
+                        doreport1();
+                        break;
 
-                    crv_report.ReportSource = rpt;
-                    int PageCount = rpt.FormatEngine.GetLastPageNumber(new ReportPageRequestContext());
-
-                    Literal1.Text = PageCount.ToString();
-
-                    if (1 == 1)
-                    {
-
-
-                        ExportOptions CrExportOptions;
-                        DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
-                        PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
-                        CrDiskFileDestinationOptions.DiskFileName = "C:\\temp\\test.pdf";
-                        CrExportOptions = rpt.ExportOptions;
-
-                        CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
-                        CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
-                        CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
-                        CrFormatTypeOptions.UsePageRange = true;
-
-                        //CrFormatTypeOptions.FirstPageNumber = 1;
-                        //CrFormatTypeOptions.LastPageNumber = 1;
-
-                        CrExportOptions.FormatOptions = CrFormatTypeOptions;
-
-                        rpt.Export();
-                    } else
-                    {
-                        crv_report.RefreshReport();
-                    }
-
-                    break;
-                case "2":
-                    //SqlConnection con2 = new SqlConnection(strConnString);
-                    //SqlDataAdapter adp2 = new SqlDataAdapter("select * from person", con2);
-                    //adp2.Fill(ds);
-                    report = Server.MapPath("~/private/reports/crystal/testNoData.rpt");
-                    rpt.Load(report);
-                    //rpt.SetDataSource(ds.Tables["Table"]);
-
-                    crv_report.ReportSource = rpt;
-                    crv_report.RefreshReport();
-
-                    break;
+                    case "2":
+                        doreport2();
+                        break;
+                    /*
                 case "3":
                     report = Server.MapPath("~/people/reports/crystal/testNoData.rpt");
                     rpt.Load(report);
@@ -87,16 +39,191 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                     crv_report.ReportSource = rpt;
 
                     break;
-                
-               default:
-                    break;
+                    */
+                    case "4":
+                        doreport4();
+
+
+
+                        break;
+
+                    default:
+                        break;
+                }
             }
+            else
+            {
+                ReportDocument doc = (ReportDocument)Session["Report"];
+                crv_report.ReportSource = doc;
+            }
+        }
+
+
+
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (1 == 2)
+            {
+                //if (!IsPostBack)
+                if (Session["Report"] == null)
+                {
+
+                    string r = Request.QueryString["id"] + "X";
+
+                    switch (r)
+                    {
+                        case "1":
+                            doreport1();
+                            break;
+
+                        case "2":
+                            doreport2();
+                            break;
+                        /*
+                    case "3":
+                        report = Server.MapPath("~/people/reports/crystal/testNoData.rpt");
+                        rpt.Load(report);
+
+                        crv_report.ReportSource = rpt;
+
+                        break;
+                        */
+                        case "4":
+                            doreport4();
+
+
+
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                //crv_report.ReportSource = Session["Report"];
+                //crv_report.RefreshReport();  //do i need this?
+            }
+        }
+
+        protected void doreport1()
+        {
+            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+
+            DataSet ds = new DataSet();
+            rpt = new ReportDocument();
+            using (SqlConnection con = new SqlConnection(strConnString))
+            {
+                SqlDataAdapter da = new SqlDataAdapter("Report_Encounters", con);
+
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
+                da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
+
+                da.Fill(ds);
+
+                //int records = ds.Tables["Table"].Rows.Count;
+
+            }
+
+            string report = Server.MapPath("~/private/reports/crystal/EncountersByPersonDate.rpt");
+            rpt.Load(report);
+            rpt.SetDataSource(ds.Tables["Table"]);
+            //rpt.SetParameterValue("fromdate", Request.QueryString["fromdate"]);
+            //rpt.SetParameterValue("todate", Request.QueryString["todate"]);
+
+
+            //crv_report.ReportSource = rpt;
+            //int PageCount = rpt.FormatEngine.GetLastPageNumber(new ReportPageRequestContext());
+
+            //Literal1.Text = PageCount.ToString();
+
+            if (1 == 2)
+            {
+
+                ExportOptions CrExportOptions;
+                DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
+                PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
+                CrDiskFileDestinationOptions.DiskFileName = "C:\\temp\\test.pdf";
+                CrExportOptions = rpt.ExportOptions;
+
+                CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
+                CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
+                CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
+                CrFormatTypeOptions.UsePageRange = true;
+
+                //CrFormatTypeOptions.FirstPageNumber = 1;
+                //CrFormatTypeOptions.LastPageNumber = 1;
+
+                CrExportOptions.FormatOptions = CrFormatTypeOptions;
+
+                rpt.Export();
+            }
+            else
+            {
+                crv_report.ReportSource = rpt;
+                Session.Add("Report", rpt);
+
+            }
+        }
+
+        protected void doreport2()
+        {
+            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+
+            DataSet ds = new DataSet();
+            rpt = new ReportDocument();
+            using (SqlConnection con = new SqlConnection(strConnString))
+            {
+                SqlDataAdapter da = new SqlDataAdapter("Report_Encounters", con);
+
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
+                da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
+
+                da.Fill(ds);
+
+                //int records = ds.Tables["Table"].Rows.Count;
+
+            }
+
+            string report = Server.MapPath("~/private/reports/crystal/EncounterSummary.rpt");
+            rpt.Load(report);
+            rpt.SetDataSource(ds.Tables["Table"]);
+            //rpt.SetParameterValue("fromdate", Request.QueryString["fromdate"]);
+            //rpt.SetParameterValue("todate", Request.QueryString["todate"]);
+
+            crv_report.ReportSource = rpt;
+            Session.Add("Report", rpt);
+
+            //int PageCount = rpt.FormatEngine.GetLastPageNumber(new ReportPageRequestContext());
+
+            //Literal1.Text = PageCount.ToString();
+
+            //crv_report.ReportSource = rpt;
+            //crv_report.RefreshReport();
 
 
         }
 
+        protected void doreport4()
+        {
+
+            //SqlConnection con2 = new SqlConnection(strConnString);
+            //SqlDataAdapter adp2 = new SqlDataAdapter("select * from person", con2);
+            //adp2.Fill(ds);
+            string report = Server.MapPath("~/private/reports/crystal/testNoData.rpt");
+            rpt.Load(report);
+
+            Session.Add("Report", rpt);
+
+            //rpt.SetDataSource(ds.Tables["Table"]);
+
+            //crv_report.ReportSource = rpt;
+            //crv_report.RefreshReport();
+        }
         protected void Button1_Click(object sender, EventArgs e)
         {
+            //Not sure what I was doing here, exports pages seperatly?
             int PageCount = rpt.FormatEngine.GetLastPageNumber(new ReportPageRequestContext());
 
             /*

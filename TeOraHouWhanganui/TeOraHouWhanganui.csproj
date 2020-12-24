@@ -122,12 +122,14 @@
     <Content Include="Private\ProgramSearch.aspx" />
     <Content Include="Private\Reports\Attendance.aspx" />
     <Content Include="Private\Reports\AttendanceStatistics.aspx" />
+    <Content Include="Private\Reports\Crystal\Selector.aspx" />
     <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
     <Content Include="Private\RosterMaintenance.aspx" />
     <Content Include="Private\RosterSearch.aspx" />
     <Content Include="Private\UpdateGeoCodes.aspx" />
+    <Content Include="Private\VehicleBookings.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
     <Content Include="_Dependencies\Posts.asmx" />
@@ -340,6 +342,13 @@
       <DependentUpon>EncounterSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Private\Reports\Crystal\Selector.aspx.cs">
+      <DependentUpon>Selector.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\Selector.aspx.designer.cs">
+      <DependentUpon>Selector.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Private\Reports\Crystal\Simple1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -393,6 +402,13 @@
     </Compile>
     <Compile Include="Private\UpdateGeoCodes.aspx.designer.cs">
       <DependentUpon>UpdateGeoCodes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\VehicleBookings.aspx.cs">
+      <DependentUpon>VehicleBookings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\VehicleBookings.aspx.designer.cs">
+      <DependentUpon>VehicleBookings.aspx</DependentUpon>
     </Compile>
     <Compile Include="TestAndPlay\LongRunning1.aspx.cs">
       <DependentUpon>LongRunning1.aspx</DependentUpon>

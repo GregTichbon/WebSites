@@ -26,6 +26,102 @@ namespace TeOraHouWhanganui._Dependencies
     {
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_vehicles()
+        {
+ 
+            JArray vehicles = new JArray();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_vehicles";
+            //cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                dynamic vehicle = new JObject();
+                vehicle.id = dr["vehicle_ctr"].ToString();
+                vehicle.title = dr["name"].ToString();
+                vehicle.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
+                vehicles.Add(vehicle);
+
+            }
+            dr.Close();
+
+            Context.Response.Write(vehicles);
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_vehicle_bookings()
+        {
+            //http://localhost:58611/_Dependencies/data.asmx/get_vehicle_bookings?start=2020-12-24T00%3A00%3A00%2B13%3A00&end=2020-12-25T00%3A00%3A00%2B13%3A00
+            JArray bookings = new JArray();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_vehicle_bookings";
+            //cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                dynamic booking = new JObject();
+                booking.id = dr["vehicle_booking_ctr"].ToString();
+                booking.resourceId = dr["vehicle_ctr"].ToString();
+                booking.title = dr["name"].ToString();
+                booking.start = Convert.ToDateTime(dr["startdatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                booking.end = Convert.ToDateTime(dr["enddatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                bookings.Add(booking);
+
+            }
+            dr.Close();
+
+            dynamic booking1 = new JObject();
+            booking1.id = "1";
+            booking1.resourceId = "2";
+            booking1.title = "Greg - Mentoring";
+            booking1.start = DateTime.Today.ToString("yyyy-MM-ddT02:00:00");
+            booking1.end = DateTime.Today.ToString("yyyy-MM-ddT07:00:00");
+            bookings.Add(booking1);
+
+            dynamic booking2 = new JObject();
+            booking2.id = "2";
+            booking2.resourceId = "3";
+            booking2.title = "Keegan - Rally car racing";
+            booking2.start = DateTime.Today.ToString("yyyy-MM-ddT06:00:00");
+            booking2.end = DateTime.Today.ToString("yyyy-MM-ddT09:00:00");
+            bookings.Add(booking2);
+
+            /*
+             * { id: '1', resourceId: '2', start: '2020-12-23T02:00:00', end: '2020-12-23T07:00:00', title: 'Greg - Mentoring' },
+                    { id: '2', resourceId: '3', start: '2020-12-23T06:00:00', end: '2020-12-23T09:00:00', title: 'Keegan - Rally car racing' },
+                    */
+
+            Context.Response.Write(bookings);
+
+        }
+
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public void get_roster_worker(string id)
         {
             dynamic roster_worker = new JObject();

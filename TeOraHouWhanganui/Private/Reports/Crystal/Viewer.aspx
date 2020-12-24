@@ -10,10 +10,14 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:Literal ID="Literal1" runat="server"></asp:Literal>
-        <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
+        
+        <!--
+            //Not sure what I was doing here, exports pages seperatly?
+            <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
+            -->
+       
 
-        <CR:CrystalReportViewer ID="crv_report" runat="server" ToolPanelWidth="200px" Width="350px" GroupTreeImagesFolderUrl="" Height="50px" ReportSourceID="CrystalReportSource1" ToolbarImagesFolderUrl="" />
+        <CR:CrystalReportViewer ID="crv_report" runat="server" ToolPanelWidth="200px" Width="350px" GroupTreeImagesFolderUrl="" Height="50px" ReportSourceID="CrystalReportSource1" ToolbarImagesFolderUrl="" EnableDatabaseLogonPrompt="False" EnableParameterPrompt="False" />
 
     </form>
 </body>

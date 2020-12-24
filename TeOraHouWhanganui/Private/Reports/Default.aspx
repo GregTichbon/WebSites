@@ -37,6 +37,8 @@
     <p><a href="Report.aspx?id=Everyone">Everyone</a></p>
     <p><a href="Attendance.aspx">All Attendance in a period</a></p>
     <p><a href="AttendanceStatistics.aspx">Attendance Statistics for specified programs in a period</a></p>
+    <p><a href="crystal/selector.aspx?id=1">Encounters by Person/Date</a></p>
+    <p><a href="crystal/selector.aspx?id=2">Encounters By Worker/Date Summary</a></p>
     <p></p>
     <p><a href="../Default.aspx">Menu</a></p>
 
