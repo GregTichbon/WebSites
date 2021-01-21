@@ -26,6 +26,116 @@ namespace TeOraHouWhanganui._Dependencies
     {
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_roster(string program)
+        {
+            //http://localhost:58611/_Dependencies/data.asmx/get_vehicle_bookings?start=2020-12-24T00%3A00%3A00%2B13%3A00&end=2020-12-25T00%3A00%3A00%2B13%3A00
+            JArray bookings = new JArray();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+            /*
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "get_vehicle_bookings";
+            //cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = id;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                dynamic booking = new JObject();
+                booking.id = dr["vehicle_booking_ctr"].ToString();
+                booking.resourceId = dr["vehicle_ctr"].ToString();
+                booking.title = dr["name"].ToString() + " - " + dr["detail"].ToString();
+                booking.start = Convert.ToDateTime(dr["startdatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                booking.end = Convert.ToDateTime(dr["enddatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                booking.worker = dr["name"].ToString();
+                booking.worker_ctr = dr["worker_ctr"].ToString();
+                booking.detail = dr["detail"].ToString();
+                bookings.Add(booking);
+
+            }
+            dr.Close();
+
+            */
+             
+            dynamic booking1 = new JObject();
+            booking1.id = "1";
+            booking1.resourceId = "2";
+            booking1.title = "Greg - Mentoring";
+            booking1.start = DateTime.Today.ToString("yyyy-MM-ddT02:00:00");
+            booking1.end = DateTime.Today.ToString("yyyy-MM-ddT07:00:00");
+            booking1.worker = "Greg";
+            booking1.worker_ctr = 27;
+            booking1.detail = "Mentoring";
+            bookings.Add(booking1);
+
+            dynamic booking2 = new JObject();
+            booking2.id = "2";
+            booking2.resourceId = "3";
+            booking2.title = "Keegan - Rally car racing";
+            booking2.start = DateTime.Today.ToString("yyyy-MM-ddT06:00:00");
+            booking2.end = DateTime.Today.ToString("yyyy-MM-ddT09:00:00");
+            booking2.name = "Keegan";
+            booking2.worker_ctr = 99;
+            booking2.detail = "Rally car racing";
+            bookings.Add(booking2);
+           
+
+            /*
+             * { id: '1', resourceId: '2', start: '2020-12-23T02:00:00', end: '2020-12-23T07:00:00', title: 'Greg - Mentoring' },
+                    { id: '2', resourceId: '3', start: '2020-12-23T06:00:00', end: '2020-12-23T09:00:00', title: 'Keegan - Rally car racing' },
+                    */
+
+            Context.Response.Write(bookings);
+
+        }
+        
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void get_entitys_for_program(string program, string worker, string start, string end)
+        {
+
+            JArray vehicles = new JArray();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "Get_Entitys_for_Program";
+            cmd.Parameters.Add("@start", SqlDbType.VarChar).Value = start;
+            cmd.Parameters.Add("@end", SqlDbType.VarChar).Value = end;
+            cmd.Parameters.Add("@program", SqlDbType.VarChar).Value = program;
+            cmd.Parameters.Add("@worker", SqlDbType.VarChar).Value = worker;
+
+            cmd.Connection = con;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                dynamic vehicle = new JObject();
+                vehicle.id = dr["vehicle_ctr"].ToString();
+                vehicle.title = dr["name"].ToString();
+                vehicle.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
+                vehicles.Add(vehicle);
+
+            }
+            dr.Close();
+
+            Context.Response.Write(vehicles);
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public void get_vehicles()
         {
  
@@ -86,20 +196,26 @@ namespace TeOraHouWhanganui._Dependencies
                 dynamic booking = new JObject();
                 booking.id = dr["vehicle_booking_ctr"].ToString();
                 booking.resourceId = dr["vehicle_ctr"].ToString();
-                booking.title = dr["name"].ToString();
+                booking.title = dr["name"].ToString() + " - " + dr["detail"].ToString();
                 booking.start = Convert.ToDateTime(dr["startdatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
                 booking.end = Convert.ToDateTime(dr["enddatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                booking.worker = dr["name"].ToString();
+                booking.worker_ctr = dr["worker_ctr"].ToString();
+                booking.detail = dr["detail"].ToString();
                 bookings.Add(booking);
 
             }
             dr.Close();
-
+            /*
             dynamic booking1 = new JObject();
             booking1.id = "1";
             booking1.resourceId = "2";
             booking1.title = "Greg - Mentoring";
             booking1.start = DateTime.Today.ToString("yyyy-MM-ddT02:00:00");
             booking1.end = DateTime.Today.ToString("yyyy-MM-ddT07:00:00");
+            booking1.worker = "Greg";
+            booking1.worker_ctr = 27;
+            booking1.detail = "Mentoring";
             bookings.Add(booking1);
 
             dynamic booking2 = new JObject();
@@ -108,7 +224,11 @@ namespace TeOraHouWhanganui._Dependencies
             booking2.title = "Keegan - Rally car racing";
             booking2.start = DateTime.Today.ToString("yyyy-MM-ddT06:00:00");
             booking2.end = DateTime.Today.ToString("yyyy-MM-ddT09:00:00");
+            booking2.name = "Keegan";
+            booking2.worker_ctr = 99;
+            booking2.detail = "Rally car racing";
             bookings.Add(booking2);
+            */
 
             /*
              * { id: '1', resourceId: '2', start: '2020-12-23T02:00:00', end: '2020-12-23T07:00:00', title: 'Greg - Mentoring' },
@@ -118,7 +238,6 @@ namespace TeOraHouWhanganui._Dependencies
             Context.Response.Write(bookings);
 
         }
-
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -199,7 +318,6 @@ namespace TeOraHouWhanganui._Dependencies
             Context.Response.Write(roster_person);
 
         }
-
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -329,6 +447,7 @@ namespace TeOraHouWhanganui._Dependencies
             Context.Response.Write(JS.Serialize(PersonList));
 
         }
+
         public class PersonClass
         {
             public string person_ctr;

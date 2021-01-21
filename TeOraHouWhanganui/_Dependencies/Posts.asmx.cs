@@ -6,7 +6,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using System.Web.Services;
+using Newtonsoft.Json.Linq;
 
 namespace TeOraHouWhanganui._Dependencies
 {
@@ -20,7 +22,35 @@ namespace TeOraHouWhanganui._Dependencies
     [System.Web.Script.Services.ScriptService]   //GREG  -  THIS IS REQUIRED FOR POSTS
     public class Posts : System.Web.Services.WebService
     {
-       
+        [WebMethod]
+        public string update_vehicle_booking(NameValue[] formVars)
+        {
+            //dynamic response = new JObject();
+            //vehicle_booking_ctr, vehicle_ctr, start, end, worker_ctr, details
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("update_vehicle_booking", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@vehicle_booking_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_booking_ctr");
+                cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_ctr");
+                cmd.Parameters.Add("@start", SqlDbType.VarChar).Value = formVars.Form("start");
+                cmd.Parameters.Add("@end", SqlDbType.VarChar).Value = formVars.Form("end");
+                cmd.Parameters.Add("@worker_ctr", SqlDbType.VarChar).Value = formVars.Form("worker_ctr");
+                cmd.Parameters.Add("@details", SqlDbType.VarChar).Value = formVars.Form("details");
+                con.Open();
+                string id = cmd.ExecuteScalar().ToString();
+                con.Close();
+                return id;
+                //Context.Response.Write(response);
+                //JavaScriptSerializer JS = new JavaScriptSerializer();
+                //string passresult = JS.Serialize(response);
+
+                //Context.Response.Write(passresult);
+            }
+        }
 
         [WebMethod]
         public void update_roster_worker(NameValue[] formVars)

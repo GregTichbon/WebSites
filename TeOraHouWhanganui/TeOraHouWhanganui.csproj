@@ -126,6 +126,7 @@
     <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
+    <Content Include="Private\Roster.aspx" />
     <Content Include="Private\RosterMaintenance.aspx" />
     <Content Include="Private\RosterSearch.aspx" />
     <Content Include="Private\UpdateGeoCodes.aspx" />
@@ -381,6 +382,13 @@
     </Compile>
     <Compile Include="Private\Reports\Report.aspx.designer.cs">
       <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Roster.aspx.cs">
+      <DependentUpon>Roster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Roster.aspx.designer.cs">
+      <DependentUpon>Roster.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\RosterMaintenance.aspx.cs">
       <DependentUpon>RosterMaintenance.aspx</DependentUpon>

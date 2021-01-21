@@ -37,6 +37,7 @@
     <% 
                  Response.Write("<p><a href=\"EventSearch.aspx\" class=\"btn btn-info\">Event Maintenance</a></p>");
                  Response.Write("<p><a href=\"ProgramSearch.aspx\" class=\"btn btn-info\">Program Maintenance</a></p>");
+                 Response.Write("<p><a href=\"VehicleBookings.aspx\" class=\"btn btn-info\">Vehicle Bookings</a></p>");
     %>
      <p><a href="reports" class="btn btn-info">Reports</a></p>
 </asp:Content>

@@ -195,7 +195,7 @@ namespace TeOraHouWhanganui.Private
 
                     html_tab += "<li><a data-target=\"#div_enrolment\">Enrolments</a></li>";
                     html_enrolments = "<thead>";
-                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Always Pickup</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>Enrolled</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Always Pickup</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_enrolments += "</thead>";
                     html_enrolments += "<tbody>";
 
@@ -203,8 +203,11 @@ namespace TeOraHouWhanganui.Private
                     html_enrolments += "<tr style=\"display:none\">";
                     html_enrolments += "<td style=\"text-align:center\"></td>";
                     html_enrolments += "<td></td>"; //Program
-                    html_enrolments += "<td></td>"; //First Event
-                    html_enrolments += "<td></td>"; //Last Event
+                    html_enrolments += "<td></td>"; //Enrolled
+                    //html_enrolments += "<td></td>"; //First Event
+                    //html_enrolments += "<td></td>"; //Last Event
+                    html_enrolments += "<td></td>"; //Events
+                    html_enrolments += "<td></td>"; //Encounters
                     html_enrolments += "<td></td>"; //Status
                     html_enrolments += "<td></td>"; //Worker
                     html_enrolments += "<td></td>"; //Always pickup
@@ -223,15 +226,21 @@ namespace TeOraHouWhanganui.Private
                         string programname = dr["programname"].ToString();
                         string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");   
                         string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
+                        //string events = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy") + " - " + Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
+                        //string encounters = Functions.formatdate(dr["firstencounter"].ToString(), "dd MMM yyyy") + " - " + Functions.formatdate(dr["lastencounter"].ToString(), "dd MMM yyyy");
                         string status = dr["enrolementstatus"].ToString();
                         string worker = dr["worker"].ToString();
                         string alwayspickup = dr["alwayspickup"].ToString();
                         string note = dr["notes"].ToString();
+                        string dateenrolled = Functions.formatdate(dr["dateenrolled"].ToString(), "dd MMM yyyy");
                         html_enrolments += "<tr id=\"enrolment_" + entity_enrolment_CTR + "\">";
                         html_enrolments += "<td style=\"text-align:center\"></td>";
                         html_enrolments += "<td programid=\"" + programid + "\">" + programname + "</td>";
+                        html_enrolments += "<td>" + dateenrolled + "</td>";
                         html_enrolments += "<td>" + firstevent + "</td>";
                         html_enrolments += "<td>" + lastevent + "</td>";
+                        //html_enrolments += "<td>" + events + "</td>";
+                        //html_enrolments += "<td>" + encounters + "</td>";
                         html_enrolments += "<td>" + status + "</td>";
                         html_enrolments += "<td worker=\"" + worker + "\">" + YesNoBit.FirstOrDefault(x => x.Value == worker).Key + "</td>";
                         html_enrolments += "<td alwayspickup=\"" + alwayspickup + "\">" + YesNoBit.FirstOrDefault(x => x.Value == alwayspickup).Key + "</td>";
@@ -954,6 +963,7 @@ namespace TeOraHouWhanganui.Private
                     cmd.Parameters.Add("@worker", SqlDbType.VarChar).Value = valuesSplit[2];
                     cmd.Parameters.Add("@alwayspickup", SqlDbType.VarChar).Value = valuesSplit[3];
                     cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
+                    cmd.Parameters.Add("@dateenrolled", SqlDbType.VarChar).Value = valuesSplit[5];
                     //}
                     con.Open();
                     cmd.ExecuteScalar().ToString();
