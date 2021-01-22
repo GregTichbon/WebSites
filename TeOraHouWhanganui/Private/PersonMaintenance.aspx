@@ -1044,11 +1044,12 @@
                     $('#fld_enrolment_program').prop("disabled", true);
 
                     $('#fld_enrolment_program').val($(tr).find('td').eq(1).attr('programid'));
-                    $('#fld_enrolment_dateenrolled').val($(tr).find('td').eq(2).text());
-                    $('#fld_enrolment_status').val($(tr).find('td').eq(5).text());
-                    $('#fld_enrolment_worker').val($(tr).find('td').eq(6).attr('worker'));
-                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(7).attr('alwayspickup'));
-                    $('#fld_enrolment_note').val($(tr).find('td').eq(8).text());
+                    $('#fld_enrolment_startdate').val($(tr).find('td').eq(2).text());
+                    $('#fld_enrolment_enddate').val($(tr).find('td').eq(3).text());
+                    $('#fld_enrolment_status').val($(tr).find('td').eq(6).text());
+                    $('#fld_enrolment_worker').val($(tr).find('td').eq(7).attr('worker'));
+                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(8).attr('alwayspickup'));
+                    $('#fld_enrolment_note').val($(tr).find('td').eq(9).text());
                 }
 
                 mywidth = $(window).width() * .95;
@@ -1093,18 +1094,19 @@
                             $(tr).attr('maint', 'changed');
                             $(tr).find('td').eq(1).text($('#fld_enrolment_program option:selected').text());
                             $(tr).find('td').eq(1).attr('programid', $('#fld_enrolment_program').val());
-                            $(tr).find('td').eq(2).text($('#fld_enrolment_dateenrolled').val());
+                            $(tr).find('td').eq(2).text($('#fld_enrolment_startdate').val());
+                            $(tr).find('td').eq(3).text($('#fld_enrolment_enddate').val());
 
-                            $(tr).find('td').eq(5).text($('#fld_enrolment_status option:selected').text());
+                            $(tr).find('td').eq(6).text($('#fld_enrolment_status option:selected').text());
                             //$(tr).find('td').eq(5).attr('status', $('#fld_enrolment_status').val());
 
-                            $(tr).find('td').eq(6).text($('#fld_enrolment_worker option:selected').text());
-                            $(tr).find('td').eq(6).attr('worker', $('#fld_enrolment_worker').val());
+                            $(tr).find('td').eq(7).text($('#fld_enrolment_worker option:selected').text());
+                            $(tr).find('td').eq(7).attr('worker', $('#fld_enrolment_worker').val());
 
-                            $(tr).find('td').eq(7).text($('#fld_enrolment_alwayspickup option:selected').text());
-                            $(tr).find('td').eq(7).attr('alwayspickup', $('#fld_enrolment_alwayspickup').val());
+                            $(tr).find('td').eq(8).text($('#fld_enrolment_alwayspickup option:selected').text());
+                            $(tr).find('td').eq(8).attr('alwayspickup', $('#fld_enrolment_alwayspickup').val());
 
-                            $(tr).find('td').eq(8).text($('#fld_enrolment_note').val());
+                            $(tr).find('td').eq(9).text($('#fld_enrolment_note').val());
                             
                             $(this).dialog("close");
                         }
@@ -1131,13 +1133,14 @@
 
                     tr_id = $(this).attr('id');
                     tr_program = $(this).find('td:eq(1)').attr('programid');
-                    tr_dateenrolled = $(this).find('td:eq(2)').text();
-                    tr_status = $(this).find('td:eq(5)').text();
-                    tr_worker = $(this).find('td:eq(6)').attr('worker');
-                    tr_alwayspickup = $(this).find('td:eq(7)').attr('alwayspickup');
-                    tr_note = $(this).find('td:eq(8)').text();
+                    tr_startdate = $(this).find('td:eq(2)').text();
+                    tr_enddate = $(this).find('td:eq(3)').text();
+                    tr_status = $(this).find('td:eq(6)').text();
+                    tr_worker = $(this).find('td:eq(7)').attr('worker');
+                    tr_alwayspickup = $(this).find('td:eq(8)').attr('alwayspickup');
+                    tr_note = $(this).find('td:eq(9)').text();
 
-                    value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note + delim + tr_dateenrolled;
+                    value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note + delim + tr_startdate + delim + tr_enddate;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -1351,12 +1354,25 @@
                 </div>
 
                  <div class="form-group">
-                    <label for="fld_enrolment_dateenrolled" class="control-label col-sm-4">
-                        Date Enrolled<br /><span style="font-size:smaller">(Need to ensure is prior to first event/encounter)</span>
+                    <label for="fld_enrolment_startdate" class="control-label col-sm-4">
+                        Start Date<br /><span style="font-size:smaller">(Need to ensure can not prior to first event)</span>
                     </label>
                     <div class="col-sm-8">
                         <div class="input-group standarddate">
-                            <input id="fld_enrolment_dateenrolled" name="fld_enrolment_dateenrolled" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <input id="fld_enrolment_startdate" name="fld_enrolment_startdate" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fld_enrolment_enddate" class="control-label col-sm-4">
+                        End Date<br /><span style="font-size:smaller">(Need to ensure can not be prior to last event)</span>
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="input-group standarddate">
+                            <input id="fld_enrolment_enddate" name="fld_enrolment_enddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>

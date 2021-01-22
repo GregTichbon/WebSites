@@ -6,7 +6,9 @@
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5/main.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script>
+     <script src="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <link href="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+   <script>
 
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -39,13 +41,13 @@
                 },
                 */
                 select: function (info) {
-                    $('#fld_startdatetime').val(moment(info.startStr).format('D MMM YYYY H:mm'));
-                    $('#fld_enddatetime').val(moment(info.endStr).format('D MMM YYYY H:mm'));
+                    $('#fld_startdatetime').val(moment(info.startStr).format('D MMM YYYY HH:mm'));
+                    $('#fld_enddatetime').val(moment(info.endStr).format('D MMM YYYY HH:mm'));
                     $('#fld_worker').val('');
                     $('#fld_worker').data('worker_ctr', '');
                     $('#fld_detail').val('');
                     $("#dialog_edit").dialog({
-                        title: 'Create ' + moment(info.startStr).format('D MMM YYYY H:mm') + ' to ' + moment(info.endStr).format('D MMM YYYY H:mm'),
+                        title: 'Create ' + moment(info.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.endStr).format('D MMM YYYY HH:mm'),
                         resizable: false,
                         height: 600,
                         width: 800,
@@ -58,8 +60,7 @@
                                 if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
                                     alert('You must select a worker and provide some detail');
                                 } else {
-
-                                    id = update_vehicle_booking({ vehicle_booking_ctr: "new", vehicle_ctr: info.resource.id, start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY H:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY H:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
+                                    id = update_vehicle_booking({ vehicle_booking_ctr: "new", vehicle_ctr: info.resource.id, start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
                                     calendar.addEvent({
                                         id: id,
                                         title: $('#fld_worker').val() + ' - ' + $('#fld_detail').val(),
@@ -79,14 +80,14 @@
                     });
                 },
                 eventClick: function (info) {
-                    $('#fld_startdatetime').val(moment(info.event.startStr).format('D MMM YYYY H:mm'));
-                    $('#fld_enddatetime').val(moment(info.event.endStr).format('D MMM YYYY H:mm'));
+                    $('#fld_startdatetime').val(moment(info.event.startStr).format('D MMM YYYY HH:mm'));
+                    $('#fld_enddatetime').val(moment(info.event.endStr).format('D MMM YYYY HH:mm'));
                     $('#fld_worker').val(info.event.extendedProps.worker);
                     $('#fld_worker').data('worker_ctr', info.event.extendedProps.worker_ctr);
                     $('#fld_detail').val(info.event.extendedProps.detail)
 
                     $("#dialog_edit").dialog({
-                        title: 'Edit ' + moment(info.event.startStr).format('D MMM YYYY H:mm') + ' to ' + moment(info.event.endStr).format('D MMM YYYY H:mm'),
+                        title: 'Edit ' + moment(info.event.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.event.endStr).format('D MMM YYYY HH:mm'),
                         resizable: false,
                         height: 600,
                         width: 800,
@@ -97,13 +98,14 @@
                             },
                             "Remove": function () {
                                 info.event.remove();
+                                update_vehicle_booking({ vehicle_booking_ctr: -info.event.id });
                                 $(this).dialog("close");
                             },
                             "Confirm": function () {
                                 if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
                                     alert('You must select a worker and provide some detail');
                                 } else {
-                                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY H:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY H:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
+                                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
                                     info.event.setStart(moment($('#fld_startdatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
                                     info.event.setEnd(moment($('#fld_enddatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
                                    
@@ -119,8 +121,45 @@
                         }
                     });
                 },
+                eventContent: function (arg) {
+                    let arrayOfDomNodes = []
+                    // title event
+                    let titleEvent = document.createElement('div')
+                    if (arg.event._def.title) {
+                        titleEvent.innerHTML = arg.event._def.title;
+                        titleEvent.classList = "fc-event-title fc-sticky";
+                    }
+                    /*
+                    // image event
+                    let imgEventWrap = document.createElement('div')
+                    if (arg.event.extendedProps.image_url) {
+                        let imgEvent = '<img src="' + arg.event.extendedProps.image_url + '" >'
+                        imgEventWrap.classList = "fc-event-img"
+                        imgEventWrap.innerHTML = imgEvent;
+                    }
+
+                    arrayOfDomNodes = [titleEvent, imgEventWrap]
+                    */
+                    arrayOfDomNodes = [titleEvent]
+                    return { domNodes: arrayOfDomNodes }
+                },
+
+                
+                //eventDidMount: function (info) {
+                    /*
+                    var tooltip = new Tooltip(info.el, {
+                        title: info.event.extendedProps.description,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                    */
+                    //console.log(info.event);
+                    //info.event.title = "---- YOUR TEXT----"
+                    //info.event.setProp('title', 'xxxxxxxxxxxx<br />zzzzzzz')
+                //},
                 eventResize: function (info) {
-                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY H:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY H:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
+                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
                     /*
                     if (!confirm("is this okay?")) {
                         info.revert();
@@ -129,13 +168,13 @@
                 },
                 eventDrop: function (info) {
                     /*
-                    $.post("/_Dependencies/posts.asmx/update_vehicle_booking", createFormVars({ vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY H:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY H:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail })
+                    $.post("/_Dependencies/posts.asmx/update_vehicle_booking", createFormVars({ vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail })
                         , function (data) {
                             alert(data);
                         });
                         */
 
-                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY H:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY H:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
+                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
 
 
                     /*
@@ -149,11 +188,14 @@
 
             });
             calendar.render();
+            window.scrollTo(0, document.body.scrollHeight);
         });
 
 
 
         $(document).ready(function () {
+ 
+
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -181,6 +223,19 @@
                     }
                 }
             })
+
+            $('.datetime').datetimepicker({
+                format: 'DD MMM YYYY HH:mm',
+                extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
+                //daysOfWeekDisabled: [0, 6],
+                showClear: true,
+                viewDate: false,
+                useCurrent: true,
+                stepping: 30,
+                sideBySide: true
+
+                //,maxDate: moment().add(-1, 'year')
+            });
         });
 
         function createFormVars(obj) {
@@ -191,7 +246,6 @@
             var formVars = JSON.stringify({ formVars: arr });
             return formVars;
         }
-
 
         function update_vehicle_booking(data) {
             var id = '';

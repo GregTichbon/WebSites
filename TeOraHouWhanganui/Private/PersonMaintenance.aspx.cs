@@ -195,7 +195,7 @@ namespace TeOraHouWhanganui.Private
 
                     html_tab += "<li><a data-target=\"#div_enrolment\">Enrolments</a></li>";
                     html_enrolments = "<thead>";
-                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>Enrolled</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Always Pickup</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                    html_enrolments += "<tr><th style=\"width:50px;text-align:center\"></th><th>Program</th><th>Started</th><th>Ended</th><th>First Event</th><th>Last Event</th><th>Status</th><th>Worker</th><th>Always Pickup</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"enrolmentedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                     html_enrolments += "</thead>";
                     html_enrolments += "<tbody>";
 
@@ -203,7 +203,8 @@ namespace TeOraHouWhanganui.Private
                     html_enrolments += "<tr style=\"display:none\">";
                     html_enrolments += "<td style=\"text-align:center\"></td>";
                     html_enrolments += "<td></td>"; //Program
-                    html_enrolments += "<td></td>"; //Enrolled
+                    html_enrolments += "<td></td>"; //Started
+                    html_enrolments += "<td></td>"; //Ended
                     //html_enrolments += "<td></td>"; //First Event
                     //html_enrolments += "<td></td>"; //Last Event
                     html_enrolments += "<td></td>"; //Events
@@ -232,11 +233,13 @@ namespace TeOraHouWhanganui.Private
                         string worker = dr["worker"].ToString();
                         string alwayspickup = dr["alwayspickup"].ToString();
                         string note = dr["notes"].ToString();
-                        string dateenrolled = Functions.formatdate(dr["dateenrolled"].ToString(), "dd MMM yyyy");
+                        string startdate = Functions.formatdate(dr["startdate"].ToString(), "dd MMM yyyy");
+                        string enddate = Functions.formatdate(dr["enddate"].ToString(), "dd MMM yyyy");
                         html_enrolments += "<tr id=\"enrolment_" + entity_enrolment_CTR + "\">";
                         html_enrolments += "<td style=\"text-align:center\"></td>";
                         html_enrolments += "<td programid=\"" + programid + "\">" + programname + "</td>";
-                        html_enrolments += "<td>" + dateenrolled + "</td>";
+                        html_enrolments += "<td>" + startdate + "</td>";
+                        html_enrolments += "<td>" + enddate + "</td>";
                         html_enrolments += "<td>" + firstevent + "</td>";
                         html_enrolments += "<td>" + lastevent + "</td>";
                         //html_enrolments += "<td>" + events + "</td>";
@@ -963,7 +966,8 @@ namespace TeOraHouWhanganui.Private
                     cmd.Parameters.Add("@worker", SqlDbType.VarChar).Value = valuesSplit[2];
                     cmd.Parameters.Add("@alwayspickup", SqlDbType.VarChar).Value = valuesSplit[3];
                     cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
-                    cmd.Parameters.Add("@dateenrolled", SqlDbType.VarChar).Value = valuesSplit[5];
+                    cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[5];
+                    cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[6];
                     //}
                     con.Open();
                     cmd.ExecuteScalar().ToString();

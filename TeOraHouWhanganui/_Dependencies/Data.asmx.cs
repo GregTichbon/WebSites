@@ -100,7 +100,7 @@ namespace TeOraHouWhanganui._Dependencies
         public void get_entitys_for_program(string program, string worker, string start, string end)
         {
 
-            JArray vehicles = new JArray();
+            JArray entities = new JArray();
 
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
             String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
@@ -121,16 +121,16 @@ namespace TeOraHouWhanganui._Dependencies
 
             while (dr.Read())
             {
-                dynamic vehicle = new JObject();
-                vehicle.id = dr["vehicle_ctr"].ToString();
-                vehicle.title = dr["name"].ToString();
-                vehicle.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
-                vehicles.Add(vehicle);
+                dynamic entity = new JObject();
+                entity.id = dr["entityid"].ToString();
+                entity.title = dr["name"].ToString();
+                entity.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
+                entities.Add(entity);
 
             }
             dr.Close();
 
-            Context.Response.Write(vehicles);
+            Context.Response.Write(entities);
 
         }
 
@@ -196,7 +196,7 @@ namespace TeOraHouWhanganui._Dependencies
                 dynamic booking = new JObject();
                 booking.id = dr["vehicle_booking_ctr"].ToString();
                 booking.resourceId = dr["vehicle_ctr"].ToString();
-                booking.title = dr["name"].ToString() + " - " + dr["detail"].ToString();
+                booking.title = Functions.formatdate(dr["startdatetime"].ToString(),"dd MMM yy HH:mm") + " - <br />" + Functions.formatdate(dr["enddatetime"].ToString(), "dd MMM yy HH:mm") + "<br />" + dr["name"].ToString() + "<br />" + dr["detail"].ToString();
                 booking.start = Convert.ToDateTime(dr["startdatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
                 booking.end = Convert.ToDateTime(dr["enddatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
                 booking.worker = dr["name"].ToString();
