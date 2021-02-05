@@ -40,6 +40,32 @@
                     });
                 },
                 */
+                buttonText: {
+                    month: 'Month',
+                    agendaDay: 'Day',
+                    agendaWeek: 'Week',
+                    today: 'Today',
+                    resourceTimeline: 'Time Line',
+                    resourceTimeGridDay: "Day Grid"
+                },
+                customButtons: {
+                    gotodatebutton: {
+                        text: 'Go to date',
+                        click: function () {
+                            alert('to do');
+                            calendar.gotoDate('2021-12-01');
+                        }
+                    }
+                },
+
+                headerToolbar: {
+                    left: 'prev,next today gotodatebutton',
+                    center: 'title',
+                    //right: 'dayGridMonth,timeGridWeek,timeGridDay,resourceTimeline,resourceTimeGridDay'
+                    right: 'dayGridMonth,timeGridWeek,resourceTimeline,resourceTimeGridDay'
+                },
+
+
                 select: function (info) {
                     $('#fld_startdatetime').val(moment(info.startStr).format('D MMM YYYY HH:mm'));
                     $('#fld_enddatetime').val(moment(info.endStr).format('D MMM YYYY HH:mm'));
@@ -194,7 +220,6 @@
 
 
         $(document).ready(function () {
- 
 
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
@@ -267,10 +292,10 @@
             return id;
 
         }
-    </script>
+   </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
+   
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>Click, hold, and drag down in empty space to create a new booking.</p>
         <p>Click, hold, and drag an existing booking to a new time and/or vehicle.</p>

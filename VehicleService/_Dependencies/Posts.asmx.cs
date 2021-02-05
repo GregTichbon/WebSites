@@ -85,6 +85,8 @@ namespace VehicleService._Dependencies
                 cmd.Parameters.Add("@year", SqlDbType.VarChar).Value = formVars.Form("vehicle_year");
                 cmd.Parameters.Add("@odometer", SqlDbType.VarChar).Value = formVars.Form("vehicle_odometer");
                 cmd.Parameters.Add("@vehicletype_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_vehicletype");
+                cmd.Parameters.Add("@registration_due", SqlDbType.VarChar).Value = formVars.Form("vehicle_registration_due");
+                
 
 
                 con.Open();

@@ -37,6 +37,11 @@
                 });
             })
 
+            $('#nzta').click(function () {
+                copytoClipboard($('#vehicle_registration').val());
+                myWindow = window.open("https://transact.nzta.govt.nz/transactions/CheckExpiry/entry", "NZTA", "width=800,height=1000");
+            })
+
             $('#makemodelrefresh').click(function () {
                 alert('to do');
             })
@@ -449,6 +454,16 @@
                 });
         }
 
+   
+
+        function copytoClipboard(textToCopy) {
+
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {  })
+                .catch((error) => { alert('Copy failed! ${error}') });
+
+
+        }
     </script>
 
 </asp:Content>
@@ -700,7 +715,9 @@
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
+                                   
                                 </div>
+                                 <a id="nzta">NZTA</a>
                             </div>
                         </div>
                         <div class="form-group">
