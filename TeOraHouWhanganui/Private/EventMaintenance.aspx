@@ -74,9 +74,6 @@
                     id = $(this).attr('attendanceid');
                     $(this).attr('name', "update_attendance_" + id);
                 }
-
-
-
                 counter();
             });
 
@@ -93,9 +90,24 @@
                 counter();
             });
 
+            $('body').on('change', '.notes', function () {
+                //name = $(this).attr("name");
+                //if (name.substring(0, 8) != "updated_") {
+                //    id = name.split("_")[1];
+                //    $(this).attr('name', "updated_capacity_" + id);
+                //}
+                if (name == "") {
+                    id = $(this).attr('notesid');
+                    $(this).attr('name', "update_notes_" + id);
+                }
+                counter();
+            });
+
+
             $('tbody tr').each(function () {
                 id = $(this).data('id');
                 //var s = $('<select class="form-control attendance" name="attendance_' + id + '" />');
+
                 var s = $('<select class="form-control attendance" name="" attendanceid="' + id + '" />');
                 value = $(this).find('td').eq(2).text();
                 attendance.forEach(function (item, index) {
@@ -121,11 +133,18 @@
                 });
                 $(this).find('td').eq(3).html(s);
 
+                value = $(this).find('td').eq(4).text();
+                var s = $('<textarea class="form-control notes" maxlength=\"900\" name="" notesid="' + id + '" />').text(value);
+                $(this).find('td').eq(4).html(s);
+
+
+
             });
 
             $('.statusfilter').change(function () {
                 if (this.checked) {
                     $('.attendancefilter').prop('checked', false);
+                    $('.notesfilter').prop('checked', false);
                 }
                 filter();
             });
@@ -133,6 +152,15 @@
             $('.attendancefilter').change(function () {
                 if (this.checked) {
                     $('.statusfilter').prop('checked', false);
+                    $('.notesfilter').prop('checked', false);
+                }
+                filter();
+            });
+
+            $('.notesfilter').change(function () {
+                if (this.checked) {
+                    $('.statusfilter').prop('checked', false);
+                    $('.attendancefilter').prop('checked', false);
                 }
                 filter();
             });
@@ -150,16 +178,17 @@
                 selected.push($(this).val());
             });
             attendaceselected = $('.attendancefilter').prop('checked');
+            notesselected = $('.notesfilter').prop('checked');
             $('tbody tr').each(function () {
                 thisstatus = $(this).attr("status");
                 thisattendance = $(this).find('.attendance').val();
-                if (selected.indexOf(thisstatus) != -1 || (attendaceselected && (thisattendance == 'Yes' || thisattendance == 'Partial'))) {
+                thisnotes = $(this).find('.notes').text();
+                if (selected.indexOf(thisstatus) != -1 || (attendaceselected && (thisattendance == 'Yes' || thisattendance == 'Partial')) || (notesselected && thisnotes != "")) {
                     $(this).show();
                 }
                 else {
                     $(this).hide();
                 }
-
             });
         }
 
@@ -256,8 +285,9 @@
         Casual&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Finished" />
         Finished&nbsp;&nbsp;&nbsp;&nbsp;<input class="statusfilter" type="checkbox" value="Deceased" />
         Deceased<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="attendancefilter" type="checkbox" value="Attended" />
-        Attended
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="attendancefilter" type="checkbox" value="Attended" /> Attended<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or ==> &nbsp;&nbsp;&nbsp;&nbsp;<input class="notesfilter" type="checkbox" value="Notes" />
+        Has Notes
     <p id="counter"></p>
     </div>
     <table class="table table-striped">

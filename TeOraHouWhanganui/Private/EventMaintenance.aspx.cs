@@ -131,7 +131,7 @@ namespace TeOraHouWhanganui.Private
                                     html_attendance += "<td>" + firstevent + " - " + lastevent + "</td>";
                                     html_attendance += "<td>" + attendance + "</td>";
                                     html_attendance += "<td class=\"capacity\">" + capacity + "</td>";
-                                    html_attendance += "<td class=\"note\">" + notes + "</td>";
+                                    html_attendance += "<td class=\"notes\">" + notes + "</td>";
                                     //html_attendance += "<td><a href=\"javascript:void(0)\" class=\"enrolmentedit\" data-mode=\"edit\">Edit</td>";
                                     html_attendance += "</tr>";
                                 }
