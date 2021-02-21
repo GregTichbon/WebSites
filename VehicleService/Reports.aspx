@@ -38,6 +38,7 @@
     </h1>
     <p><a class="btn btn-info" href="report.aspx?id=1">Full Report</a></p>
     <p><a class="btn btn-info" href="report.aspx?id=2">Wof Dues within 14 days</a></p>
+       <p><a class="btn btn-info" href="report.aspx?id=3">Activity Followup within 14 days</a></p>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>
