@@ -10,6 +10,8 @@
     <link href="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
    <script>
 
+       var gotodate;
+
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -52,8 +54,17 @@
                     gotodatebutton: {
                         text: 'Go to date',
                         click: function () {
-                            alert('to do');
-                            calendar.gotoDate('2021-12-01');
+                            $("#dialog_gotodate").dialog({
+                                buttons: {
+                                    "Cancel": function () {
+                                        $(this).dialog("close");
+                                    },
+                                    "Use": function () {
+                                        calendar.gotoDate(gotodate);
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
                         }
                     }
                 },
@@ -67,94 +78,104 @@
 
 
                 select: function (info) {
-                    $('#fld_startdatetime').val(moment(info.startStr).format('D MMM YYYY HH:mm'));
-                    $('#fld_enddatetime').val(moment(info.endStr).format('D MMM YYYY HH:mm'));
-                    $('#fld_worker').val('');
-                    $('#fld_worker').data('worker_ctr', '');
-                    $('#fld_detail').val('');
-                    $("#dialog_edit").dialog({
-                        title: 'Create ' + moment(info.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.endStr).format('D MMM YYYY HH:mm'),
-                        resizable: false,
-                        height: 600,
-                        width: 800,
-                        modal: true,
-                        buttons: {
-                            "Cancel": function () {
-                                $(this).dialog("close");
-                            },
-                            "Confirm": function () {
-                                if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
-                                    alert('You must select a worker and provide some detail');
-                                } else {
-                                    id = update_vehicle_booking({ vehicle_booking_ctr: "new", vehicle_ctr: info.resource.id, start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
-                                    calendar.addEvent({
-                                        id: id,
-                                        title: $('#fld_worker').val() + ' - ' + $('#fld_detail').val(),
-                                        resourceId: info.resource.id,
-                                        start: moment($('#fld_startdatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"), //info.startStr,
-                                        end: moment($('#fld_enddatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"), //info.endStr,
-                                        extendedProps: {
-                                            worker: $('#fld_worker').val(),
-                                            worker_ctr: $('#fld_worker').data('worker_ctr'),
-                                            detail: $('#fld_detail').val()
-                                        }
-                                    });
+                    if (!calendar.view.type.startsWith("resource")) {
+                        alert('Working on .... To allow edit then the vehicle must be able to be selected in the dialog');
+                    } else {
+                        $('#fld_startdatetime').val(moment(info.startStr).format('D MMM YYYY HH:mm'));
+                        $('#fld_enddatetime').val(moment(info.endStr).format('D MMM YYYY HH:mm'));
+                        $('#fld_worker').val('');
+                        $('#fld_worker').data('worker_ctr', '');
+                        $('#fld_detail').val('');
+                        $("#dialog_edit").dialog({
+                            title: 'Create ' + moment(info.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.endStr).format('D MMM YYYY HH:mm'),
+                            resizable: false,
+                            height: 600,
+                            width: 800,
+                            modal: true,
+                            buttons: {
+                                "Cancel": function () {
                                     $(this).dialog("close");
+                                },
+                                "Confirm": function () {
+                                    if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
+                                        alert('You must select a worker and provide some detail');
+                                    } else {
+                                        id = update_vehicle_booking({ vehicle_booking_ctr: "new", vehicle_ctr: info.resource.id, start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
+                                        resourcename = calendar.getResourceById(info.resource.id).extendedProps.name;
+                                        calendar.addEvent({
+                                            id: id,
+                                            title: "<b>" + resourcename + "</b><br />" + moment($('#fld_startdatetime').val()).format('D MMM YY HH:mm') + " -<br /> " + moment($('#fld_enddatetime').val()).format('D MMM YY HH:mm') + "<br />" + $('#fld_worker').val() + '<br />' + $('#fld_detail').val(),
+                                            resourceId: info.resource.id,
+                                            start: moment($('#fld_startdatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"), //info.startStr,
+                                            end: moment($('#fld_enddatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"), //info.endStr,
+                                            extendedProps: {
+                                                worker: $('#fld_worker').val(),
+                                                worker_ctr: $('#fld_worker').data('worker_ctr'),
+                                                detail: $('#fld_detail').val()
+                                            }
+                                        });
+                                        $(this).dialog("close");
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 },
                 eventClick: function (info) {
-                    $('#fld_startdatetime').val(moment(info.event.startStr).format('D MMM YYYY HH:mm'));
-                    $('#fld_enddatetime').val(moment(info.event.endStr).format('D MMM YYYY HH:mm'));
-                    $('#fld_worker').val(info.event.extendedProps.worker);
-                    $('#fld_worker').data('worker_ctr', info.event.extendedProps.worker_ctr);
-                    $('#fld_detail').val(info.event.extendedProps.detail)
-
-                    $("#dialog_edit").dialog({
-                        title: 'Edit ' + moment(info.event.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.event.endStr).format('D MMM YYYY HH:mm'),
-                        resizable: false,
-                        height: 600,
-                        width: 800,
-                        modal: true,
-                        buttons: {
-                            "Cancel": function () {
-                                $(this).dialog("close");
-                            },
-                            "Remove": function () {
-                                info.event.remove();
-                                update_vehicle_booking({ vehicle_booking_ctr: -info.event.id });
-                                $(this).dialog("close");
-                            },
-                            "Confirm": function () {
-                                if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
-                                    alert('You must select a worker and provide some detail');
-                                } else {
-                                    update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
-                                    info.event.setStart(moment($('#fld_startdatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
-                                    info.event.setEnd(moment($('#fld_enddatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
-                                   
-
-                                    info.event.setProp("title", $('#fld_worker').val() + ' - ' + $('#fld_detail').val());
-                                    info.event.extendedProps.worker = $('#fld_worker').val();
-                                    info.event.extendedProps.worker_ctr = $('#fld_worker').data('worker_ctr');
-                                    info.event.extendedProps.detail = $('#fld_detail').val();
-
+                    if (!calendar.view.type.startsWith("resource")) {
+                        alert('Working on .... To allow edit then the vehicle must be able to be selected in the dialog');
+                    } else {
+                        $('#fld_startdatetime').val(moment(info.event.startStr).format('D MMM YYYY HH:mm'));
+                        $('#fld_enddatetime').val(moment(info.event.endStr).format('D MMM YYYY HH:mm'));
+                        $('#fld_worker').val(info.event.extendedProps.worker);
+                        $('#fld_worker').data('worker_ctr', info.event.extendedProps.worker_ctr);
+                        $('#fld_detail').val(info.event.extendedProps.detail);
+                        $("#dialog_edit").dialog({
+                            title: 'Edit ' + moment(info.event.startStr).format('D MMM YYYY HH:mm') + ' to ' + moment(info.event.endStr).format('D MMM YYYY HH:mm'),
+                            resizable: false,
+                            height: 600,
+                            width: 800,
+                            modal: true,
+                            buttons: {
+                                "Cancel": function () {
                                     $(this).dialog("close");
+                                },
+                                "Remove": function () {
+                                    info.event.remove();
+                                    update_vehicle_booking({ vehicle_booking_ctr: -info.event.id });
+                                    $(this).dialog("close");
+                                },
+                                "Confirm": function () {
+                                    if ($('#fld_detail').val() == '' || $('#fld_worker').data('worker_ctr') == '') {
+                                        alert('You must select a worker and provide some detail');
+                                    } else {
+                                        update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment($('#fld_startdatetime').val()).format('D-MMM-YYYY HH:mm'), end: moment($('#fld_enddatetime').val()).format('D-MMM-YYYY HH:mm'), worker_ctr: $('#fld_worker').data('worker_ctr'), details: $('#fld_detail').val() });
+                                        info.event.setStart(moment($('#fld_startdatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
+                                        info.event.setEnd(moment($('#fld_enddatetime').val()).format("YYYY-MM-DDTHH:mm:ssZ"));
+                                        var resources = info.event.getResources();
+                                        info.event.setProp("title", "<b>" + resources[0].extendedProps.name + "</b><br />" + moment($('#fld_startdatetime').val()).format('D MMM YY HH:mm') + " -<br /> " + moment($('#fld_enddatetime').val()).format('D MMM YY HH:mm') + "<br />" + $('#fld_worker').val() + '<br />' + $('#fld_detail').val());
+                                        info.event.setExtendedProp('worker', $('#fld_worker').val());
+                                        info.event.setExtendedProp('worker_ctr', $('#fld_worker').data('worker_ctr'));
+                                        info.event.setExtendedProp('detail', $('#fld_detail').val());
+
+                                        $(this).dialog("close");
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 },
                 eventContent: function (arg) {
+                    /*
                     let arrayOfDomNodes = []
-                    // title event
                     let titleEvent = document.createElement('div')
                     if (arg.event._def.title) {
                         titleEvent.innerHTML = arg.event._def.title;
                         titleEvent.classList = "fc-event-title fc-sticky";
                     }
+                    arrayOfDomNodes = [titleEvent]
+                    */
+
                     /*
                     // image event
                     let imgEventWrap = document.createElement('div')
@@ -166,8 +187,10 @@
 
                     arrayOfDomNodes = [titleEvent, imgEventWrap]
                     */
-                    arrayOfDomNodes = [titleEvent]
-                    return { domNodes: arrayOfDomNodes }
+        
+                    //return { domNodes: arrayOfDomNodes }
+
+                    return { html: arg.event.title };
                 },
 
                 
@@ -186,6 +209,7 @@
                 //},
                 eventResize: function (info) {
                     update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
+                    alert('Need to rebuild title');
                     /*
                     if (!confirm("is this okay?")) {
                         info.revert();
@@ -201,14 +225,22 @@
                         */
 
                     update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
-
-
+                    alert('Need to rebuild title');
                     /*
                     if (!confirm("is this okay?")) {
                         info.revert();
                     }
                     */
                 },
+
+                resourceLabelContent: function (arg) {
+                    return { html: arg.resource.title };
+                },
+                /*
+                resourcesSet: function (resource) {
+                    console.log(resource);
+                },
+                */
                 editable: true,
                 selectable: true
 
@@ -261,7 +293,24 @@
 
                 //,maxDate: moment().add(-1, 'year')
             });
+
+            $('#gotodate').datetimepicker({
+                format: 'DD MMM YYYY',
+                extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
+                //daysOfWeekDisabled: [0, 6],
+                showClear: true,
+                viewDate: false,
+                useCurrent: true,
+                inline: true
+            });
+            $("#gotodate").on("dp.change", function (e) {
+                gotodate = moment(e.date).format('YYYY-MM-DD');
+            });
         });
+       
+
+
+
 
         function createFormVars(obj) {
             var arr = [];
@@ -304,7 +353,20 @@
         <p>Click in a cell on the "All-Day" row to book a vehicle for the whole day.</p>
         <p>You can also change the start and/or end time in the dialog box.  This is useful if a booking will span multiple days.</p>
     </div>
+    <div id="dialog_gotodate" style="display:none">
+        <div id="gotodate"></div>
+    </div>
     <div id="dialog_edit" title="Edit" style="display: none" class="form-horizontal">
+        <div class="form-group">
+            <label for="fld_vehicle_ctr" class="control-label col-sm-4">
+                Vehicle
+            </label>
+            <div class="col-sm-8">
+                <input id="fld_vehicle_ctr" name="fld_vehicle_ctr" type="text" class="form-control" value="working on" readonly="readonly" />
+            </div>
+        </div>
+
+
         <div class="form-group">
             <label for="fld_startdatetime" class="control-label col-sm-4">
                 Start Date/Time
@@ -332,12 +394,10 @@
             </div>
         </div>
 
-
-
         <div class="form-group">
             <label class="control-label col-sm-4" for="fld_worker">Worker</label>
             <div class="col-sm-8">
-                <input id="fld_worker" name="fld_name" type="text" class="form-control" />
+                <input id="fld_worker" name="fld_worker" type="text" class="form-control" />
             </div>
         </div>
 

@@ -41,6 +41,37 @@
             $('#search').click(function () {
                 window.location.href = "<%=ResolveUrl("~/private/eventsearch.aspx")%>";
             });
+
+            $('#pickups').click(function () {
+                var formData = new FormData();
+                formData.append('mode', 'pickups');
+                formData.append('event_ctr', event_ctr);
+                $.ajax({
+                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url: '/_dependencies/data.aspx', // the url where we want to POST
+                    processData: false,  // tell jQuery not to process the data
+                    contentType: false,  // tell jQuery not to set contentType
+                    data: formData,
+                    //dataType: 'html', // what type of data do we expect back from the server
+                    success: function (result) {
+                        $('#div_pickups').html(result);
+                    },
+                    error: function (xhr, status) {
+                        alert('error');
+
+                    }
+                });
+
+               
+                $("#dialog_pickups").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: 800,
+                    modal: true
+                });
+            });
+
+
             $("#form1").validate();
 
             $('.Finished, .Deceased, .Casual').hide();
@@ -214,8 +245,14 @@
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p></p>
     </div>
+     <div id="dialog_pickups" title="Pickups" style="display: none">
+        <div id="div_pickups"></div>
+    </div>
 
     <div class="toprighticon">
+        <%if (pickups != "0") { %>
+        <input type="button" id="pickups" class="btn btn-info" value="Pickups" />
+        <%} %>
         <input type="button" id="search" class="btn btn-info" value="Search" />
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />

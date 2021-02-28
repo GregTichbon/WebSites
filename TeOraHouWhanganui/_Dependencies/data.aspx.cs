@@ -28,6 +28,9 @@ namespace TeOraHouWhanganui._Dependencies
 
             switch (mode)
             {
+                case "pickups":
+                    Pickups();
+                    break;
                 case "get_employee_periods":
                     get_employee_periods();
                     break;
@@ -322,6 +325,45 @@ namespace TeOraHouWhanganui._Dependencies
                 }
             }
 
+            html += "</tbody></table>";
+            return (html);
+        }
+
+        protected string Pickups()
+        {
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            string event_ctr = Request.Form["event_ctr"];
+            html = "<table class=\"table table-condensed\" style=\"width:100%\">";
+            html += "<thead>";
+            html += "<tr><th>Name</th><th>Pickup</th><th>Attendance</th></tr>";
+            html += "</thead>";
+            html += "<tbody>";
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("Compare_Pickup_Attendance", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@event_ctr", SqlDbType.VarChar).Value = event_ctr;
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    string name = dr["name"].ToString();
+                    string attendance = dr["attendance"].ToString();
+                    string pickup = dr["pickup"].ToString();
+
+                    html += "<tr>";
+                    html += "<td>" + name + "</td>";
+                    html += "<td>" + pickup + "</td>";
+                    html += "<td>" + attendance + "</td>";
+                    html += "</tr>";
+                }
+                dr.Close();
+                con.Close();
+            }
             html += "</tbody></table>";
             return (html);
         }

@@ -159,7 +159,10 @@ namespace TeOraHouWhanganui._Dependencies
             {
                 dynamic vehicle = new JObject();
                 vehicle.id = dr["vehicle_ctr"].ToString();
-                vehicle.title = dr["name"].ToString();
+                vehicle.name = dr["name"].ToString();
+                vehicle.registration = dr["registration"].ToString();
+                vehicle.title = vehicle.name + "<br />" + vehicle.registration;
+                vehicle.eventBackgroundColor = "blue";
                 vehicle.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
                 vehicles.Add(vehicle);
 
@@ -196,7 +199,7 @@ namespace TeOraHouWhanganui._Dependencies
                 dynamic booking = new JObject();
                 booking.id = dr["vehicle_booking_ctr"].ToString();
                 booking.resourceId = dr["vehicle_ctr"].ToString();
-                booking.title = Functions.formatdate(dr["startdatetime"].ToString(),"dd MMM yy HH:mm") + " - <br />" + Functions.formatdate(dr["enddatetime"].ToString(), "dd MMM yy HH:mm") + "<br />" + dr["name"].ToString() + "<br />" + dr["detail"].ToString();
+                booking.title = "<b>" + dr["vehicleName"] + "</b><br />" + Functions.formatdate(dr["startdatetime"].ToString(),"dd MMM yy HH:mm") + " - <br />" + Functions.formatdate(dr["enddatetime"].ToString(), "dd MMM yy HH:mm") + "<br />" + dr["name"].ToString() + "<br />" + dr["detail"].ToString();
                 booking.start = Convert.ToDateTime(dr["startdatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
                 booking.end = Convert.ToDateTime(dr["enddatetime"]).ToString("yyyy-MM-ddTHH:mm:ss");
                 booking.worker = dr["name"].ToString();

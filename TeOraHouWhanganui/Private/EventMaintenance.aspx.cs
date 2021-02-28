@@ -25,6 +25,7 @@ namespace TeOraHouWhanganui.Private
         public string fld_money;
         public string fld_venue;
         public string html_attendance = "";
+        public string pickups = "0";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
         public string[] nooptions = { };
@@ -88,6 +89,8 @@ namespace TeOraHouWhanganui.Private
                                 fld_attendanceentrycomplete = dr["AttendanceEntryComplete"].ToString();
                                 fld_money = dr["Money"].ToString();
                                 fld_venue = dr["venue"].ToString();
+                                pickups = dr["pickups"].ToString();
+
                             }
                             dr.Close();
                             con.Close();
