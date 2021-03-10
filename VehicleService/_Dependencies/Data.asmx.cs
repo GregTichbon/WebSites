@@ -102,6 +102,7 @@ namespace TeOraHouWhanganui._Dependencies
             {
                 dr.Read();
                 //fld_customertype_ctr[0] = dr["customertype_ctr"].ToString();
+                customer.displayname = dr["displayname"].ToString();
                 customer.name = dr["fullname"].ToString();
                 customer.firstname = dr["firstname"].ToString();
                 customer.surname = dr["surname"].ToString();

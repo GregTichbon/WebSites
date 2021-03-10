@@ -15,6 +15,11 @@
         input[required], select[required], textarea[required] {
             border: 3px solid
         }
+
+        .customer_name, vehicle_description {
+            background-color:lightskyblue;
+            color: white;
+        }
     </style>
 
 
@@ -28,42 +33,57 @@
             ////$('#hidden_dirty').addClass('dirty');
             //$('#form1').addClass('dirty');
             //}
+            
+
+
+            customer_ctr = "<%=customer_ctr%>";
+            if (customer_ctr != "") {
+                load_customer(customer_ctr);
+                customer_vehicle_ctr = "<%=customer_vehicle_ctr%>";
+                if (customer_vehicle_ctr != "") {
+                    load_vehicle(customer_vehicle_ctr);
+                    $('#section_vehicle').show();
+                } else {
+                    $('#section_customer').show();
+                }
+            }
+
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
-                    resizable: false,
+                resizable: false,
                     height: 600,
                     width: 800,
                     modal: true
                 });
-            })
+        })
 
             $('#nzta').click(function () {
-                copytoClipboard($('#vehicle_registration').val());
-                myWindow = window.open("https://transact.nzta.govt.nz/transactions/CheckExpiry/entry", "NZTA", "width=800,height=1000");
-            })
+            copytoClipboard($('#vehicle_registration').val());
+            myWindow = window.open("https://transact.nzta.govt.nz/transactions/CheckExpiry/entry", "NZTA", "width=800,height=1000");
+        })
 
             $('#makemodelrefresh').click(function () {
-                alert('to do');
-            })
+            alert('to do');
+        })
 
             $('#vehicle_followup_actioneddate').change(function () {
-                if ($(this).val() != "") {
+            if ($(this).val() != "") {
                     $('#vehicle_followup_actioneddetail').prop('required', true);
-                } else {
+            } else {
                     $('#vehicle_followup_actioneddetail').prop('required', false);
-                }
-            })
+            }
+        })
 
             $('#vehicle_followup_actioneddetail').change(function () {
-                if ($(this).val() != "") {
+            if ($(this).val() != "") {
                     $('#vehicle_followup_actioneddate').prop('required', true);
-                } else {
+            } else {
                     $('#vehicle_followup_actioneddate').prop('required', false);
-                }
-            })
+            }
+        })
 
             $('#menu').click(function () {
-                window.location.href = "<%=ResolveUrl("~/default.aspx")%>";
+            window.location.href = "<%=ResolveUrl("~/default.aspx")%>";
             });
 
             $('.key').click(function () {
@@ -88,27 +108,9 @@
                 minLength: 2,
                 select: function (event, ui) {
                     event.preventDefault();
-                    $('#customersearch_name').val("");
-                    customer_ctr = ui.item.customer_ctr;
-                    $('#customer_ctr').val(customer_ctr);
-                    $('#section_customersearch').hide();
-                    $.getJSON("/_Dependencies/data.asmx/get_customer?id=" + customer_ctr, function (data) {
-                        $('#customer_name').val(data.name);
-                        $('.customer_name').html(data.name);
-                        $('#customer_firstname').val(data.firstname);
-                        $('#customer_surname').val(data.surname);
-                        $('#customer_knownas').val(data.knownas);
-                        $('#customer_address').val(data.address);
-                        $('#customer_customertype').val(data.customertype_ctr);
-                        $('#customer_emailaddress').val(data.emailaddress);
-                        $('#customer_mobilephone').val(data.mobilephone);
-                        $('#customer_homephone').val(data.homephone);
-                        $('#customer_workphone').val(data.workphone);
-                        $('#customer_note').val(data.note);
-                        $('#customer_guid').val(data.guid);
-                    });
-                    get_customer_vehicles(customer_ctr);
+                    load_customer(ui.item.customer_ctr);
                     $('#section_customer').show();
+
                 }
             })
 
@@ -133,6 +135,8 @@
                     $('#vehicle_vehiclemodel').val('');
                     $('#vehicle_note').val('');
                 } else {
+                    load_vehicle(customer_vehicle_ctr); //NEW
+                    /*
                     $('#vehicle_registration').prop('disabled', true);
                     $.getJSON("/_Dependencies/data.asmx/get_customer_vehicle?id=" + customer_vehicle_ctr, function (data) {
                         $('#vehicle_ctr').val(data.vehicle_ctr);
@@ -149,7 +153,7 @@
                         get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
                         get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
                     });
-
+                    */
                 }
                 $('#section_vehicle').show();
             });
@@ -396,6 +400,31 @@
                 }
             });
 
+            $('#btn_vehicle_followupdelete').click(function () {
+                if (confirm('Are you sure you would like to delete this followup record?')) {
+                    $('#section_vehicle_followup').hide();
+                    var arForm = [{ name: 'vehicle_followup_ctr', value: $('#vehicle_followup_ctr').val() }];
+                    var formData = JSON.stringify({ formVars: arForm });
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/_dependencies/posts.asmx/delete_vehicle_followup', // the url where we want to POST
+                        contentType: "application/json; charset=utf-8",
+                        data: formData,
+                        dataType: 'json', // what type of data do we expect back from the server
+                        async: false,
+                        success: function (result) {
+                        },
+                        error: function (xhr, status) {
+                            alert('error');
+                        }
+                    });
+
+                    get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                    $('#section_vehicle').show();
+                }
+            });
+
+
             $('#btn_vehicle_followupcancel').click(function () {
                 form_vehicle_followup.resetForm();
                 $('#section_vehicle_followup').hide();
@@ -433,6 +462,47 @@
                 }
             });
         }); //document.ready
+
+        function load_customer(customer_ctr) {
+            $('#customersearch_name').val("");
+            $('#section_customersearch').hide();
+            $('#customer_ctr').val(customer_ctr);
+            $.getJSON("/_Dependencies/data.asmx/get_customer?id=" + customer_ctr, function (data) {
+                $('#customer_name').val(data.name);
+                $('.customer_name').html(data.displayname);
+                $('#customer_firstname').val(data.firstname);
+                $('#customer_surname').val(data.surname);
+                $('#customer_knownas').val(data.knownas);
+                $('#customer_address').val(data.address);
+                $('#customer_customertype').val(data.customertype_ctr);
+                $('#customer_emailaddress').val(data.emailaddress);
+                $('#customer_mobilephone').val(data.mobilephone);
+                $('#customer_homephone').val(data.homephone);
+                $('#customer_workphone').val(data.workphone);
+                $('#customer_note').val(data.note);
+                $('#customer_guid').val(data.guid);
+            });
+            get_customer_vehicles(customer_ctr);
+        }
+
+        function load_vehicle(customer_vehicle_ctr) {
+            $('#vehicle_registration').prop('disabled', true);
+            $.getJSON("/_Dependencies/data.asmx/get_customer_vehicle?id=" + customer_vehicle_ctr, function (data) {
+                $('#vehicle_ctr').val(data.vehicle_ctr);
+                $('#vehicle_registration').val(data.registration);
+                $('#vehicle_description').val(data.description);
+                $('#vehicle_wof_cycle').val(data.wof_cycle);
+                $('#vehicle_wof_due').val(data.wof_due);
+                $('#vehicle_registration_due').val(data.registration_due);
+                $('#vehicle_year').val(data.year);
+                $('#vehicle_odometer').val(data.odometer);
+                $('#vehicle_vehiclemodel').val(data.vehiclemodel);
+                $('#vehicle_vehicletype').val(data.vehicletype);
+                $('#vehicle_note').val(data.vehiclenote);
+                get_vehicle_activities($('#customer_ctr').val(), $('#vehicle_ctr').val());
+                get_vehicle_followups($('#customer_ctr').val(), $('#vehicle_ctr').val());
+            });
+        }
 
         function get_customer_vehicles(customer_ctr) {
             $.post("/_Dependencies/data.aspx", { mode: "get_customer_vehicles", customer_ctr: customer_ctr })
@@ -499,7 +569,7 @@
                 <input id="btn_customercancel" type="button" class="btn btn-info" value="Cancel" />
                 <input id="btn_customersubmit" type="button" class="btn btn-info" value="Submit" />
             </div>
-            <h2>Customer Maintenance</h2>
+            <h2>Customer Maintenance : </h2>
             <h3 class="customer_name"></h3>
             <hr />
 
@@ -814,6 +884,7 @@
             </div>
             <div class="bottomrighticon">
                 <input type="button" id="btn_vehicle_followupcancel" class="btn btn-info" value="Cancel" />
+                <input type="button" id="btn_vehicle_followupdelete" class="btn btn-info" value="Delete" />
                 <input type="button" id="btn_vehicle_followupsubmit" class="btn btn-info" value="Submit" />
             </div>
             <h2>Vehicle followup

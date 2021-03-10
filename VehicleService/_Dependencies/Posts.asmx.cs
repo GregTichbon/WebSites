@@ -159,6 +159,28 @@ namespace VehicleService._Dependencies
             //Context.Response.Write(response);
             //return (response.ToString() );
         }
+
+        [WebMethod]
+        public void delete_vehicle_followup(NameValue[] formVars)
+        {
+            //dynamic response = new JObject();
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("delete_vehicle_followup", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@vehicle_followup_ctr", SqlDbType.VarChar).Value = formVars.Form("vehicle_followup_ctr");
+               
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+        }
+
     }
     
 }

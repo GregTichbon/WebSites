@@ -839,15 +839,15 @@ namespace TeOraHouWhanganui.Private
                 else if (key.StartsWith("encounter_"))
                 {
                     string encounter_ctr = key.Substring(10);   //key length 
-                                                                //if (encounter_ctr.EndsWith("_delete"))
-                                                                //{
-                                                                //    cmd.CommandText = "Delete_encounter";
-                                                                //    cmd.Parameters.Clear();
-                                                                //    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter.Substring(0, encounter_ctr.Length - ???);
-                                                                //}
-                                                                //else
-                                                                //{
-                    if (encounter_ctr.StartsWith("new"))
+                    if (encounter_ctr.EndsWith("_delete"))
+                    {
+                        cmd.CommandText = "Delete_encounter";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter_ctr;
+                    }
+                    else
+                    {
+                        if (encounter_ctr.StartsWith("new"))
                     {
                         encounter_ctr = "new";
                     }
@@ -863,7 +863,7 @@ namespace TeOraHouWhanganui.Private
                     cmd.Parameters.Add("@enddatetime", SqlDbType.VarChar).Value = valuesSplit[1];
                     cmd.Parameters.Add("@encounteraccesslevel", SqlDbType.VarChar).Value = valuesSplit[4];
                     cmd.Parameters.Add("@workers", SqlDbType.VarChar).Value = valuesSplit[3];
-                    //}
+                    }
                     con.Open();
                     cmd.ExecuteScalar().ToString();
                     con.Close();

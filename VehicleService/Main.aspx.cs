@@ -20,6 +20,8 @@ namespace VehicleService
         public Dictionary<string, string> wofcycles = new Dictionary<string, string>();
         public Dictionary<string, string> vehicletypes = new Dictionary<string, string>();
         public Dictionary<string, string> vehicleakemodels = new Dictionary<string, string>();
+        public string customer_ctr = "";
+        public string customer_vehicle_ctr = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
@@ -31,6 +33,9 @@ namespace VehicleService
             }
             //username = HttpContext.Current.User.Identity.Name.ToLower();
             //Username += "<br />" + Environment.UserName;
+
+            customer_ctr = Request.QueryString["customer"];
+            customer_vehicle_ctr = Request.QueryString["customer_vehicle"];
 
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
             String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;

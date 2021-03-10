@@ -76,6 +76,7 @@
     <Content Include="CustomerMaintenance.aspx" />
     <Content Include="CustomerSearch.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="Followup.aspx" />
     <Content Include="ImageUpload.aspx" />
     <Content Include="Import.aspx" />
     <Content Include="Imports\CampbellContacts.xml" />
@@ -146,6 +147,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Followup.aspx.cs">
+      <DependentUpon>Followup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Followup.aspx.designer.cs">
+      <DependentUpon>Followup.aspx</DependentUpon>
     </Compile>
     <Compile Include="ImageUpload.aspx.cs">
       <DependentUpon>ImageUpload.aspx</DependentUpon>

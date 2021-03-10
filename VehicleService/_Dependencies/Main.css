@@ -88,3 +88,25 @@ body {
 .ui-autocomplete-loading {
     background: white url('Images/processing_16x16.gif') right no-repeat;
 }
+a {
+    color: red;
+}
+/* unvisited link */
+a:link {
+    color: red;
+}
+
+/* visited link */
+a:visited {
+    color: red;
+}
+
+/* mouse over link */
+a:hover {
+    color: deeppink;
+}
+
+/* selected link */
+a:active {
+    color: red;
+}

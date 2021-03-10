@@ -429,7 +429,7 @@
                         value: value
                     }).appendTo('#form1');
                 });
-                /*
+                
                 $('#encountertable > tbody > tr[maint="deleted"]').each(function () {
                     tr_id = $(this).attr('id') + '_delete';
                     if (tr_id.substring(0, 3) != 'new') {
@@ -440,7 +440,7 @@
                         }).appendTo('#form1');
                     }
                 });
-                */
+                
 
                 update_enrolment();
                 update_address();
@@ -560,7 +560,7 @@
                     }
                 }
 
-
+                /*
                 if (mode != 'add') {
                     myButtons["Delete"] = function () {
                         if (window.confirm("Are you sure you want to delete this encounter?")) {
@@ -571,6 +571,7 @@
                         }
                     }
                 }
+                */
 
                 $("#dialog_encounter").dialog('option', 'buttons', myButtons);
             })
