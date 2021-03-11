@@ -1,6 +1,14 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Followup.aspx.cs" Inherits="VehicleService.Followup" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .updatewof {
+            width:20px;
+        }
+
+    </style>
+
+
     <script>
         $(document).ready(function () {
             $('#assistance').click(function () {
@@ -25,8 +33,35 @@
                 window.open("/main.aspx?customer=" + customer + '&customer_vehicle=' + customer_vehicle, 'main');
                 //window.location.href = "/main.aspx?customer=" + customer + '&customer_vehicle=' + customer_vehicle;
             })
+       
 
-           
+            $('.updatewof').click(function () {
+                id = $(this).closest('tr').data('vehicle');
+                $("#dialog_updatewof").dialog({
+                    //autoOpen: false,
+                    resizable: false,
+                    height: 600,
+                    width: 800,
+                    modal: true,
+                    open: function () {
+                        $(this).load('update_wof.aspx?id=' + id);
+                        $('#dialogform').validate();
+                    },
+                    buttons: {
+                        "Cancel": function () {
+                           $(this).dialog('close'); 
+                         },
+                        "Save": function () {
+                           
+                            alert("to do");
+                            if ($('#dialogform').valid()) {
+                                $(this).dialog('close');
+                            }
+                        }
+                    }
+                });
+            });
+        
 
         });
     </script>
@@ -38,6 +73,9 @@
     <div id="dialog_details" title="Details" style="display: none">
         <p>To do</p>
     </div>
+    <div id="dialog_updatewof" title="Update" style="display: none" class="form-horizontal">
+    </div>
+
     <div class="toprighticon">
         <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />

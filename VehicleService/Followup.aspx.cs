@@ -18,13 +18,11 @@ namespace VehicleService
         public string html = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
 
-
-                string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
-                String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
-
-                using (SqlConnection con = new SqlConnection(connectionString))
-                using (SqlCommand cmd = new SqlCommand("Wof_and_Followup", con))
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("Wof_and_Followup", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 //cmd.Parameters.Add("@id", SqlDbType.VarChar).Value = id;
@@ -46,21 +44,28 @@ namespace VehicleService
                         string Vehicle = dr["Vehicle"].ToString();
                         string Customer_Vehicle_CTR = dr["Customer_Vehicle_CTR"].ToString();
                         string WOF_Due = Functions.formatdate(dr["WOF_Due"].ToString(), "dd/MM/yy");
+                        int WOF_Cycle = (int)dr["wof_cycle"];
+
                         string FollowupDate = Functions.formatdate(dr["FollowupDate"].ToString(), "dd/MM/yy");
                         string Detail = dr["Detail"].ToString();
                         string vehicle_followup_ctr = dr["vehicle_followup_ctr"].ToString();
-
+                        string update = "";
+                        //if(WOF_Cycle != 0 && FollowupDate != "")
+                        //{
+                        update = " <img src=\"/_dependencies/images/tick.gif\" class=\"updatewof\">";
+                        //}
                         html += "<tr data-customer=\"" + Customer_CTR + "\" data-vehicle=\"" + vehicle_CTR + "\" data-customer_vehicle=\"" + Customer_Vehicle_CTR + "\" data-followup=\"" + vehicle_followup_ctr + "\">";
                         if (Vehicle != lastvehicle)
                         {
-                            html += "<td><a class=\"customer\">" + Customer + "</a></td><td><a class=\"customer_vehicle\">" + Vehicle + " </a></td><td>" + WOF_Due + "</td>";
+                            html += "<td><a class=\"customer\">" + Customer + "</a></td><td><a class=\"customer_vehicle\">" + Vehicle + " </a></td><td>" + WOF_Due + update + "</td>";
                             lastvehicle = Vehicle;
-                        } else
+                        }
+                        else
                         {
                             html += "<td colspan=\"3\"></td>";
                         }
                         //html += "<td><a class=\"followup\">" + FollowupDate + " </a></td>;
-                        html += "<td>" + FollowupDate + " </td>"; 
+                        html += "<td>" + FollowupDate + " </td>";
                         html += "<td>" + Detail + "</td><td>";
                         html += "</tr>";
                     }
@@ -71,5 +76,4 @@ namespace VehicleService
             }
         }
     }
-    }
- 
+}

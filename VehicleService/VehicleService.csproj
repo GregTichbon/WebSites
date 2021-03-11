@@ -86,6 +86,7 @@
     <Content Include="Report.aspx" />
     <Content Include="Reports.aspx" />
     <Content Include="Test1.aspx" />
+    <Content Include="Update_WOF.aspx" />
     <Content Include="VehicleMaintenance.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
@@ -120,6 +121,7 @@
     <Content Include="_Dependencies\Images\qm.png" />
     <Content Include="_Dependencies\Images\Scissors.png" />
     <Content Include="_Dependencies\Images\star.png" />
+    <Content Include="_Dependencies\Images\Tick.gif" />
     <Content Include="_Dependencies\Main.css" />
     <Content Include="_Dependencies\Main.js" />
     <Content Include="_Dependencies\Posts.asmx" />
@@ -225,6 +227,13 @@
     </Compile>
     <Compile Include="Test1.aspx.designer.cs">
       <DependentUpon>Test1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Update_WOF.aspx.cs">
+      <DependentUpon>Update_WOF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Update_WOF.aspx.designer.cs">
+      <DependentUpon>Update_WOF.aspx</DependentUpon>
     </Compile>
     <Compile Include="VehicleMaintenance.aspx.cs">
       <DependentUpon>VehicleMaintenance.aspx</DependentUpon>
