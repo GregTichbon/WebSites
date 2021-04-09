@@ -1187,15 +1187,16 @@
         <p>Making changes to the data under the various tabs will not be actioned until the record is submitted. </p>
         <p><b>Upload photo: </b>Click on the link and choose a photo from your computer or internet, crop it to the correct size and upload it.  It will be saved immediatly.</p>
         <p><b>Addresses: </b>Enter an address and then <span class="btn btn-info">Refresh</span> to verify it against Google Maps.  This will also format the address properly and resolve the co-ordinates.  Generally, you only need to enter the number and the street. " Where there are Google co-ordinates a link will allow you to go to that address in Google Maps.</p>
-        <p><b>Encounters: </b>There are different levels of access given to Te Ora Hou workes.  Each worker is granted a level of between 1 and 4 for each person in the database.  They will only see the encounter notes where their access level is equal to or less than the level assigned to the encounter.  They may additionally see encounter notes where they have been recorded as a worker in that record.</p>
+        <p><b>Encounters: </b>There are different levels of access given to Te Ora Hou workes.  Each worker is granted a certain access level for each person in the database.  They will only see the encounter notes for that level and any "lower" level.  They may additionally see encounter notes where they have been recorded as a worker in that record.</p>
         <p>The levels are</p>
         <ul>
-            <li>1. Confidential</li>
-            <li>2. Highly sensitive</li>
-            <li>3. Sensitive</li>
-            <li>4. General</li>
+            <li>Confidential</li>
+            <li>Highly sensitive</li>
+            <li>Sensitive</li>
+            <li>General</li>
         </ul>
-        <p>Everyone has access to encounter notes at level 4.</p>
+        <p>Everyone has access to encounter notes at the General level.</p>
+
     </div>
     <div id="dialog_fullphoto" title="Full Photo" style="display: none">
         <img id="fullphoto" src="x" />

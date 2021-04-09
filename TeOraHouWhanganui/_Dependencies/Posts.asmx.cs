@@ -1,4 +1,5 @@
 ﻿using System;
+using myGeneric = Generic;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -25,6 +26,8 @@ namespace TeOraHouWhanganui._Dependencies
         [WebMethod]
         public string update_vehicle_booking(NameValue[] formVars)
         {
+            myGeneric.Functions gFunctions = new myGeneric.Functions();
+
             //dynamic response = new JObject();
             //vehicle_booking_ctr, vehicle_ctr, start, end, worker_ctr, details
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
@@ -41,8 +44,58 @@ namespace TeOraHouWhanganui._Dependencies
                 cmd.Parameters.Add("@worker_ctr", SqlDbType.VarChar).Value = formVars.Form("worker_ctr");
                 cmd.Parameters.Add("@details", SqlDbType.VarChar).Value = formVars.Form("details");
                 con.Open();
-                string id = cmd.ExecuteScalar().ToString();
-                con.Close();
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                dr.Read();
+                //if ((int)formVars.Form("vehicle_booking_ctr") > 0)
+
+                string mode = dr["mode"].ToString();
+
+                string id = dr["Vehicle_Booking_CTR"].ToString();
+                string StartDateTime = myGeneric.Functions.formatdate(dr["StartDateTime"].ToString(), "d MMM yyyy HH:mm");
+                string EndDateTime = myGeneric.Functions.formatdate(dr["EndDateTime"].ToString(), "d MMM yyyy HH:mm");
+                string detail = dr["detail"].ToString();
+                string name = dr["name"].ToString();
+                string Registration = dr["Registration"].ToString();
+                string Worker = dr["Worker"].ToString();
+
+                string extraemail = "";
+                if (mode == "Update")
+                {
+                    string OLDStartDateTime = myGeneric.Functions.formatdate(dr["OLDStartDateTime"].ToString(), "d MMM yyyy HH:mm");
+                    string OLDEndDateTime = myGeneric.Functions.formatdate(dr["OLDEndDateTime"].ToString(), "d MMM yyyy HH:mm");
+                    string OLDdetail = dr["OLDdetail"].ToString();
+                    string OLDname = dr["OLDname"].ToString();
+                    string OLDRegistration = dr["OLDRegistration"].ToString();
+                    string OLDWorker = dr["OLDWorker"].ToString();
+
+                    extraemail += "<br /><br /><hr /><b>Original Booking</b><br />" + OLDname + " " + OLDRegistration + " <br />" + OLDStartDateTime + " - " + OLDEndDateTime + "<br />" + OLDWorker + "<br />" + OLDdetail;
+
+
+                }
+
+                dr.Close();
+
+                string host = "smtp.office365.com";
+                string emailfrom = "noreply@teorahou.org.nz"; // "noreply@teorahou.org.nz";
+                string password = "Whanganui1998"; // "Whanganui1998";
+                int port = 587;
+                Boolean enableSsl = true;
+                string emailfromname = "Vehicle booking";
+                string emailBCC = "";
+                string emailRecipient = "whanganui@teorahou.org.nz";
+                string emailsubject = "Vehicle booking - " + mode;
+                string emailhtml = "<html><head></head><body>";
+                emailhtml += name + " " + Registration + " <br />" + StartDateTime + " - " + EndDateTime + "<br />" + Worker + "<br />" + detail;
+                emailhtml += extraemail;
+                emailhtml += "</body></html>";
+                string[] attachments = new string[0];
+                Dictionary<string, string> emailoptions = new Dictionary<string, string>();
+
+                gFunctions.sendemailV5(host, port, enableSsl, emailfrom, emailfromname, password, emailsubject, emailhtml, emailRecipient, emailBCC, "", attachments, emailoptions);
+                //sendemailV5(string host, int port, Boolean enableSsl, string emailfrom, string emailfromname, string password, string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto, string[] attachments, Dictionary<string, string> options)
                 return id;
                 //Context.Response.Write(response);
                 //JavaScriptSerializer JS = new JavaScriptSerializer();

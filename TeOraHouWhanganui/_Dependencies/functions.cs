@@ -1,8 +1,11 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 
 namespace TeOraHouWhanganui._Dependencies
@@ -18,7 +21,7 @@ namespace TeOraHouWhanganui._Dependencies
             using (SqlCommand cmd = new SqlCommand("Get_AccessString", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@username", SqlDbType.VarChar).Value =username;
+                cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                 con.Open();
                 personaccess = cmd.ExecuteScalar().ToString();
             }

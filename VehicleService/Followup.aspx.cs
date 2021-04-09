@@ -33,7 +33,7 @@ namespace VehicleService
                 {
                     string lastvehicle = "";
                     html += "<table class=\"table\"><thead><tr>";
-                    html += "<th>Customer</th><th>Vehicle</th><th>WOF Due</th><th>Followup Date</th><th>Detail</th><th>";
+                    html += "<th>Customer</th><th>Vehicle</th><th>WOF Due</th><th>Followup Date</th><th>Detail</th><th>Contact</th>";
                     html += "</tr></thead><tbody>";
 
                     while (dr.Read())
@@ -45,6 +45,12 @@ namespace VehicleService
                         string Customer_Vehicle_CTR = dr["Customer_Vehicle_CTR"].ToString();
                         string WOF_Due = Functions.formatdate(dr["WOF_Due"].ToString(), "dd/MM/yy");
                         int WOF_Cycle = (int)dr["wof_cycle"];
+                        string emailaddress = dr["emailaddress"].ToString();
+                        string mobilephone = dr["mobilephone"].ToString();
+                        string homephone = dr["homephone"].ToString();
+                        string workphone = dr["workphone"].ToString();
+                        string greeting = dr["greeting"].ToString();
+                        string workplace = dr["workplace"].ToString();
 
                         string FollowupDate = Functions.formatdate(dr["FollowupDate"].ToString(), "dd/MM/yy");
                         string Detail = dr["Detail"].ToString();
@@ -66,7 +72,44 @@ namespace VehicleService
                         }
                         //html += "<td><a class=\"followup\">" + FollowupDate + " </a></td>;
                         html += "<td>" + FollowupDate + " </td>";
-                        html += "<td>" + Detail + "</td><td>";
+                        html += "<td>" + Detail + "</td>";
+
+
+
+                        string delim = "";
+                        if (emailaddress != "")
+                        {
+                            string body = "Hi " + greeting + "%0D%0A";
+
+                            if (Detail != "")
+                            {
+                                body = Detail;
+                                delim = "%0D%0A";
+                            }
+                            if (WOF_Due != "")
+                            {
+                                body += delim + "Your Warrant of fitness is due: " + WOF_Due;
+                            }
+                            emailaddress = "<a href=\"mailto:" + emailaddress + "?subject=Campbell Auto Repairs Reminder: " + Vehicle + "&body=" + body + "\">" + emailaddress + "</a>";
+                            delim = "<br />";
+                        }
+                        if(mobilephone != "")
+                        {
+                            emailaddress += delim + "Mobile: " + mobilephone;
+                            delim = "<br />";
+                        }
+                        if (workphone != "")
+                        {
+                            emailaddress += delim + "Work: " + workphone;
+                            delim = "<br />";
+                        }
+                        if (homephone != "")
+                        {
+                            emailaddress += delim + "Home: " + homephone;
+                            //delim = "<br />";
+                        }
+                        html += "<td>" + emailaddress + "</td>";
+
                         html += "</tr>";
                     }
                     html += "</tbody></table>";

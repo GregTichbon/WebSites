@@ -17,7 +17,7 @@
         }
 
         .customer_name, vehicle_description {
-            background-color:lightskyblue;
+            background-color: lightskyblue;
             color: white;
         }
     </style>
@@ -33,7 +33,7 @@
             ////$('#hidden_dirty').addClass('dirty');
             //$('#form1').addClass('dirty');
             //}
-            
+
 
 
             customer_ctr = "<%=customer_ctr%>";
@@ -50,40 +50,40 @@
 
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
-                resizable: false,
+                    resizable: false,
                     height: 600,
                     width: 800,
                     modal: true
                 });
-        })
+            })
 
             $('#nzta').click(function () {
-            copytoClipboard($('#vehicle_registration').val());
-            myWindow = window.open("https://transact.nzta.govt.nz/transactions/CheckExpiry/entry", "NZTA", "width=800,height=1000");
-        })
+                copytoClipboard($('#vehicle_registration').val());
+                myWindow = window.open("https://transact.nzta.govt.nz/transactions/CheckExpiry/entry", "NZTA", "width=800,height=1000");
+            })
 
             $('#makemodelrefresh').click(function () {
-            alert('to do');
-        })
+                alert('to do');
+            })
 
             $('#vehicle_followup_actioneddate').change(function () {
-            if ($(this).val() != "") {
+                if ($(this).val() != "") {
                     $('#vehicle_followup_actioneddetail').prop('required', true);
-            } else {
+                } else {
                     $('#vehicle_followup_actioneddetail').prop('required', false);
-            }
-        })
+                }
+            })
 
             $('#vehicle_followup_actioneddetail').change(function () {
-            if ($(this).val() != "") {
+                if ($(this).val() != "") {
                     $('#vehicle_followup_actioneddate').prop('required', true);
-            } else {
+                } else {
                     $('#vehicle_followup_actioneddate').prop('required', false);
-            }
-        })
+                }
+            })
 
-            $('#menu').click(function () {
-            window.location.href = "<%=ResolveUrl("~/default.aspx")%>";
+            $('.menu').click(function () {
+                window.location.href = "<%=ResolveUrl("~/default.aspx")%>";
             });
 
             $('.key').click(function () {
@@ -292,7 +292,7 @@
 
             $('#btn_customersubmit').click(function () {
                 if ($("#form_customer").valid()) {
-                //if (form_customer.valid()) {
+                    //if (form_customer.valid()) {
                     //$('#section_vehicle_activity').hide();
                     var arForm = $("#form_customer")
                         .find("input,textarea,select,hidden")
@@ -524,12 +524,12 @@
                 });
         }
 
-   
+
 
         function copytoClipboard(textToCopy) {
 
             navigator.clipboard.writeText(textToCopy)
-                .then(() => {  })
+                .then(() => { })
                 .catch((error) => { alert('Copy failed! ${error}') });
 
 
@@ -540,6 +540,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div id="section_customersearch">
+        <div class="toprighticon">
+            <input type="button" class="btn btn-info menu" value="MENU" />
+        </div>
         <h2>Customer Search
         </h2>
         <hr />
@@ -563,7 +566,7 @@
             <div class="toprighticon">
                 <input type="button" id="customersearch" class="btn btn-info" value="Search" />
                 <input type="button" id="assistance" class="btn btn-info" value="Assistance" />
-                <input type="button" id="menu" class="btn btn-info" value="MENU" />
+                <input type="button" class="btn btn-info menu" value="MENU" />
             </div>
             <div class="bottomrighticon">
                 <input id="btn_customercancel" type="button" class="btn btn-info" value="Cancel" />
@@ -671,7 +674,7 @@
                                 <label class="control-label col-sm-4" for="customer_guid">GUID</label>
                                 <div class="col-sm-8">
                                     <input type="text" id="customer_guid" disabled="disabled" class="form-control" />
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -785,9 +788,9 @@
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
-                                   
+
                                 </div>
-                                 <a id="nzta">NZTA</a>
+                                <a id="nzta">NZTA</a>
                             </div>
                         </div>
                         <div class="form-group">

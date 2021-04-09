@@ -136,7 +136,7 @@ namespace TeOraHouWhanganui._Dependencies
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void get_vehicles()
+        public void get_vehicles(string start, string end)
         {
  
             JArray vehicles = new JArray();
@@ -149,6 +149,8 @@ namespace TeOraHouWhanganui._Dependencies
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "get_vehicles";
+            cmd.Parameters.Add("@start", SqlDbType.VarChar).Value = start;
+            cmd.Parameters.Add("@end", SqlDbType.VarChar).Value = end;
             //cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = id;
 
             cmd.Connection = con;
