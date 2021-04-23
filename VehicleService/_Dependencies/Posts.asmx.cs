@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using myGeneric = Generic;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
+using System.Threading;
 
 namespace VehicleService._Dependencies
 {
@@ -58,6 +60,36 @@ namespace VehicleService._Dependencies
             //return (response.ToString() );
         }
 
+        [WebMethod]
+        public void support(NameValue[] formVars)
+        {
+            myGeneric.Functions gFunctions = new myGeneric.Functions();
+
+            string host = "smtp.office365.com";
+            string emailfrom = "noreply@teorahou.org.nz"; // "noreply@teorahou.org.nz";
+            string password = "WhanganuiInc1998"; // "Whanganui1998";
+            int port = 587;
+            Boolean enableSsl = true;
+            string emailfromname = "Support Request";
+            string emailBCC = "";
+            string emailRecipient = "greg@datainn.co.nz";
+            string emailsubject = "Support Request - " + formVars.Form("supportusername") + " : " + formVars.Form("supporturl");
+            string emailhtml = "<html><head></head><body>";
+            emailhtml += formVars.Form("supportmessage");
+            emailhtml += "</body></html>";
+            string[] attachments = new string[0];
+            Dictionary<string, string> emailoptions = new Dictionary<string, string>();
+
+
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                gFunctions.sendemailV5(host, port, enableSsl, emailfrom, emailfromname, password, emailsubject, emailhtml, emailRecipient, emailBCC, "", attachments, emailoptions);
+            }).Start();
+
+
+
+        }
 
 
 

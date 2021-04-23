@@ -6,7 +6,7 @@
     <script src="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js")%>"></script>
     <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
-
+     <script src="/_Dependencies/Support.js"></script>
     <style>
         h1, h2, h3, h4 {
             display: inline;
@@ -538,7 +538,7 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
+ <!-- #include file = "/_dependencies/support.html" -->
     <div id="section_customersearch">
         <div class="toprighticon">
             <input type="button" class="btn btn-info menu" value="MENU" />

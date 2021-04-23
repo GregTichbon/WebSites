@@ -16,14 +16,14 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class EncounterSummary : ReportClass {
+    public class EncounterWorkerYouth : ReportClass {
         
-        public EncounterSummary() {
+        public EncounterWorkerYouth() {
         }
         
         public override string ResourceName {
             get {
-                return "EncounterSummary.rpt";
+                return "EncounterWorkerYouth.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         public override string FullResourceName {
             get {
-                return "TeOraHouWhanganui.Private.Reports.Crystal.EncounterSummary.rpt";
+                return "TeOraHouWhanganui.Private.Reports.Crystal.EncounterWorkerYouth.rpt";
             }
             set {
                 // Do nothing
@@ -138,9 +138,9 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedEncounterSummary : Component, ICachedReport {
+    public class CachedEncounterWorkerYouth : Component, ICachedReport {
         
-        public CachedEncounterSummary() {
+        public CachedEncounterWorkerYouth() {
         }
         
         [Browsable(false)]
@@ -177,7 +177,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            EncounterSummary rpt = new EncounterSummary();
+            EncounterWorkerYouth rpt = new EncounterWorkerYouth();
             rpt.Site = this.Site;
             return rpt;
         }

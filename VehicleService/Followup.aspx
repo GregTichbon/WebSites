@@ -3,9 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         .updatewof {
-            width:20px;
+            width: 20px;
         }
-
     </style>
 
 
@@ -33,7 +32,7 @@
                 window.open("/main.aspx?customer=" + customer + '&customer_vehicle=' + customer_vehicle, 'main');
                 //window.location.href = "/main.aspx?customer=" + customer + '&customer_vehicle=' + customer_vehicle;
             })
-       
+
 
             $('.updatewof').click(function () {
                 id = $(this).closest('tr').data('vehicle');
@@ -49,10 +48,10 @@
                     },
                     buttons: {
                         "Cancel": function () {
-                           $(this).dialog('close'); 
-                         },
+                            $(this).dialog('close');
+                        },
                         "Save": function () {
-                           
+
                             alert("to do");
                             if ($('#dialogform').valid()) {
                                 $(this).dialog('close');
@@ -61,7 +60,7 @@
                     }
                 });
             });
-        
+
 
         });
     </script>
@@ -74,6 +73,7 @@
         <p>To do</p>
     </div>
     <div id="dialog_updatewof" title="Update" style="display: none" class="form-horizontal">
+        
     </div>
 
     <div class="toprighticon">
@@ -83,7 +83,6 @@
     <h1>Customer Followup
     </h1>
     <%= html %>
-
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>

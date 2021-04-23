@@ -36,14 +36,15 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
                         break;
                     case "2":
-                        reporttitle = "Encounters By Worker/Date Summary";
+                        reporttitle = "Encounters By Worker By Youth";
                         fields = new string[] { "From Date|Date", "To Date|Date" };
                         html = formatfields(fields);
 
                         break;
                     case "3":
-
-
+                        reporttitle = "Encounters By Youth By Worker";
+                        fields = new string[] { "From Date|Date", "To Date|Date" };
+                        html = formatfields(fields);
                         break;
                     case "4":
 

@@ -34,6 +34,16 @@
     z-index: 9999;
 }
 
+.toplefticon {
+    border-style: none;
+    border-color: inherit;
+    border-width: 0;
+    position: fixed;
+    top: 5px;
+    left: 15px;
+    z-index: 9999;
+}
+
 .bottomrighticon {
     border-style: none;
     border-color: inherit;

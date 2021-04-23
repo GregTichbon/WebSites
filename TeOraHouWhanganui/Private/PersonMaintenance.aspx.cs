@@ -225,7 +225,7 @@ namespace TeOraHouWhanganui.Private
                         string entity_enrolment_CTR = dr["ID"].ToString();
                         string programid = dr["programid"].ToString();
                         string programname = dr["programname"].ToString();
-                        string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");   
+                        string firstevent = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy");
                         string lastevent = Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
                         //string events = Functions.formatdate(dr["firstevent"].ToString(), "dd MMM yyyy") + " - " + Functions.formatdate(dr["lastevent"].ToString(), "dd MMM yyyy");
                         //string encounters = Functions.formatdate(dr["firstencounter"].ToString(), "dd MMM yyyy") + " - " + Functions.formatdate(dr["lastencounter"].ToString(), "dd MMM yyyy");
@@ -408,7 +408,7 @@ namespace TeOraHouWhanganui.Private
 
                     #endregion PHONE
 
-  
+
 
 
                     #region FINANCIAL
@@ -848,21 +848,22 @@ namespace TeOraHouWhanganui.Private
                     else
                     {
                         if (encounter_ctr.StartsWith("new"))
-                    {
-                        encounter_ctr = "new";
-                    }
+                        {
+                            encounter_ctr = "new";
+                        }
 
-                    string[] valuesSplit = Request.Form[key].Split('\x00FE');
+                        string[] valuesSplit = Request.Form[key].Split('\x00FE');
 
-                    cmd.CommandText = "Update_encounter";
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter_ctr;
-                    cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
-                    cmd.Parameters.Add("@narrative", SqlDbType.VarChar).Value = valuesSplit[2];
-                    cmd.Parameters.Add("@startdatetime", SqlDbType.VarChar).Value = valuesSplit[0];
-                    cmd.Parameters.Add("@enddatetime", SqlDbType.VarChar).Value = valuesSplit[1];
-                    cmd.Parameters.Add("@encounteraccesslevel", SqlDbType.VarChar).Value = valuesSplit[4];
-                    cmd.Parameters.Add("@workers", SqlDbType.VarChar).Value = valuesSplit[3];
+                        cmd.CommandText = "Update_encounter";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                        cmd.Parameters.Add("@encounter_ctr", SqlDbType.VarChar).Value = encounter_ctr;
+                        cmd.Parameters.Add("@person_ctr", SqlDbType.VarChar).Value = person_ctr;
+                        cmd.Parameters.Add("@narrative", SqlDbType.VarChar).Value = valuesSplit[2];
+                        cmd.Parameters.Add("@startdatetime", SqlDbType.VarChar).Value = valuesSplit[0];
+                        cmd.Parameters.Add("@enddatetime", SqlDbType.VarChar).Value = valuesSplit[1];
+                        cmd.Parameters.Add("@encounteraccesslevel", SqlDbType.VarChar).Value = valuesSplit[4];
+                        cmd.Parameters.Add("@workers", SqlDbType.VarChar).Value = valuesSplit[3];
                     }
                     con.Open();
                     cmd.ExecuteScalar().ToString();

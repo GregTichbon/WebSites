@@ -1,0 +1,40 @@
+﻿<input type="button" id="support" class="btn btn-info toplefticon" value="?" />
+<div id="dialog_support" title="<%: Title + " Support Contact"%>" style="display: none" class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-heading">Support request</div>
+        <div class="panel-body">
+            <p>
+                Please use this form to ask a question, report an error, or suggest an enhancement to this system.
+            </p>
+            <p>Please give as much information including examples as you can.  If it is an error, when did it work correctly last, what might have changed.</p>
+            <p>I'll get back to you as soon as I can.</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="supportusername" class="control-label col-sm-4">
+            User
+        </label>
+        <div class="col-sm-8">
+            <input id="supportusername" name="supportusername" type="text" class="form-control" value="<%=username %>" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="supporturl" class="control-label col-sm-4">
+            URL
+        </label>
+        <div class="col-sm-8">
+            <input id="supporturl" name="supporturl" type="text" class="form-control" readonly="readonly" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="supportmessage" class="control-label col-sm-4">
+            Message
+        </label>
+        <div class="col-sm-8">
+            <textarea rows="6" id="supportmessage" name="supportmessage" class="form-control" required="required"></textarea>
+        </div>
+    </div>
+</div>

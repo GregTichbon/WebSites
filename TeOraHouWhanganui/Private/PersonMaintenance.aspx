@@ -15,7 +15,7 @@
     <!--<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>-->
     <script src="https://cdn.tiny.cloud/1/0rm57f61mkhtljml272kg6rniw3zjw84hmu9q5zoyebn7sb2/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
-
+    <script src="/_Dependencies/Support.js"></script>
     <style>
         .imagecontainer {
             max-width: 800px;
@@ -48,7 +48,6 @@
 
         $(document).ready(function () {
             //Generic.Functions.googleanalyticstracking()%>
-
             function makedirty() {
                 //$('#hidden_dirty').addClass('dirty');
                 $('#form1').addClass('dirty');
@@ -1198,6 +1197,8 @@
         <p>Everyone has access to encounter notes at the General level.</p>
 
     </div>
+     <!-- #include file = "/_dependencies/support.html" -->
+  
     <div id="dialog_fullphoto" title="Full Photo" style="display: none">
         <img id="fullphoto" src="x" />
     </div>
@@ -1354,34 +1355,39 @@
                         </select>
                     </div>
                 </div>
-
-                 <div class="form-group">
-                    <label for="fld_enrolment_startdate" class="control-label col-sm-4">
-                        Start Date<br /><span style="font-size:smaller">(Need to ensure can not prior to first event)</span>
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="input-group standarddate">
-                            <input id="fld_enrolment_startdate" name="fld_enrolment_startdate" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Not currently used</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="fld_enrolment_startdate" class="control-label col-sm-4">
+                                Start Date<br />
+                                <span style="font-size: smaller">(Need to ensure can not prior to first event)</span>
+                            </label>
+                            <div class="col-sm-8">
+                                <div class="input-group standarddate">
+                                    <input id="fld_enrolment_startdate" name="fld_enrolment_startdate" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fld_enrolment_enddate" class="control-label col-sm-4">
+                                End Date<br />
+                                <span style="font-size: smaller">(Need to ensure can not be prior to last event)</span>
+                            </label>
+                            <div class="col-sm-8">
+                                <div class="input-group standarddate">
+                                    <input id="fld_enrolment_enddate" name="fld_enrolment_enddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="fld_enrolment_enddate" class="control-label col-sm-4">
-                        End Date<br /><span style="font-size:smaller">(Need to ensure can not be prior to last event)</span>
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="input-group standarddate">
-                            <input id="fld_enrolment_enddate" name="fld_enrolment_enddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_enrolment_status">Status</label>
                     <div class="col-sm-8">

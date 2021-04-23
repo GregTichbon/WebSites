@@ -134,11 +134,14 @@
     <Content Include="Private\RosterMaintenance.aspx" />
     <Content Include="Private\RosterSearch.aspx" />
     <Content Include="Private\UpdateGeoCodes.aspx" />
+    <Content Include="Private\UploadMedia.aspx" />
     <Content Include="Private\VehicleBookings.aspx" />
     <Content Include="TestAndPlay\Email1.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
     <Content Include="_Dependencies\Posts.asmx" />
+    <Content Include="_Dependencies\Support.html" />
+    <Content Include="_Dependencies\Support.js" />
     <None Include="TestAndPlay\offline.manifest" />
     <Content Include="TestAndPlay\offline1.aspx" />
     <Content Include="XDefault.aspx" />
@@ -342,10 +345,16 @@
       <DependentUpon>EncountersByPersonDate.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Private\Reports\Crystal\EncounterSummary.cs">
+    <Compile Include="Private\Reports\Crystal\EncounterYouthWorker.cs">
+      <DependentUpon>EncounterYouthWorker.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Private\Reports\Crystal\EncounterWorkerYouth.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EncounterSummary.rpt</DependentUpon>
+      <DependentUpon>EncounterWorkerYouth.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Private\Reports\Crystal\Selector.aspx.cs">
@@ -415,6 +424,13 @@
     </Compile>
     <Compile Include="Private\UpdateGeoCodes.aspx.designer.cs">
       <DependentUpon>UpdateGeoCodes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\UploadMedia.aspx.cs">
+      <DependentUpon>UploadMedia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\UploadMedia.aspx.designer.cs">
+      <DependentUpon>UploadMedia.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\VehicleBookings.aspx.cs">
       <DependentUpon>VehicleBookings.aspx</DependentUpon>
@@ -532,9 +548,13 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EncountersByPersonDate.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Private\Reports\Crystal\EncounterSummary.rpt">
+    <EmbeddedResource Include="Private\Reports\Crystal\EncounterYouthWorker.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>EncounterSummary.cs</LastGenOutput>
+      <LastGenOutput>EncounterYouthWorker.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Reports\Crystal\EncounterWorkerYouth.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EncounterWorkerYouth.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Private\Reports\Crystal\Simple1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

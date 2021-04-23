@@ -14,12 +14,21 @@ namespace TeOraHouWhanganui.Private
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            _Dependencies.functions xfunctions = new _Dependencies.functions();
-            if (localfunctions.functions.AccessStringTest(username, "111")) {
-                string a = "1";
-            }
+            //_Dependencies.functions xfunctions = new _Dependencies.functions();
+            
 
             username = HttpContext.Current.User.Identity.Name.ToLower();
+
+            if (username == "")
+            {
+                username = "toh\\gtichbon";   //localhost
+            }
+            /*
+            if (localfunctions.functions.AccessStringTest(username, "111"))
+            {
+                string a = "1";
+            }
+            */
         }
     }
 }

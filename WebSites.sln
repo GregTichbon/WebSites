@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleService", "VehicleSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAccounts", "SimpleAccounts\SimpleAccounts.csproj", "{C4062624-EAD0-4FD8-BC39-601BE79F0883}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonGoodCoffee", "CommonGoodCoffee\CommonGoodCoffee.csproj", "{BF9F32F3-B4A6-4853-8EB7-39AF0E88B189}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4062624-EAD0-4FD8-BC39-601BE79F0883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9F32F3-B4A6-4853-8EB7-39AF0E88B189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9F32F3-B4A6-4853-8EB7-39AF0E88B189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9F32F3-B4A6-4853-8EB7-39AF0E88B189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9F32F3-B4A6-4853-8EB7-39AF0E88B189}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

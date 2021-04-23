@@ -14,6 +14,15 @@
 
     <p></p>
 <form id="dialogform" class="form-horizontal"> 
+    <div class="panel panel-default">
+            <div class="panel-heading">Not currently active</div>
+            <div class="panel-body">
+                <p>
+                    This will not currently update the records
+                </p>
+                <p>Work is underway to restructure followup and activity and then allow this functionality.</p>
+            </div>
+        </div>
      
         <div class="form-group">
             <label class="control-label col-sm-4" for="fld_oldwofdate">Old WOF Date</label>

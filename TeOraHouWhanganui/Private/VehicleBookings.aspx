@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="VehicleBookings.aspx.cs" Inherits="TeOraHouWhanganui.Private.VehicleBookings" %>
+﻿<%@ Page Title="TOHW Vehicle Booking" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="VehicleBookings.aspx.cs" Inherits="TeOraHouWhanganui.Private.VehicleBookings" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!--<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.js"></script>-->
@@ -6,11 +6,12 @@
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5/main.min.css">-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5/main.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-     <script src="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
     <link href="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-   <script>
+    <script src="/_Dependencies/Support.js"></script>
+    <script>
 
-       var gotodate;
+        var gotodate;
 
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -188,25 +189,25 @@
 
                     arrayOfDomNodes = [titleEvent, imgEventWrap]
                     */
-        
+
                     //return { domNodes: arrayOfDomNodes }
 
                     return { html: arg.event.title };
                 },
 
-                
+
                 //eventDidMount: function (info) {
-                    /*
-                    var tooltip = new Tooltip(info.el, {
-                        title: info.event.extendedProps.description,
-                        placement: 'top',
-                        trigger: 'hover',
-                        container: 'body'
-                    });
-                    */
-                    //console.log(info.event);
-                    //info.event.title = "---- YOUR TEXT----"
-                    //info.event.setProp('title', 'xxxxxxxxxxxx<br />zzzzzzz')
+                /*
+                var tooltip = new Tooltip(info.el, {
+                    title: info.event.extendedProps.description,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                });
+                */
+                //console.log(info.event);
+                //info.event.title = "---- YOUR TEXT----"
+                //info.event.setProp('title', 'xxxxxxxxxxxx<br />zzzzzzz')
                 //},
                 eventResize: function (info) {
                     update_vehicle_booking({ vehicle_booking_ctr: info.event.id, vehicle_ctr: info.event._def.resourceIds[0], start: moment(info.event.startStr).format('D-MMM-YYYY HH:mm'), end: moment(info.event.endStr).format('D-MMM-YYYY HH:mm'), worker_ctr: info.event.extendedProps.worker_ctr, details: info.event.extendedProps.detail });
@@ -254,6 +255,45 @@
 
         $(document).ready(function () {
 
+
+            $('#supporturl').val(window.location.href);
+            $('body').append('<form id="frmDialog">');
+            $('#support').click(function () {
+                $("#dialog_support").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: 800,
+                    modal: true,
+                    buttons: {
+                        "Send": function () {
+                            if ($("#frmDialog").valid()) {
+                                $(this).dialog("close");
+                                var arr = [];
+                                arr.push({ 'name': 'supportusername', 'value': $('#supportusername').val() });
+                                arr.push({ 'name': 'supporturl', 'value': $('#supporturl').val() });
+                                arr.push({ 'name': 'supportmessage', 'value': $('#supportmessage').val() });
+                                var formVars = JSON.stringify({ formVars: arr });
+                                $.ajax({
+                                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                    url: '/_dependencies/posts.asmx/support', // the url where we want to POST
+                                    contentType: "application/json; charset=utf-8",
+                                    data: formVars,
+                                    dataType: 'json', // what type of data do we expect back from the server
+                                    async: false,
+                                    success: function (result) {
+                                    },
+                                    error: function (xhr, status) {
+                                        alert('error');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    , appendTo: "#frmDialog"
+                });
+            })
+            $("#frmDialog").validate();
+
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -265,8 +305,8 @@
             $('#menu').click(function () {
                 window.location.href = "<%=ResolveUrl("~/private/default.aspx")%>";
             });
-            $("#fld_worker").autocomplete({
-                source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete?options=Workers")%>",
+           $("#fld_worker").autocomplete({
+               source: "<%: ResolveUrl("~/_Dependencies/data.asmx/Person_name_autocomplete?options=Workers")%>",
                 minLength: 2,
                 appendTo: "#dialog_edit",
                 select: function (event, ui) {
@@ -282,33 +322,33 @@
                 }
             })
 
-            $('.datetime').datetimepicker({
-                format: 'DD MMM YYYY HH:mm',
-                extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
-                //daysOfWeekDisabled: [0, 6],
-                showClear: true,
-                viewDate: false,
-                useCurrent: true,
-                stepping: 30,
-                sideBySide: true
+           $('.datetime').datetimepicker({
+               format: 'DD MMM YYYY HH:mm',
+               extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
+               //daysOfWeekDisabled: [0, 6],
+               showClear: true,
+               viewDate: false,
+               useCurrent: true,
+               stepping: 30,
+               sideBySide: true
 
-                //,maxDate: moment().add(-1, 'year')
-            });
+               //,maxDate: moment().add(-1, 'year')
+           });
 
-            $('#gotodate').datetimepicker({
-                format: 'DD MMM YYYY',
-                extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
-                //daysOfWeekDisabled: [0, 6],
-                showClear: true,
-                viewDate: false,
-                useCurrent: true,
-                inline: true
-            });
-            $("#gotodate").on("dp.change", function (e) {
-                gotodate = moment(e.date).format('YYYY-MM-DD');
-            });
-        });
-       
+           $('#gotodate').datetimepicker({
+               format: 'DD MMM YYYY',
+               extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
+               //daysOfWeekDisabled: [0, 6],
+               showClear: true,
+               viewDate: false,
+               useCurrent: true,
+               inline: true
+           });
+           $("#gotodate").on("dp.change", function (e) {
+               gotodate = moment(e.date).format('YYYY-MM-DD');
+           });
+       });
+
 
 
 
@@ -342,10 +382,10 @@
             return id;
 
         }
-   </script>
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   
+    <!-- #include file = "/_dependencies/support.html" -->
     <div id="dialog_assistance" title="<%: Title + " Assistance"%>" style="display: none">
         <p>Click, hold, and drag down in empty space to create a new booking.</p>
         <p>Click, hold, and drag an existing booking to a new time and/or vehicle.</p>
@@ -354,7 +394,7 @@
         <p>Click in a cell on the "All-Day" row to book a vehicle for the whole day.</p>
         <p>You can also change the start and/or end time in the dialog box.  This is useful if a booking will span multiple days.</p>
     </div>
-    <div id="dialog_gotodate" style="display:none">
+    <div id="dialog_gotodate" style="display: none">
         <div id="gotodate"></div>
     </div>
     <div id="dialog_edit" title="Edit" style="display: none" class="form-horizontal">

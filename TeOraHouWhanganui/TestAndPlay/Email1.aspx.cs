@@ -14,7 +14,7 @@ namespace TeOraHouWhanganui.TestAndPlay
             string host = "smtp.office365.com";
             string emailfrom = "noreply@teorahou.org.nz"; // "noreply@teorahou.org.nz";
             //emailfrom = "gtichbon@teorahou.org.nz";
-            string password = "Whanganui1998"; // "Whanganui1998";
+            string password = "WhanganuiInc1998"; // "Whanganui1998";
             //password = "Linus007t";
             int port = 587;
             Boolean enableSsl = true;

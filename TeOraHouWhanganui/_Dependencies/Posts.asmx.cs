@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace TeOraHouWhanganui._Dependencies
 {
@@ -80,7 +81,7 @@ namespace TeOraHouWhanganui._Dependencies
 
                 string host = "smtp.office365.com";
                 string emailfrom = "noreply@teorahou.org.nz"; // "noreply@teorahou.org.nz";
-                string password = "Whanganui1998"; // "Whanganui1998";
+                string password = "WhanganuiInc1998"; // "Whanganui1998";
                 int port = 587;
                 Boolean enableSsl = true;
                 string emailfromname = "Vehicle booking";
@@ -94,7 +95,13 @@ namespace TeOraHouWhanganui._Dependencies
                 string[] attachments = new string[0];
                 Dictionary<string, string> emailoptions = new Dictionary<string, string>();
 
-                gFunctions.sendemailV5(host, port, enableSsl, emailfrom, emailfromname, password, emailsubject, emailhtml, emailRecipient, emailBCC, "", attachments, emailoptions);
+               
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    gFunctions.sendemailV5(host, port, enableSsl, emailfrom, emailfromname, password, emailsubject, emailhtml, emailRecipient, emailBCC, "", attachments, emailoptions);
+                }).Start();
+
                 //sendemailV5(string host, int port, Boolean enableSsl, string emailfrom, string emailfromname, string password, string emailsubject, string emailhtml, string emailRecipient, string emailbcc, string replyto, string[] attachments, Dictionary<string, string> options)
                 return id;
                 //Context.Response.Write(response);
@@ -104,6 +111,38 @@ namespace TeOraHouWhanganui._Dependencies
                 //Context.Response.Write(passresult);
             }
         }
+
+        [WebMethod]
+        public void support(NameValue[] formVars)
+        {
+            myGeneric.Functions gFunctions = new myGeneric.Functions();
+
+                string host = "smtp.office365.com";
+                string emailfrom = "noreply@teorahou.org.nz"; // "noreply@teorahou.org.nz";
+                string password = "WhanganuiInc1998"; // "Whanganui1998";
+                int port = 587;
+                Boolean enableSsl = true;
+                string emailfromname = "Support Request";
+                string emailBCC = "";
+                string emailRecipient = "gtichbon@teorahou.org.nz";
+                string emailsubject = "Support Request - " + formVars.Form("supportusername") + " : " + formVars.Form("supporturl");  
+                string emailhtml = "<html><head></head><body>";
+                emailhtml += formVars.Form("supportmessage");
+                emailhtml += "</body></html>";
+                string[] attachments = new string[0];
+                Dictionary<string, string> emailoptions = new Dictionary<string, string>();
+
+
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    gFunctions.sendemailV5(host, port, enableSsl, emailfrom, emailfromname, password, emailsubject, emailhtml, emailRecipient, emailBCC, "", attachments, emailoptions);
+                }).Start();
+
+            
+           
+        }
+
 
         [WebMethod]
         public void update_roster_worker(NameValue[] formVars)
