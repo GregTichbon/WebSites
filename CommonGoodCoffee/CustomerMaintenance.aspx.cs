@@ -19,6 +19,7 @@ namespace CommonGoodCoffee
         public string fld_surname;
         public string fld_businessname;
         public string[] fld_customertype = new string[1];
+        public string[] fld_businesstype = new string[1];
         public string fld_greeting;
         public string fld_emailaddress;
         public string fld_deliveryaddress;
@@ -27,7 +28,7 @@ namespace CommonGoodCoffee
 
         public string fld_xxxxxx;
 
-        public string displaybusinessname = "none";
+        public string displaybusinessfields = "none";
 
         public string html_tab = "";
 
@@ -38,6 +39,7 @@ namespace CommonGoodCoffee
         public string[] nooptions = { };
 
         public Dictionary<string, string> customertypes = new Dictionary<string, string>();
+        public Dictionary<string, string> businesstypes = new Dictionary<string, string>();
         public Dictionary<string, string> YesNo = new Dictionary<string, string>();
         public Dictionary<string, string> stockitems = new Dictionary<string, string>();
         public Dictionary<string, string> grinds = new Dictionary<string, string>();
@@ -67,6 +69,13 @@ namespace CommonGoodCoffee
                 options.Add("usevalues", "");
                 //options.Add("insertblank", "start");
                 customertypes = Functions.buildselectionlist(connectionString, "get_customertypes", options);
+
+                options.Clear();
+                options.Add("storedprocedure", "");
+                options.Add("storedprocedurename", "");
+                options.Add("usevalues", "");
+                //options.Add("insertblank", "start");
+                businesstypes = Functions.buildselectionlist(connectionString, "get_businesstypes", options);
 
                 if (customer_ctr != "new")
                 {
@@ -103,12 +112,13 @@ namespace CommonGoodCoffee
                                 fld_surname = dr["surname"].ToString();
                                 fld_businessname = dr["businessname"].ToString();
                                 fld_customertype[0] = dr["customertype_ctr"].ToString();
+                                fld_businesstype[0] = dr["businesstype_ctr"].ToString();
+
                                 if (fld_customertype[0] == "1")
                                 {
-                                    displaybusinessname = "";
+                                    displaybusinessfields = "";
                                 }
-
-
+                                
                                 fld_greeting = dr["greeting"].ToString();
                                 fld_emailaddress = dr["emailaddress"].ToString();
                                 fld_deliveryaddress = dr["deliveryaddress"].ToString();
@@ -122,7 +132,8 @@ namespace CommonGoodCoffee
 
                         html_tab += "<li><a data-target=\"#div_orders\">Orders</a></li>";
                         html_orders = "<thead>";
-                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Delivered</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        //html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Item Date</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Delivered</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Delivered</th><th>Batch</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_orders += "</thead>";
                         html_orders += "<tbody>";
 
@@ -132,10 +143,12 @@ namespace CommonGoodCoffee
                         html_orders += "<td></td>"; //Date
                         html_orders += "<td></td>"; //Reference
                         html_orders += "<td></td>"; //Type
+                        //html_orders += "<td></td>"; //Stock Item Date
                         html_orders += "<td></td>"; //Grind
                         html_orders += "<td></td>"; //Quantity
                         html_orders += "<td></td>"; //Amount
                         html_orders += "<td></td>"; //Delivered Date
+                        html_orders += "<td></td>"; //Batch
                         html_orders += "<td></td>"; //Invoice Reference
                         html_orders += "<td></td>"; //Note
                         html_orders += "<td><a href=\"javascript:void(0)\" class=\"orderedit\" data-mode=\"edit\">Edit</td>";
@@ -154,11 +167,14 @@ namespace CommonGoodCoffee
                                 string reference = dr["reference"].ToString();
                                 string stockitem_ctr = dr["stockitem_ctr"].ToString();
                                 string stockitem = dr["stockitem"].ToString();
+                                //string stockitemdate = Functions.formatdate(dr["stockitemdate"].ToString(), "dd MMM yyyy");
                                 string grind_ctr = dr["grind_ctr"].ToString();
                                 string grind = dr["grind"].ToString();
                                 string quantity = Convert.ToDecimal(dr["quantity"]).ToString("0.00");
                                 string amount = Convert.ToDecimal(dr["amount"]).ToString("0.00");
                                 string delivereddate = Functions.formatdate(dr["delivereddate"].ToString(), "dd MMM yyyy");
+                                string batchstockitem_ctr = dr["batchstockitem_ctr"].ToString();
+                                string batchstockitem = dr["batchstockitem"].ToString();
                                 string invoicereference = dr["invoicereference"].ToString();
                                 string note = dr["note"].ToString();
                                 html_orders += "<tr id=\"order_" + order_CTR + "\">";
@@ -167,11 +183,13 @@ namespace CommonGoodCoffee
                                 html_orders += "<td>" + date + "</td>";
                                 html_orders += "<td>" + reference + "</td>";
                                 html_orders += "<td stockitem_ctr=\"" + stockitem_ctr + "\">" + stockitem + "</td>";
+                                //html_orders += "<td>" + stockitemdate + "</td>";
                                 html_orders += "<td grind_ctr=\"" + grind_ctr + "\">" + grind + "</td>";
                                 html_orders += "<td>" + quantity + "</td>";
                                 html_orders += "<td>" + amount + "</td>";
                                 html_orders += "<td>" + delivereddate + "</td>";
-                                html_orders += "<td>" + invoicereference + "</td>";
+                                html_orders += "<td data-id=\"" + batchstockitem_ctr + "\">" + batchstockitem + "</td>";
+                                html_orders += "<td>" + invoicereference + "</td>"; 
                                 html_orders += "<td>" + note + "</td>";
 
                                 //html_orders += "<td colspan=\"9\">Working on</td>";
@@ -283,6 +301,7 @@ namespace CommonGoodCoffee
                     cmd.Parameters.Add("@firstname", SqlDbType.VarChar).Value = Request.Form["fld_firstname"].Trim();
                     cmd.Parameters.Add("@surname", SqlDbType.VarChar).Value = Request.Form["fld_surname"].Trim();
                     cmd.Parameters.Add("@businessname", SqlDbType.VarChar).Value = Request.Form["fld_businessname"].Trim();
+                    cmd.Parameters.Add("@businesstype_ctr", SqlDbType.VarChar).Value = Request.Form["fld_businesstype"].Trim();
                     cmd.Parameters.Add("@greeting", SqlDbType.VarChar).Value = Request.Form["fld_greeting"].Trim();
                     cmd.Parameters.Add("@emailaddress", SqlDbType.VarChar).Value = Request.Form["fld_emailaddress"].Trim();
                     cmd.Parameters.Add("@deliveryaddress", SqlDbType.VarChar).Value = Request.Form["fld_deliveryaddress"].Trim();
@@ -338,8 +357,9 @@ namespace CommonGoodCoffee
                                 cmd.Parameters.Add("@quantity", SqlDbType.VarChar).Value = valuesSplit[4];
                                 cmd.Parameters.Add("@amount", SqlDbType.VarChar).Value = valuesSplit[5];
                                 cmd.Parameters.Add("@deliveredDate", SqlDbType.VarChar).Value = valuesSplit[6];
-                                cmd.Parameters.Add("@invoicereference", SqlDbType.VarChar).Value = valuesSplit[7];
-                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[8];
+                                cmd.Parameters.Add("@stockitembatch_ctr", SqlDbType.VarChar).Value = valuesSplit[7];
+                                cmd.Parameters.Add("@invoicereference", SqlDbType.VarChar).Value = valuesSplit[8];
+                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[9];
                                 con.Open();
                                 cmd.ExecuteScalar();
                                 con.Close();

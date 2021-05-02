@@ -77,13 +77,19 @@
     <Content Include="CustomerSearch.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Images\1.jpg" />
+    <Content Include="Images\2.jpg" />
     <Content Include="Images\3.jpg" />
+    <Content Include="Images\7.jpg" />
     <Content Include="Images\original\1.jpg" />
+    <Content Include="Images\original\2.jpg" />
     <Content Include="Images\original\3.jpg" />
+    <Content Include="Images\original\7.jpg" />
     <Content Include="Reporting\Default.aspx" />
     <Content Include="Reporting\Report.aspx" />
+    <Content Include="stockitemBatchMaintenance.aspx" />
     <Content Include="StockItemList.aspx" />
     <Content Include="StockItemMaintenance.aspx" />
+    <Content Include="StockItemMaintenanceWithTransactions.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
@@ -164,6 +170,13 @@
     <Compile Include="Reporting\Report.aspx.designer.cs">
       <DependentUpon>Report.aspx</DependentUpon>
     </Compile>
+    <Compile Include="stockitemBatchMaintenance.aspx.cs">
+      <DependentUpon>stockitemBatchMaintenance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="stockitemBatchMaintenance.aspx.designer.cs">
+      <DependentUpon>stockitemBatchMaintenance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StockItemList.aspx.cs">
       <DependentUpon>StockItemList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -177,6 +190,13 @@
     </Compile>
     <Compile Include="StockItemMaintenance.aspx.designer.cs">
       <DependentUpon>StockItemMaintenance.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StockItemMaintenanceWithTransactions.aspx.cs">
+      <DependentUpon>StockItemMaintenanceWithTransactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StockItemMaintenanceWithTransactions.aspx.designer.cs">
+      <DependentUpon>StockItemMaintenanceWithTransactions.aspx</DependentUpon>
     </Compile>
     <Compile Include="_Dependencies\Data.asmx.cs">
       <DependentUpon>Data.asmx</DependentUpon>

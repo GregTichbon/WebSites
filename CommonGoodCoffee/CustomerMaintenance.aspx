@@ -50,10 +50,11 @@
 
             $('#fld_customertype').change(function () {
                 if ($(this).val() == 1) {
-                    $('#div_businessname').show();
+                    $('#div_businessfields').show();
                 } else {
-                    $('#div_businessname').hide();
+                    $('#div_businessfields').hide();
                     $('#fld_businessname').val('');
+                    $('#fld_businesstype').val('');
                 }
             });
 
@@ -226,6 +227,7 @@
                 mode = $(this).data('mode');
                 if (mode == "add") {
                     $("#dialog_order").find(':input').val('');
+                    $('#div_order_stockitembatch').hide();
                 } else {
                     tr = $(this).closest('tr');
                     $('#fld_order_date').val($(tr).find('td').eq(1).text());
@@ -235,8 +237,15 @@
                     $('#fld_order_quantity').val($(tr).find('td').eq(5).text());
                     $('#fld_order_amount').val($(tr).find('td').eq(6).text());
                     $('#fld_order_delivereddate').val($(tr).find('td').eq(7).text());
-                    $('#fld_order_invoicereference').val($(tr).find('td').eq(8).text());
-                    $('#fld_order_note').val($(tr).find('td').eq(9).text());
+                    $('#fld_order_stockitembatch').val($(tr).find('td').eq(8).data('id'));
+                    $('#fld_order_invoicereference').val($(tr).find('td').eq(9).text());
+                    $('#fld_order_note').val($(tr).find('td').eq(10).text());
+
+                    if ($('#fld_order_delivereddate').val() != '') {
+                        $('#div_order_stockitembatch').show();
+                    } else {
+                        $('#div_order_stockitembatch').hide();
+                    }
                 }
 
                 mywidth = $(window).width() * .95;
@@ -288,8 +297,10 @@
                             $(tr).find('td').eq(5).text($('#fld_order_quantity').val());
                             $(tr).find('td').eq(6).text($('#fld_order_amount').val());
                             $(tr).find('td').eq(7).text($('#fld_order_delivereddate').val());
-                            $(tr).find('td').eq(8).text($('#fld_order_invoicereference').val());
-                            $(tr).find('td').eq(9).text($('#fld_order_note').val());
+                            $(tr).find('td').eq(8).text($('#fld_order_stockitembatch option:selected').text());
+                            $(tr).find('td').eq(8).data('id', $('#fld_order_stockitembatch').val());
+                            $(tr).find('td').eq(9).text($('#fld_order_invoicereference').val());
+                            $(tr).find('td').eq(10).text($('#fld_order_note').val());
 
                             $(this).dialog("close");
                         }
@@ -308,11 +319,11 @@
 
                 $("#dialog_order").dialog('option', 'buttons', myButtons);
             })
+           
 
             function update_order() {
                 delim = String.fromCharCode(254);
                 $('#orderstable > tbody > tr[maint="changed"]').each(function () {
-
                     tr_id = $(this).attr('id');
                     tr_date = $(this).find('td:eq(1)').text();
                     tr_reference = $(this).find('td:eq(2)').text();
@@ -321,11 +332,11 @@
                     tr_quantity = $(this).find('td:eq(5)').text();
                     tr_amount = $(this).find('td:eq(6)').text();
                     tr_delivereddate = $(this).find('td:eq(7)').text();
-                    tr_invoicereference = $(this).find('td:eq(8)').text();
-                    tr_note = $(this).find('td:eq(9)').text();
+                    tr_stockitembatch = $(this).find('td:eq(8)').data('id');
+                    tr_invoicereference = $(this).find('td:eq(9)').text();
+                    tr_note = $(this).find('td:eq(10)').text();
 
-                    value = tr_date + delim + tr_reference + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_delivereddate + delim + tr_invoicereference + delim + tr_note;
-                    alert(value);
+                    value = tr_date + delim + tr_reference + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_delivereddate + delim + tr_stockitembatch + delim + tr_invoicereference + delim + tr_note;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -344,6 +355,22 @@
                     }
                 });
             }
+
+            //$('#fld_order_delivereddate').on("dp.change", function (e) {
+            //$('#fld_order_delivereddate').change(function () {
+            $('#fld_order_amount').change(function () {
+                alert(1);
+            });
+            $('#fld_order_delivereddate').change(function () {
+                alert(2);
+                if ($('#fld_order_delivereddate').val() != '') {
+                    $('#div_order_stockitembatch').show();
+                } else {
+                    $('#div_order_stockitembatch').hide();
+                    alert('Todo: Clear stockitembatch and invoice');
+                }
+            })
+
 
             /* ========================================= EDIT SUBSCRIPTIONS ===========================================*/
             $(document).on('click', '.subscriptionedit', function () {
@@ -507,12 +534,30 @@
                     </select>
                 </div>
             </div>
-
-            <div id="div_businessname" class="form-group row" style="display: <%=displaybusinessname%>">
-                <label class="control-label col-md-6" for="fld_businessname">Business Name</label>
-                <div class="col-md-6">
-                    <input id="fld_businessname" name="fld_businessname" type="text" class="form-control confirm" value="<%:fld_businessname%>" maxlength="20" />
+            <div id="div_businessfields" style="display: <%=displaybusinessfields%>">
+                <div id="div_businessname" class="form-group row">
+                    <label class="control-label col-md-6" for="fld_businessname">Business Name</label>
+                    <div class="col-md-6">
+                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control confirm" value="<%:fld_businessname%>" maxlength="20" />
+                    </div>
                 </div>
+
+
+                <div class="form-group row">
+                    <label class="control-label col-sm-6" for="fld_businesstype">Business Type</label>
+                    <div class="col-sm-6">
+                        <select id="fld_businesstype" name="fld_businesstype" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <% 
+                                Dictionary<string, string> businesstypeoptions = new Dictionary<string, string>();
+                                businesstypeoptions["type"] = "select";
+                                businesstypeoptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(businesstypes, fld_businesstype, businesstypeoptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
             <div class="form-group row">
@@ -629,6 +674,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_grind">Grind</label>
                     <div class="col-sm-8">
@@ -643,10 +689,11 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_quantity">Quantity</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_order_quantity" name="fld_order_quantity" class="form-control" />
+                        <input type="text" id="fld_order_quantity" name="fld_order_quantity" class="form-control" required="required"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -656,20 +703,35 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_delivereddate">Delivered</label>
+                    <label class="control-label col-sm-4" for="fld_order_delivereddate">Delivered</label>  
                     <div class="col-sm-8">
                         <div class="input-group standarddate">
-                            <input id="fld_order_delivereddate" name="fld_order_delivereddate" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <input id="fld_order_delivereddate" name="fld_order_delivereddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control test" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_invoicereference">Invoice</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_order_invoicereference" name="fld_order_invoicereference" class="form-control" />
+
+                <div id="div_order_stockitembatch" style="display: none">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="fld_order_stockitembatch">Batch</label>
+                        <div class="col-sm-8">
+                            <!--
+                        <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" required="required">
+                        </select>
+                        -->
+                            <input type="text" id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="fld_order_invoicereference">Invoice</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="fld_order_invoicereference" name="fld_order_invoicereference" class="form-control" />
+                        </div>
                     </div>
                 </div>
 

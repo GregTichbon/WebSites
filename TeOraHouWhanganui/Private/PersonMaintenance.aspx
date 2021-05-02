@@ -1044,12 +1044,12 @@
                     $('#fld_enrolment_program').prop("disabled", true);
 
                     $('#fld_enrolment_program').val($(tr).find('td').eq(1).attr('programid'));
-                    $('#fld_enrolment_startdate').val($(tr).find('td').eq(2).text());
-                    $('#fld_enrolment_enddate').val($(tr).find('td').eq(3).text());
-                    $('#fld_enrolment_status').val($(tr).find('td').eq(6).text());
-                    $('#fld_enrolment_worker').val($(tr).find('td').eq(7).attr('worker'));
-                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(8).attr('alwayspickup'));
-                    $('#fld_enrolment_note').val($(tr).find('td').eq(9).text());
+                    //$('#fld_enrolment_startdate').val($(tr).find('td').eq(2).text());
+                    //$('#fld_enrolment_enddate').val($(tr).find('td').eq(3).text());
+                    $('#fld_enrolment_status').val($(tr).find('td').eq(5).text());
+                    $('#fld_enrolment_worker').val($(tr).find('td').eq(6).attr('worker'));
+                    $('#fld_enrolment_alwayspickup').val($(tr).find('td').eq(7).attr('alwayspickup'));
+                    $('#fld_enrolment_note').val($(tr).find('td').eq(8).text());
                 }
 
                 mywidth = $(window).width() * .95;
@@ -1094,19 +1094,19 @@
                             $(tr).attr('maint', 'changed');
                             $(tr).find('td').eq(1).text($('#fld_enrolment_program option:selected').text());
                             $(tr).find('td').eq(1).attr('programid', $('#fld_enrolment_program').val());
-                            $(tr).find('td').eq(2).text($('#fld_enrolment_startdate').val());
-                            $(tr).find('td').eq(3).text($('#fld_enrolment_enddate').val());
+                            //$(tr).find('td').eq(2).text($('#fld_enrolment_startdate').val());
+                            //$(tr).find('td').eq(3).text($('#fld_enrolment_enddate').val());
 
-                            $(tr).find('td').eq(6).text($('#fld_enrolment_status option:selected').text());
+                            $(tr).find('td').eq(5).text($('#fld_enrolment_status option:selected').text());
                             //$(tr).find('td').eq(5).attr('status', $('#fld_enrolment_status').val());
 
-                            $(tr).find('td').eq(7).text($('#fld_enrolment_worker option:selected').text());
-                            $(tr).find('td').eq(7).attr('worker', $('#fld_enrolment_worker').val());
+                            $(tr).find('td').eq(6).text($('#fld_enrolment_worker option:selected').text());
+                            $(tr).find('td').eq(6).attr('worker', $('#fld_enrolment_worker').val());
 
-                            $(tr).find('td').eq(8).text($('#fld_enrolment_alwayspickup option:selected').text());
-                            $(tr).find('td').eq(8).attr('alwayspickup', $('#fld_enrolment_alwayspickup').val());
+                            $(tr).find('td').eq(7).text($('#fld_enrolment_alwayspickup option:selected').text());
+                            $(tr).find('td').eq(7).attr('alwayspickup', $('#fld_enrolment_alwayspickup').val());
 
-                            $(tr).find('td').eq(9).text($('#fld_enrolment_note').val());
+                            $(tr).find('td').eq(8).text($('#fld_enrolment_note').val());
                             
                             $(this).dialog("close");
                         }
@@ -1133,14 +1133,15 @@
 
                     tr_id = $(this).attr('id');
                     tr_program = $(this).find('td:eq(1)').attr('programid');
-                    tr_startdate = $(this).find('td:eq(2)').text();
-                    tr_enddate = $(this).find('td:eq(3)').text();
-                    tr_status = $(this).find('td:eq(6)').text();
-                    tr_worker = $(this).find('td:eq(7)').attr('worker');
-                    tr_alwayspickup = $(this).find('td:eq(8)').attr('alwayspickup');
-                    tr_note = $(this).find('td:eq(9)').text();
+                    //tr_startdate = $(this).find('td:eq(2)').text();
+                    //tr_enddate = $(this).find('td:eq(3)').text();
+                    tr_status = $(this).find('td:eq(5)').text();
+                    tr_worker = $(this).find('td:eq(6)').attr('worker');
+                    tr_alwayspickup = $(this).find('td:eq(7)').attr('alwayspickup');
+                    tr_note = $(this).find('td:eq(8)').text();
 
-                    value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note + delim + tr_startdate + delim + tr_enddate;
+                    //value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note + delim + tr_startdate + delim + tr_enddate;
+                    value = tr_program + delim + tr_status + delim + tr_worker + delim + tr_alwayspickup + delim + tr_note// + delim + tr_startdate + delim + tr_enddate;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -1355,6 +1356,7 @@
                         </select>
                     </div>
                 </div>
+                <!--
                 <div class="panel panel-default">
                     <div class="panel-heading">Not currently used</div>
                     <div class="panel-body">
@@ -1388,6 +1390,7 @@
                         </div>
                     </div>
                 </div>
+                -->
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_enrolment_status">Status</label>
                     <div class="col-sm-8">

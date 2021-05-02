@@ -17,6 +17,7 @@ namespace CommonGoodCoffee
         public string html = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            string laststockitem = "";
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
             String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
 
@@ -27,7 +28,7 @@ namespace CommonGoodCoffee
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
                 {
-                    html = "<thead><tr><th>Item</th><th>Description</th><th>Committed</th><th>Sold</th><th>Transactions</th><th>Balance</th></tr></thead>";
+                    html = "<thead><tr><th>Item</th><th>Description</th><th>Batch</th><th>Committed</th><th>Sold</th><th>Transactions</th><th>Balance</th></tr></thead>";
                     html += "<tbody>";
                     while (dr.Read())
                     {
@@ -35,13 +36,22 @@ namespace CommonGoodCoffee
                         String stockitem_ctr = dr["stockitem_ctr"].ToString();
                         String item = dr["stockitem"].ToString();
                         String description = dr["description"].ToString();
+                        String stockitembatch_ctr = dr["stockitembatch_ctr"].ToString();
+                        string batchdate = Functions.formatdate(dr["date"].ToString(), "dd MMM yyyy");
                         decimal committed = (decimal)dr["committed"];
                         decimal sold = (decimal)dr["sold"];
                         decimal transactions = (decimal)dr["transactions"];
                         decimal balance = transactions - sold - committed;
 
-
-                        html += "<tr><td><a href=\"stockitemMaintenance.aspx?id=" + stockitem_ctr + "\">" + item + "</a></td><td>" + description + "</td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
+                        string headeritem = "";
+                        string headerdescription = "";
+                        if(stockitem_ctr != laststockitem)
+                        {
+                            headeritem = item;
+                            headerdescription = description;
+                            laststockitem = stockitem_ctr;
+                        }
+                        html += "<tr><td><a href=\"stockitemMaintenance.aspx?id=" + stockitem_ctr + "\">" + headeritem + "</a></td><td>" + headerdescription + "</td><td><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">" + batchdate + "</a></td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
                     }
                     html += "</tbody>";
                 }

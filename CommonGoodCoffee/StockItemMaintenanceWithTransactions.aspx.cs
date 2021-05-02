@@ -10,9 +10,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
 
+
 namespace CommonGoodCoffee
 {
-    public partial class StockItemMaintenance : System.Web.UI.Page
+    public partial class StockItemMaintenanceWithTransactions : System.Web.UI.Page
     {
         public string stockitem_ctr;
         public string fld_stockitem;
@@ -120,7 +121,7 @@ namespace CommonGoodCoffee
                         //-------------------------------BATCHES TAB------------------------------------------------------
                         html_tab += "<li class=\"active\"><a data-target=\"#div_batches\">Batches</a></li>";
                         html_batches = "<thead>";
-                        html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Quantity</th><th>Note</th><th style=\"width:100px\">Action / <a href=\"stockitemBatchMaintenance.aspx?stockid=" + stockitem_ctr + "\">Add</a></th></tr>";
+                        html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Quantity</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"batchedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_batches += "</thead>";
                         html_batches += "<tbody>";
 
@@ -153,14 +154,14 @@ namespace CommonGoodCoffee
                                     html_batches += "<td>" + note + "</td>";
 
                                     //html_batches += "<td colspan=\"9\">Working on</td>";
-                                    html_batches += "<td><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">Edit</a></td>";
+                                    html_batches += "<td><a href=\"javascript:void(0)\" class=\"batchedit\" data-mode=\"edit\">Edit</td>";
                                     html_batches += "</tr>";
 
                                     html_batches += "<tr style=\"display:none\"><td colspan=\"5\">";
 
                                     html_batches += "<table class=\"table table-bordered\">";
                                     html_batches += "<thead>";
-                                    html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th class=\"transaction_date\">Date</th><th class=\"transaction_type\">Type</th><th class=\"transaction_quantity\">Quantity</th><th class=\"transaction_note\">Note</th></tr>"; //<th style=\"width:100px\">Action / <a class=\"transactionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                                    html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th class=\"transaction_date\">Date</th><th class=\"transaction_type\">Type</th><th class=\"transaction_quantity\">Quantity</th><th class=\"transaction_note\">Note</th><th style=\"width:100px\">Action / <a class=\"transactionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                                     html_batches += "</thead>";
                                     html_batches += "<tbody>";
 
@@ -189,7 +190,7 @@ namespace CommonGoodCoffee
                                                 html_batches += "<td>" + tnote + "</td>";
 
                                                 //html_batches += "<td colspan=\"9\">Working on</td>";
-                                                //html_batches += "<td><a href=\"javascript:void(0)\" class=\"transactionedit\" data-mode=\"edit\">Edit</td>";
+                                                html_batches += "<td><a href=\"javascript:void(0)\" class=\"transactionedit\" data-mode=\"edit\">Edit</td>";
                                                 html_batches += "</tr>";
                                             }
                                         }

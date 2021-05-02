@@ -3,16 +3,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#assistance').click(function () {
-                $("#dialog_assistance").dialog({
-                    resizable: false,
-                    height: 600,
-                    width: 800,
-                    modal: true
-                });
-            })
-
-            $('#menu').click(function () {
+                      $('#menu').click(function () {
                 window.location.href = "/default.aspx";
             });
 

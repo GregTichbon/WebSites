@@ -115,6 +115,7 @@
     <Content Include="Private\Administration\Access.aspx" />
     <Content Include="Private\Administration\Program.aspx" />
     <Content Include="Private\Administration\ProgramActivity.aspx" />
+    <Content Include="Private\Administration\TestEncounterAccess.aspx" />
     <Content Include="Private\Default.aspx" />
     <Content Include="Private\EmployeeMaintenance.aspx" />
     <Content Include="Private\EventMaintenance.aspx" />
@@ -264,6 +265,13 @@
     </Compile>
     <Compile Include="Private\Administration\ProgramActivity.aspx.designer.cs">
       <DependentUpon>ProgramActivity.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Administration\TestEncounterAccess.aspx.cs">
+      <DependentUpon>TestEncounterAccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Administration\TestEncounterAccess.aspx.designer.cs">
+      <DependentUpon>TestEncounterAccess.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

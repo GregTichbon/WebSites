@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="StockItemMaintenance.aspx.cs" Inherits="CommonGoodCoffee.StockItemMaintenance" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="StockItemMaintenanceWithTransactions.aspx.cs" Inherits="CommonGoodCoffee.StockItemMaintenanceWithTransactions" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
     <link href="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css")%>" rel="stylesheet" />
@@ -70,6 +70,7 @@
                 delim = String.fromCharCode(254);
 
                 update_batch()
+                update_transaction()
 
             });  //.submit end
 
@@ -124,16 +125,25 @@
                                 $(tr).attr('id', 'batch_new_' + get_newctr());
                                 $(tr).find('td:first').attr("class", "inserted");
 
+                                //tr = $('<tr><table><thead><tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Quantity</th><th>Note</th><th style="width:100px">Action / <a class="batchedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>').appendTo($(transactiontablebody));
+                                //$('#div_transactions > table > tbody > tr:last').after(tr);
                                 $(tr).attr('id', 'transaction_new_' + get_newctr());
                                 $(tr).find('td:first').attr("class", "inserted");
 
+                                tr2 = '<tr style="display:none"><td colspan="5"><table class="table table-bordered">';
+                                tr2 += '<thead>';
+                                tr2 += '<tr><th style="width:50px;text-align:center"></th><th class="transaction_date">Date</th><th class="transaction_type">Type</th><th class="transaction_quantity">Quantity</th><th class="transaction_note">Note</th><th style="width:100px">Action / <a class="transactionedit" data-mode="add" href="javascript: void(0)">Add</a></th></tr>';
+                                tr2 += '</thead>';
+                                tr2 += '<tbody></tbody></table></td></tr>';
+
+                                tr.after(tr2);
 
                             } else {
                                 $(tr).find('td:first').attr("class", "changed");
                             }
                             $(tr).attr('maint', 'changed');
                             $(tr).find('td').eq(1).text($('#fld_batch_date').val());
-                            $(tr).find('td').eq(2).text($('#fld_batch_quantity').val());
+                            //$(tr).find('td').eq(2).text($('#fld_batch_quantity').val());
                             $(tr).find('td').eq(3).text($('#fld_batch_note').val());
 
                             $(this).dialog("close");
@@ -152,6 +162,84 @@
                 }
 
                 $("#dialog_batch").dialog('option', 'buttons', myButtons);
+            })
+
+
+            /* ========================================= EDIT TRANSACTIONS ===========================================*/
+            $(document).on('click', '.transactionedit', function () {
+                transactiontablebody = $(this).closest('table').find('tbody');
+                mode = $(this).data('mode');
+                if (mode == "add") {
+                    $("#dialog_transaction").find(':input').val('');
+                } else {
+                    tr = $(this).closest('tr');
+                    $('#fld_transaction_date').val($(tr).find('td').eq(1).text());
+                    $('#fld_transaction_type').val($(tr).find('td').eq(2).text());
+                    $('#fld_transaction_quantity').val($(tr).find('td').eq(3).text());
+                    $('#fld_transaction_note').val($(tr).find('td').eq(4).text());
+                }
+
+                mywidth = $(window).width() * .95;
+                if (mywidth > 800) {
+                    mywidth = 800;
+                }
+
+                $("#dialog_transaction").dialog({
+                    resizable: false,
+                    height: 600,
+                    width: mywidth,
+                    modal: true
+                    , open: function (type, data) {
+                        //$(this).appendTo($('form')); // reinsert the dialog to the form   
+                        $("#form1 :button").prop("disabled", true);
+                        $('#form1 :input[type="submit"]').prop('disabled', true);
+                    }
+                    , close: function (event, ui) {
+                        //$('#fld_encounter_worker').select2('destroy');
+                        $("#form1 :button").prop("disabled", false);
+                        $('#form1 :input[type="submit"]').prop('disabled', false);
+                    }
+                    , appendTo: "#form2"
+                });
+
+                var myButtons = {
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                    },
+                    "Save": function () {
+                        if ($("#form2").valid()) {
+                            if (mode == "add") {
+                               // tr = $(transactiontablelastrow).appendTo('<tr><td style="text-align:center"</td><td></td><td></td><td></td></tr>');
+                                tr = $('<tr><td style="text-align:center"></td><td></td><td></td><td></td><td></td><td><a href="javascript:void(0)" class="transactionedit" data-mode="edit">Edit</a></td></tr>').appendTo($(transactiontablebody));
+                                //$('#div_transactions > table > tbody > tr:last').after(tr);
+                                $(tr).attr('id', 'transaction_new_' + get_newctr());
+                                $(tr).find('td:first').attr("class", "inserted");
+                            } else {
+                                $(tr).find('td:first').attr("class", "changed");
+
+                            }
+                            $(tr).attr('maint', 'changed');
+                            $(tr).find('td').eq(1).text($('#fld_transaction_date').val());
+                            $(tr).find('td').eq(2).text($('#fld_transaction_type').val());
+                            $(tr).find('td').eq(3).text($('#fld_transaction_quantity').val());
+                            $(tr).find('td').eq(4).text($('#fld_transaction_note').val());
+
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+
+                if (mode != 'add') {
+                    myButtons["Delete"] = function () {
+                        if (window.confirm("Are you sure you want to delete this transaction?")) {
+                            $(tr).find('td:first').attr("class", "deleted");
+                            $(tr).attr('maint', 'deleted');
+                            $(this).dialog("close");
+                        }
+                    }
+                }
+
+                $("#dialog_transaction").dialog('option', 'buttons', myButtons);
             })
 
             function update_batch() {
@@ -173,6 +261,28 @@
                 });
             }
 
+
+
+            function update_transaction() {
+                delim = String.fromCharCode(254);
+                $('#transactionstable > tbody > tr[maint="changed"]').each(function () {
+
+                    tr_id = $(this).attr('id');
+                    tr_date = $(this).find('td:eq(1)').text();
+                    tr_type = $(this).find('td:eq(2)').text();
+                    tr_quantity = $(this).find('td:eq(3)').text();
+                    tr_note = $(this).find('td:eq(4)').text();
+
+                    value = tr_date + delim + tr_type + delim + tr_quantity + delim + tr_note;
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: tr_id,
+                        value: value
+                    }).appendTo('#form1');
+                });
+            }
+
+            
 
 
         }); //document.ready
@@ -273,7 +383,47 @@
                 </div>
             </div>
 
-          
+            <!-- ================================= TRANSACTIONS DIALOG ===================================  -->
+
+            <div id="dialog_transaction" title="Maintain Transaction" style="display: none" class="form-horizontal">
+                <div class="form-group">
+                    <label for="fld_transaction_date" class="control-label col-sm-4">
+                        Date
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="input-group standarddate">
+                            <input id="fld_transaction_date" name="fld_transaction_date" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_transaction_type">Type</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_transaction_type" name="fld_transaction_type" class="form-control" required="required" />
+                    </div>
+                </div>
+ 
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_transaction_quantity">Quantity</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_transaction_quantity" name="fld_transaction_quantity" class="form-control" required="required" />
+                    </div>
+                </div>
+           
+               
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_transaction_note">Note</label>
+                    <div class="col-sm-8">
+                        <textarea id="fld_transaction_note" name="fld_transaction_note" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+
             
             <!-- ================================= END OF TABS ===================================  -->
         </div>
@@ -285,3 +435,4 @@
     <form id="form2">
     </form>
 </asp:Content>
+
