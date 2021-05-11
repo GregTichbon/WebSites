@@ -137,6 +137,7 @@
     <Content Include="Private\UpdateGeoCodes.aspx" />
     <Content Include="Private\UploadMedia.aspx" />
     <Content Include="Private\VehicleBookings.aspx" />
+    <Content Include="Private\Vehicles.aspx" />
     <Content Include="TestAndPlay\Email1.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
@@ -446,6 +447,13 @@
     </Compile>
     <Compile Include="Private\VehicleBookings.aspx.designer.cs">
       <DependentUpon>VehicleBookings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Vehicles.aspx.cs">
+      <DependentUpon>Vehicles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Vehicles.aspx.designer.cs">
+      <DependentUpon>Vehicles.aspx</DependentUpon>
     </Compile>
     <Compile Include="TestAndPlay\Email1.aspx.cs">
       <DependentUpon>Email1.aspx</DependentUpon>

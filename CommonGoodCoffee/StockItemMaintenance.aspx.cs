@@ -67,9 +67,9 @@ namespace CommonGoodCoffee
                                 }
                             }
                         }
-
-                        /*
                         #region TRANSACTIONS
+                        /*
+                      
                         //-------------------------------TRANSACTIONS TAB------------------------------------------------------
                         html_tab += "<li class=\"active\"><a data-target=\"#div_transactions\">Transactions</a></li>";
                         html_transactions = "<thead>";
@@ -114,13 +114,14 @@ namespace CommonGoodCoffee
                             dr.Close();
                         }
 
-                        #endregion TRANSACTIONS
+
                         */
+                        #endregion TRANSACTIONS
                         #region BATCHES
                         //-------------------------------BATCHES TAB------------------------------------------------------
                         html_tab += "<li class=\"active\"><a data-target=\"#div_batches\">Batches</a></li>";
                         html_batches = "<thead>";
-                        html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Quantity</th><th>Note</th><th style=\"width:100px\">Action / <a href=\"stockitemBatchMaintenance.aspx?stockid=" + stockitem_ctr + "\">Add</a></th></tr>";
+                        html_batches += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Quantity</th><th>Note</th><th style=\"width:100px\">Action / <a href=\"stockitemBatchMaintenance.aspx?stockid=" + stockitem_ctr + "\">Add</a></th></tr>";
                         html_batches += "</thead>";
                         html_batches += "<tbody>";
 
@@ -128,6 +129,7 @@ namespace CommonGoodCoffee
                         html_batches += "<tr style=\"display:none\">";
                         html_batches += "<td style=\"text-align:center\"></td>";
                         html_batches += "<td class=\"transaction\"></td>"; //Date
+                        html_batches += "<td></td>"; //Reference                        
                         html_batches += "<td></td>"; //Quantity
                         html_batches += "<td></td>"; //Note
                         html_batches += "<td><a href=\"javascript:void(0)\" class=\"batchedit\" data-mode=\"edit\">Edit</td>";
@@ -143,12 +145,14 @@ namespace CommonGoodCoffee
                                 {
                                     string stockitembatch_ctr = dr["stockitembatch_ctr"].ToString();
                                     string date = Functions.formatdate(dr["date"].ToString(), "dd MMM yyyy");
+                                    string reference = dr["reference"].ToString();
                                     string quantity = Convert.ToDecimal(dr["quantity"]).ToString("0.00");
                                     string note = dr["note"].ToString();
                                     html_batches += "<tr id=\"batch_" + stockitembatch_ctr + "\">";
                                     html_batches += "<td style=\"text-align:center\"></td>";
 
                                     html_batches += "<td class=\"transaction\">" + date + "</td>";
+                                    html_batches += "<td>" + reference + "</td>";
                                     html_batches += "<td>" + quantity + "</td>";
                                     html_batches += "<td>" + note + "</td>";
 

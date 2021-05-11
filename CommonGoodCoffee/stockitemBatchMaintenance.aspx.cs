@@ -16,6 +16,7 @@ namespace CommonGoodCoffee
     {
         public string stockitembatch_ctr;
         public string stockitem_ctr;
+        public string stockItem;
         public string fld_date;
         public string fld_reference;
         public string fld_note;
@@ -23,6 +24,9 @@ namespace CommonGoodCoffee
         public string html_tab = "";
 
         public string html_transactions = "";
+        public string html_orders = "";
+
+        public string showtransaction = "none";
 
         public Dictionary<string, string> options = new Dictionary<string, string>();
 
@@ -46,8 +50,7 @@ namespace CommonGoodCoffee
 
                 ViewState["stockitembatch_ctr"] = stockitembatch_ctr;
                 ViewState["stockitem_ctr"] = stockitem_ctr;
-                ViewState["returnto"] = Request.QueryString["returnto"] + "";
-
+                ViewState["returnto"] = Request.UrlReferrer.ToString();
 
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
                 String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString + "; MultipleActiveResultSets=True";
@@ -75,8 +78,9 @@ namespace CommonGoodCoffee
                                 {
                                     dr.Read();
 
+                                    stockItem = dr["stockItem"].ToString();
                                     fld_date = Functions.formatdate(dr["date"].ToString(), "dd MMM yyyy");
-                                    fld_reference = dr["reference"].ToString(); 
+                                    fld_reference = dr["reference"].ToString();
                                     fld_note = dr["note"].ToString();
                                 }
                             }
@@ -120,14 +124,91 @@ namespace CommonGoodCoffee
 
                                     html_transactions += "<td>" + date + "</td>";
                                     html_transactions += "<td data-id=\"" + StockTransactionType_CTR + "\">" + StockTransactionType + "</td>";
-                                    html_transactions += "<td>" + quantity + "</td>"; 
+                                    html_transactions += "<td>" + quantity + "</td>";
                                     html_transactions += "<td>" + note + "</td>";
 
                                     html_transactions += "<td><a href=\"javascript:void(0)\" class=\"transactionedit\" data-mode=\"edit\">Edit</td>";
                                     html_transactions += "</tr>";
 
-                                    
+
                                 }
+                            }
+                        }
+
+                        //-------------------------------ORDERS TAB------------------------------------------------------
+
+                        /*
+                         * Order_CTR
+                        Order_CTR	Customer_CTR	Date	Reference	StockItem_CTR	Grind_CTR	Quantity	Amount	DeliveredDate	InvoiceReference	StockItemBatch_CTR	Note	FromSubscription	Customer
+                        1	7	2021-04-26	442	1	2	5	44	2021-04-27	0129	1		NULL	Chris Kirby
+                        */
+                        html_tab += "<li><a data-target=\"#div_orders\">Orders</a></li>";
+                        html_orders = "<thead>";
+                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Customer</th><th>Quantity</th><th>Delivered</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_orders += "</thead>";
+                        html_orders += "<tbody>";
+
+                        //hidden row, used for creating new rows client side
+                        html_orders += "<tr style=\"display:none\">";
+                        html_orders += "<td style=\"text-align:center\"></td>";
+                        html_orders += "<td></td>"; //Date
+                        html_orders += "<td></td>"; //Customer
+                        html_orders += "<td></td>"; //Quantity
+                        html_orders += "<td></td>"; //Delivered
+                        html_orders += "<td><a href=\"javascript:void(0)\" class=\"orderedit\" data-mode=\"edit\">Edit</td>";
+                        html_orders += "</tr>";
+
+                        using (SqlCommand cmd = new SqlCommand("get_stockitembatch_orders", con))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@stockitembatch_ctr", SqlDbType.VarChar).Value = stockitembatch_ctr;
+                            using (SqlDataReader dr = cmd.ExecuteReader())
+                            {
+                                while (dr.Read())
+                                {
+                                    string order_ctr = dr["order_ctr"].ToString();
+                                    string date = Functions.formatdate(dr["date"].ToString(), "dd MMM yyyy");
+                                    string customer_CTR = dr["customer_CTR"].ToString();
+                                    string customer = dr["customer"].ToString();
+                                    string quantity = Convert.ToDecimal(dr["quantity"]).ToString("0.00");
+                                    string deliveredDate = Functions.formatdate(dr["deliveredDate"].ToString(), "dd MMM yyyy");
+
+                                    html_orders += "<tr id=\"order_" + order_ctr + "\">";
+                                    html_orders += "<td style=\"text-align:center\"></td>";
+
+                                    html_orders += "<td>" + date + "</td>";
+                                    html_orders += "<td data-id=\"" + customer_CTR + "\">" + customer + "</td>";
+                                    html_orders += "<td>" + quantity + "</td>";
+                                    html_orders += "<td>" + deliveredDate + "</td>";
+
+                                    html_orders += "<td><a href=\"javascript:void(0)\" class=\"orderedit\" data-mode=\"edit\">Edit</td>";
+                                    html_orders += "</tr>";
+
+
+                                }
+                            }
+                        }
+                        //-------------------------------END OF TABS------------------------------------------------------
+
+
+                    }
+                }
+                else
+                {
+                    showtransaction = "";
+
+                    using (SqlConnection con = new SqlConnection(connectionString))
+                    {
+                        con.Open();
+                        using (SqlCommand cmd = new SqlCommand("get_stockitem", con))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@stockitem_ctr", SqlDbType.VarChar).Value = stockitem_ctr;
+
+                            using (SqlDataReader dr = cmd.ExecuteReader())
+                            {
+                                dr.Read();
+                                stockItem = dr["stockItem"].ToString();
                             }
                         }
                     }
@@ -160,6 +241,8 @@ namespace CommonGoodCoffee
                     cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = Request.Form["fld_date"].Trim();
                     cmd.Parameters.Add("@reference", SqlDbType.VarChar).Value = Request.Form["fld_reference"].Trim();
                     cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = Request.Form["fld_note"].Trim();
+                    cmd.Parameters.Add("@transaction_quantity", SqlDbType.VarChar).Value = Request.Form["fld_takeon_quantity"].Trim();
+                    cmd.Parameters.Add("@transaction_note", SqlDbType.VarChar).Value = Request.Form["fld_takeon_note"].Trim();
 
                     cmd.Connection = con;
                     //try
@@ -216,28 +299,42 @@ namespace CommonGoodCoffee
                     }
                 }
             }
-            string returnto = ViewState["returnto"].ToString();
+            //string returnto = ViewState["returnto"].ToString();
 
+
+            string returnto = "";
             if (Creating)
             {
-                if (returnto == "")
+                returnto = "stockitembatchmaintenance.aspx?id=" + stockitembatch_ctr;
+            } else
+            {
+                returnto = ViewState["returnto"].ToString();
+                //returnto = "stockitemmaintenance.aspx?id=" + stockitem_ctr;
+            }
+
+                /*
+
+                if (Creating)
                 {
-                    returnto = "stockitembatchmaintenance.aspx?id=" + stockitem_ctr;
+                    if (returnto == "")
+                    {
+                        returnto = "stockitembatchmaintenance.aspx?id=" + stockitembatch_ctr;
+                    }
+                    else
+                    {
+                        returnto = "stockitemmaintenance.aspx?id=" + stockitem_ctr + "&returnto=" + returnto + ".aspx";
+                    }
                 }
                 else
                 {
-                    returnto = "stockitemmaintenance.aspx?id=" + stockitem_ctr + "&returnto=" + returnto + ".aspx";
+                    if (returnto == "")
+                    {
+                        returnto = "stockitemlist.aspx";
+                    }
                 }
-            }
-            else
-            {
-                if (returnto == "")
-                {
-                    returnto = "stockitemlist.aspx";
-                }
-            }
+                */
 
-            Response.Redirect(returnto);
+                Response.Redirect(returnto);
         }
     }
 }

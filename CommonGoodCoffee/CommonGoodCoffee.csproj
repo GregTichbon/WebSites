@@ -90,10 +90,12 @@
     <Content Include="StockItemList.aspx" />
     <Content Include="StockItemMaintenance.aspx" />
     <Content Include="StockItemMaintenanceWithTransactions.aspx" />
+    <Content Include="StockReceived.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="_Dependencies\bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="_Dependencies\Data.asmx" />
+    <Content Include="_Dependencies\Data.aspx" />
     <Content Include="_Dependencies\Images\cgclogo.PNG" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
@@ -198,9 +200,23 @@
     <Compile Include="StockItemMaintenanceWithTransactions.aspx.designer.cs">
       <DependentUpon>StockItemMaintenanceWithTransactions.aspx</DependentUpon>
     </Compile>
+    <Compile Include="StockReceived.aspx.cs">
+      <DependentUpon>StockReceived.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StockReceived.aspx.designer.cs">
+      <DependentUpon>StockReceived.aspx</DependentUpon>
+    </Compile>
     <Compile Include="_Dependencies\Data.asmx.cs">
       <DependentUpon>Data.asmx</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="_Dependencies\Data.aspx.cs">
+      <DependentUpon>Data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_Dependencies\Data.aspx.designer.cs">
+      <DependentUpon>Data.aspx</DependentUpon>
     </Compile>
     <Compile Include="_Dependencies\MainClass.cs" />
     <Compile Include="_Dependencies\Posts.asmx.cs">

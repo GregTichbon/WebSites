@@ -5,8 +5,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-
-
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -16,7 +14,7 @@
                 });
             })
 
-            
+         
 
             //Generic.Functions.googleanalyticstracking()%>
 
@@ -47,6 +45,8 @@
         Response.Write("<p><a href=\"EventSearch.aspx\" class=\"btn btn-info\">Event Maintenance</a></p>");
         Response.Write("<p><a href=\"ProgramSearch.aspx\" class=\"btn btn-info\">Program Maintenance</a></p>");
         Response.Write("<p><a href=\"VehicleBookings.aspx\" class=\"btn btn-info\">Vehicle Bookings</a></p>");
+        Response.Write("<p><a href=\"http://whanganui.teorahou.org.nz/pickups\" class=\"btn btn-info\">Senior Club Pickups</a></p>");
+        Response.Write("<p><a href=\"http://whanganui.teorahou.org.nz/pickups/admin.aspx\" class=\"btn btn-info\">Senior Club Pickups - Set Date</a></p>");
     %>
     <p><a href="UploadMedia.aspx" class="btn btn-info">Upload Media</a></p>
     <p><a href="reports" class="btn btn-info">Reports</a></p>

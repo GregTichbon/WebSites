@@ -255,6 +255,12 @@
 
         $(document).ready(function () {
 
+            $('body').on('click', '.fc-resource', function () {
+                $.post("/_Dependencies/data.aspx", { mode: "get_vehicle", vehicle_ctr: $(this).data('resource-id'), options: '' })
+                    .done(function (data) {
+                        alert(data)
+                    });
+            })
 
             $('#supporturl').val(window.location.href);
             $('body').append('<form id="frmDialog">');

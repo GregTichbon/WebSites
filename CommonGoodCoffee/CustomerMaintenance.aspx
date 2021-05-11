@@ -35,6 +35,8 @@
     <script type="text/javascript">
         var newctr = 0;
         var mode = "<%=ViewState["customer_ctr"]%>";
+        var last_order_date = "";
+        var last_order_reference = "";
 
         $(document).ready(function () {
 
@@ -202,17 +204,16 @@
                 //,maxDate: moment().add(-1, 'year')
             });
 
-            $('.datetime').datetimepicker({
-                format: 'D MMM YYYY HH:mm',
+            $('.fld_order_delivereddate').datetimepicker({
+                format: 'D MMM YYYY',
                 extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
                 //daysOfWeekDisabled: [0, 6],
                 showClear: true,
                 viewDate: false,
-                useCurrent: true,
-
+                useCurrent: true
                 //,maxDate: moment().add(-1, 'year')
             });
-
+  
             $('.submit').click(function () { //Started creating functions so that I can group code together - see update_order() - not yet tested
                 delim = String.fromCharCode(254);
 
@@ -226,7 +227,10 @@
             $(document).on('click', '.orderedit', function () {
                 mode = $(this).data('mode');
                 if (mode == "add") {
+                    $('#fld_order_ctr').val(0);
                     $("#dialog_order").find(':input').val('');
+                    $('#fld_order_date').val(last_order_date);
+                    $('#fld_order_reference').val(last_order_reference);
                     $('#div_order_stockitembatch').hide();
                 } else {
                     tr = $(this).closest('tr');
@@ -237,7 +241,7 @@
                     $('#fld_order_quantity').val($(tr).find('td').eq(5).text());
                     $('#fld_order_amount').val($(tr).find('td').eq(6).text());
                     $('#fld_order_delivereddate').val($(tr).find('td').eq(7).text());
-                    $('#fld_order_stockitembatch').val($(tr).find('td').eq(8).data('id'));
+                    //$('#fld_order_stockitembatch').val($(tr).find('td').eq(8).data('id'));
                     $('#fld_order_invoicereference').val($(tr).find('td').eq(9).text());
                     $('#fld_order_note').val($(tr).find('td').eq(10).text());
 
@@ -246,6 +250,13 @@
                     } else {
                         $('#div_order_stockitembatch').hide();
                     }
+
+                    stockitem_ctr = $('#fld_order_stockitem').val();
+                    stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
+                    order_ctr = $(tr).attr('id').substring(6);
+                    quantity = $('#fld_order_quantity').val();
+
+                    get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
                 }
 
                 mywidth = $(window).width() * .95;
@@ -283,9 +294,12 @@
                                 $('#div_orders > table > tbody > tr:last').after(tr);
                                 $(tr).attr('id', 'order_new_' + get_newctr());
                                 $(tr).find('td:first').attr("class", "inserted");
+                                last_order_date = $('#fld_order_date').val();
+                                last_order_reference = $('#fld_order_reference').val();
                             } else {
                                 $(tr).find('td:first').attr("class", "changed");
-
+                                last_order_date = "";
+                                last_order_reference = "";
                             }
                             $(tr).attr('maint', 'changed');
                             $(tr).find('td').eq(1).text($('#fld_order_date').val());
@@ -313,14 +327,120 @@
                             $(tr).find('td:first').attr("class", "deleted");
                             $(tr).attr('maint', 'deleted');
                             $(this).dialog("close");
+                            last_order_date = "";
+                            last_order_reference = "";
                         }
                     }
                 }
 
                 $("#dialog_order").dialog('option', 'buttons', myButtons);
             })
-           
 
+
+            $('#fld_order_stockitem').focusin(function () {
+                $(this).data('val', $(this).val());
+            }).change(function () {
+                if ($('#fld_order_delivereddate').val() != "") {
+                    var response = confirm("Are you sure you want to change this?\nThere is already a delivery date.");
+                    if (response) {
+                        stockitem_ctr = $('#fld_order_stockitem').val();
+                        stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
+                        order_ctr = $(tr).attr('id').substring(6);
+                        quantity = $('#fld_order_quantity').val();
+                        get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
+                    } else {
+                        $('#fld_order_stockitem').val($(this).data('val'));
+                    }
+                }
+                show_div_order_stockitembatch();
+            });
+
+
+            $('#fld_order_quantity').focusin(function () {
+                $(this).data('val', $(this).val());
+            }).change(function () {
+                if ($('#fld_order_delivereddate').val() != "") {
+                    var response = confirm("Are you sure you want to change this?\nThere is already a delivery date.");
+                    if (response) {
+                        stockitem_ctr = $('#fld_order_stockitem').val();
+                        stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
+                        order_ctr = $(tr).attr('id').substring(6);
+                        quantity = $('#fld_order_quantity').val();
+                        get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
+                    } else {
+                        $('#fld_order_quantity').val($(this).data('val'));
+                    }
+                }
+                show_div_order_stockitembatch();
+
+            });
+
+            $('#fld_order_amount').focusin(function () {
+                $(this).data('val', $(this).val());
+            }).change(function () {
+                if ($('#fld_order_invoicereference').val() != "") {
+                    var response = confirm("Are you sure you want to change this?\nThere is already an invoice.");
+                    if (response) {
+                        stockitem_ctr = $('#fld_order_stockitem').val();
+                        stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
+                        order_ctr = $(tr).attr('id').substring(6);
+                        quantity = $('#fld_order_quantity').val();
+                        get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
+                    } else {
+                        $('#fld_order_amount').val($(this).data('val'));
+                    }
+                }
+                show_div_order_stockitembatch();
+            });
+
+
+            $('.fld_order_delivereddate').on('dp.change', function (e) {
+                //   IF THE VERY FIRST CHANGE IS TO MAKE IT NULL THIS CODE DOES NOT FIRE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! //
+                //alert(e.date);
+                if (!e.date) {
+                    //alert("Test");
+                    warning = "";
+                    if ($('#fld_order_invoicereference').val() != "") {
+                        warning = "\nThere is an Invoice Reference!";
+                    }
+                    var response = confirm("Are you sure you want to remove the delivery date?" + warning);
+                    if (response) {
+                        $('#div_order_stockitembatch').hide();
+                        $("#fld_order_stockitembatch").empty();
+                    } else {
+                        $('#fld_order_delivereddate').val(e.oldDate);
+                    }
+                    /*
+                    alert('Delivery date has been removed, need to confirm this and then take into account that it has no longer been delivered when compiling stock batches.');
+                    stockitem_ctr = $('#fld_order_stockitem').val();
+                    stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
+                    order_ctr = $(tr).attr('id').substring(6);
+                    quantity = $('#fld_order_quantity').val();
+
+                    get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
+                    */
+                }
+                
+            })
+
+            function show_div_order_stockitembatch() {
+                if ($('#fld_order_stockitem').val() != '' && $('#fld_order_quantity').val() != '' && $('#fld_order_amount').val() != '') {
+                    stockitem_ctr = $('#fld_order_stockitem').val();
+                    stockitembatch_ctr = 0;
+                    order_ctr = 0;
+                    quantity = $('#fld_order_quantity').val();
+                    get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
+                    $('#div_order_stockitembatch').show();
+                } else {
+                    $('#fld_order_stockitembatch').val('');
+                    $('#div_order_stockitembatch').hide();
+                }
+                    
+                
+            }
+
+           
+            
             function update_order() {
                 delim = String.fromCharCode(254);
                 $('#orderstable > tbody > tr[maint="changed"]').each(function () {
@@ -355,21 +475,6 @@
                     }
                 });
             }
-
-            //$('#fld_order_delivereddate').on("dp.change", function (e) {
-            //$('#fld_order_delivereddate').change(function () {
-            $('#fld_order_amount').change(function () {
-                alert(1);
-            });
-            $('#fld_order_delivereddate').change(function () {
-                alert(2);
-                if ($('#fld_order_delivereddate').val() != '') {
-                    $('#div_order_stockitembatch').show();
-                } else {
-                    $('#div_order_stockitembatch').hide();
-                    alert('Todo: Clear stockitembatch and invoice');
-                }
-            })
 
 
             /* ========================================= EDIT SUBSCRIPTIONS ===========================================*/
@@ -493,8 +598,17 @@
 
             }
 
+            function get_stockitembatches(stockitem_ctr,stockitembatch_ctr,order_ctr) {
+                $.post("/_Dependencies/data.aspx", { mode: "get_stockitembatches", stockitem_ctr: stockitem_ctr, stockitembatch_ctr: stockitembatch_ctr, order_ctr: order_ctr, quantity: quantity })
+                    .done(function (data) {
+                        $("#fld_order_stockitembatch").empty().append(data);
+                    });
+            }
+
 
         }); //document.ready
+
+        
 
         function get_newctr() {
             newctr++;
@@ -628,6 +742,10 @@
                 </div>
             </div>
 
+
+
+  
+
             <!-- ================================= ORDERS TAB ===================================  -->
             <div id="div_orders" class="tab-pane fade in">
                 <!--<h3 class="tabheading">Orders</h3>-->
@@ -639,6 +757,7 @@
             <!-- ================================= ORDERS DIALOG ===================================  -->
 
             <div id="dialog_order" title="Maintain Orders" style="display: none" class="form-horizontal">
+                <input type="hidden" id="fld_order_ctr" name="fld_order_ctr" />
                 <div class="form-group">
                     <label for="fld_order_date" class="control-label col-sm-4">
                         Date
@@ -705,8 +824,8 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_delivereddate">Delivered</label>  
                     <div class="col-sm-8">
-                        <div class="input-group standarddate">
-                            <input id="fld_order_delivereddate" name="fld_order_delivereddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control test" />
+                        <div class="input-group fld_order_delivereddate">
+                            <input id="fld_order_delivereddate" name="fld_order_delivereddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -718,14 +837,11 @@
                     <div class="form-group">
                         <label class="control-label col-sm-4" for="fld_order_stockitembatch">Batch</label>
                         <div class="col-sm-8">
-                            <!--
-                        <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" required="required">
-                        </select>
-                        -->
-                            <input type="text" id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" />
+                            <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" required="required">
+                            </select>
                         </div>
                     </div>
-
+                </div>
 
                     <div class="form-group">
                         <label class="control-label col-sm-4" for="fld_order_invoicereference">Invoice</label>
@@ -733,7 +849,7 @@
                             <input type="text" id="fld_order_invoicereference" name="fld_order_invoicereference" class="form-control" />
                         </div>
                     </div>
-                </div>
+
 
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_note">Note</label>

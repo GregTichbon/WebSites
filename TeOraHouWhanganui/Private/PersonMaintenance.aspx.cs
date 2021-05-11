@@ -969,8 +969,8 @@ namespace TeOraHouWhanganui.Private
                     cmd.Parameters.Add("@worker", SqlDbType.VarChar).Value = valuesSplit[2];
                     cmd.Parameters.Add("@alwayspickup", SqlDbType.VarChar).Value = valuesSplit[3];
                     cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[4];
-                    cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[5];
-                    cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[6];
+                    //cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[5];
+                    //cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = valuesSplit[6];
                     //}
                     con.Open();
                     cmd.ExecuteScalar().ToString();

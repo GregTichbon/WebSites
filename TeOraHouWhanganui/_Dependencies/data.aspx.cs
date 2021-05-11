@@ -28,6 +28,9 @@ namespace TeOraHouWhanganui._Dependencies
 
             switch (mode)
             {
+                case "get_vehicle":
+                    get_vehicle();
+                    break;
                 case "pickups":
                     Pickups();
                     break;
@@ -150,12 +153,52 @@ namespace TeOraHouWhanganui._Dependencies
                         html += "</tbody></table>";
                         dr.Close();
                         con.Close();
-
                     }
 
                     break;
             }
         }
+
+        protected string get_vehicle()
+        {
+
+            string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
+            String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
+
+            string vehicle_ctr = Request.Form["vehicle_ctr"];
+            string options = Request.Form["options"];
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand("get_vehicle", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@vehicle_ctr", SqlDbType.VarChar).Value = vehicle_ctr;
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    string description = dr["description"].ToString();
+                    string wofdue = Functions.formatdate(dr["wofdue"].ToString(), "d MMM yyyy");
+                    string registrationdue = Functions.formatdate(dr["registrationdue"].ToString(), "d MMM yyyy");
+
+                    html += description;
+                    if(wofdue != "")
+                    {
+                        html += "\nWOF Due: " + wofdue;
+                    }
+                    if (registrationdue != "")
+                    {
+                        html += "\nRegistration Due: " + registrationdue;
+                    }
+                }
+                dr.Close();
+                con.Close();
+            }
+            
+            return (html);
+        }
+
+
         protected string get_employee_periods()
         {
 
