@@ -50,10 +50,13 @@
                 //,maxDate: moment().add(-1, 'year')
             });
 
-            $('.submit').click(function () { //Started creating functions so that I can group code together - see update_item() - not yet tested
-                delim = String.fromCharCode(254);
-
-                update_item()
+            $('.submit').click(function (e) {
+                if ($('#itemstable > tbody > tr[maint="changed"]').length == 0) {
+                    e.preventDefault();
+                    alert('You need to add at least one item');
+                } else {
+                    update_item();
+                }
 
             });  //.submit end
 
@@ -190,7 +193,7 @@
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_reference">Reference</label>
                 <div class="col-md-6">
-                    <input id="fld_reference" name="fld_reference" type="text" class="form-control" />
+                    <input id="fld_reference" name="fld_reference" type="text" class="form-control" required="required" />
                 </div>
             </div>
             <div class="form-group row">

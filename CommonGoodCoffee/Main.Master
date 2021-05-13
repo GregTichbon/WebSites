@@ -43,10 +43,10 @@
                     <p><strong>Attention:</strong> This site requires that Javascript be enabled.</p>
                 </div>
             </noscript>
-        <div class="jumbotron" style="background-color: white">
-                    <h1>
-                        <img style="max-width: 200px; height: auto; " src="<%: headerimage %>"  />
-                        Common Good Coffee </h1>
+        <div class="jumbotron" style="background-color: #009e5a">
+                   
+                        <img style="max-width: 400px; height: auto; " src="<%: headerimage %>"  />
+                        
                 </div>
         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>

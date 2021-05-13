@@ -141,7 +141,9 @@
     <Content Include="TestAndPlay\Email1.aspx" />
     <Content Include="TestAndPlay\GoogleMaps1.html" />
     <Content Include="TestAndPlay\LongRunning1.aspx" />
+    <Content Include="_Dependencies\Images\sort.png" />
     <Content Include="_Dependencies\Posts.asmx" />
+    <Content Include="_Dependencies\RowSorter\RowSorter.js" />
     <Content Include="_Dependencies\Support.html" />
     <Content Include="_Dependencies\Support.js" />
     <None Include="TestAndPlay\offline.manifest" />

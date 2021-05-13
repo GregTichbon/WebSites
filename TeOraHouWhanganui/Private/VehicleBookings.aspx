@@ -9,6 +9,13 @@
     <script src="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
     <link href="/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <script src="/_Dependencies/Support.js"></script>
+
+    <style>
+        .highlight {
+            color: red;
+        }
+    </style>
+
     <script>
 
         var gotodate;

@@ -28,7 +28,8 @@ namespace CommonGoodCoffee
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
                 {
-                    html = "<thead><tr><th>Item</th><th>Description</th><th>Batch</th><th>Committed</th><th>Delivered</th><th>Transactions</th><th>Balance</th></tr></thead>";
+
+                    html = "<thead><tr><th>Batch</th><th>Committed</th><th>Delivered</th><th>Transactions</th><th>Balance</th></tr></thead>";
                     html += "<tbody>";
                     while (dr.Read())
                     {
@@ -44,15 +45,30 @@ namespace CommonGoodCoffee
                         decimal transactions = (decimal)dr["transactions"];
                         decimal balance = transactions - sold - committed;
 
+                        string batchclass = "";
+
+
+                        if ((DateTime.Today - Convert.ToDateTime(batchdate)).Days > 6)
+                        {
+                            batchclass = " class=\"highlight\"";
+                        }
+                        string hide0 = "";
+                        if(transactions - sold == 0)
+                        {
+                            hide0 = " class=\"hide0\"";
+                        }
+
                         string headeritem = "";
                         string headerdescription = "";
                         if(stockitem_ctr != laststockitem)
                         {
                             headeritem = item;
                             headerdescription = description;
+                            html += "<tr><td colspan=\"5\"><a href=\"stockitemMaintenance.aspx?id=" + stockitem_ctr + "\"><b>" + headeritem + "</b></a> - " + headerdescription + "</td></tr>";
+
                             laststockitem = stockitem_ctr;
                         }
-                        html += "<tr><td><a href=\"stockitemMaintenance.aspx?id=" + stockitem_ctr + "\">" + headeritem + "</a></td><td>" + headerdescription + "</td><td><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">" + batchdate + " - " + reference + "</a></td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
+                        html += "<tr" + hide0 + "><td><span" + batchclass + "><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">" + batchdate + " - " + reference + "</a></span></td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
                     }
                     html += "</tbody>";
                 }

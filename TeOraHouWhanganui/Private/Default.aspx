@@ -44,6 +44,13 @@
     <% 
         Response.Write("<p><a href=\"EventSearch.aspx\" class=\"btn btn-info\">Event Maintenance</a></p>");
         Response.Write("<p><a href=\"ProgramSearch.aspx\" class=\"btn btn-info\">Program Maintenance</a></p>");
+    %>
+    <%    if (TeOraHouWhanganui._Dependencies.functions.AccessStringTest(username, "1001"))
+        {
+            Response.Write("<p><a href=\"Vehicles.aspx\" class=\"btn btn-info\">Vehicle Maintenance</a></p>");
+        }
+    %>
+    <% 
         Response.Write("<p><a href=\"VehicleBookings.aspx\" class=\"btn btn-info\">Vehicle Bookings</a></p>");
         Response.Write("<p><a href=\"http://whanganui.teorahou.org.nz/pickups\" class=\"btn btn-info\">Senior Club Pickups</a></p>");
         Response.Write("<p><a href=\"http://whanganui.teorahou.org.nz/pickups/admin.aspx\" class=\"btn btn-info\">Senior Club Pickups - Set Date</a></p>");

@@ -97,6 +97,7 @@
     <Content Include="_Dependencies\Data.asmx" />
     <Content Include="_Dependencies\Data.aspx" />
     <Content Include="_Dependencies\Images\cgclogo.PNG" />
+    <Content Include="_Dependencies\Images\cgclogo1.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-114x114.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-120x120.png" />
     <Content Include="_Dependencies\Images\FavIcon\apple-touch-icon-144x144.png" />

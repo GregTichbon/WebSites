@@ -159,13 +159,26 @@ namespace TeOraHouWhanganui._Dependencies
 
             while (dr.Read())
             {
+                string wofdue = Functions.formatdate(dr["wofdue"].ToString(), "d MMM yyyy");
+                string registrationdue = Functions.formatdate(dr["registrationdue"].ToString(), "d MMM yyyy");
+                string highlight = "";
+                if ((wofdue != "" && (Convert.ToDateTime(wofdue) - DateTime.Today).Days < 14) || (registrationdue != "" && (Convert.ToDateTime(registrationdue) - DateTime.Today).Days < 14))
+                {
+                    highlight = " class=\"highlight\"";
+                }
+
+
                 dynamic vehicle = new JObject();
                 vehicle.id = dr["vehicle_ctr"].ToString();
                 vehicle.name = dr["name"].ToString();
                 vehicle.registration = dr["registration"].ToString();
-                vehicle.title = vehicle.name + "<br />" + vehicle.registration;
+                vehicle.title = "<span" + highlight + ">" + vehicle.name + "<br />" + vehicle.registration + "</span>";
                 vehicle.eventBackgroundColor = "blue";
                 vehicle.sequence = Convert.ToInt32(dr["sequence"]).ToString("000");
+
+
+
+
                 vehicles.Add(vehicle);
 
             }

@@ -12,7 +12,7 @@ namespace TeOraHouWhanganui
         public string headerimage = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-            headerimage = ResolveUrl("~/_Dependencies/Images/CGClogo.png");
+            headerimage = ResolveUrl("~/_Dependencies/Images/CGClogo1.png");
 
         }
     }
