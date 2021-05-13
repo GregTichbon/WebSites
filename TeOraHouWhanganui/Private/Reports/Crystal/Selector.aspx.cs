@@ -47,8 +47,9 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                         html = formatfields(fields);
                         break;
                     case "4":
-
-                        
+                        reporttitle = "Encounters Maintainence By Youth";
+                        fields = new string[] { "From Date|Date", "To Date|Date" };
+                        html = formatfields(fields);
 
                         break;
                     case "test":

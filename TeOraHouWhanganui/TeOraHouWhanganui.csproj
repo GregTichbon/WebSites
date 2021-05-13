@@ -356,6 +356,12 @@
       <DependentUpon>EncountersByPersonDate.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Private\Reports\Crystal\Encounters_Maintenance.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Encounters_Maintenance.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Private\Reports\Crystal\EncounterYouthWorker.cs">
       <DependentUpon>EncounterYouthWorker.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -565,6 +571,10 @@
     <EmbeddedResource Include="Private\Reports\Crystal\EncountersByPersonDate.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EncountersByPersonDate.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Reports\Crystal\Encounters_Maintenance.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Encounters_Maintenance.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Private\Reports\Crystal\EncounterYouthWorker.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

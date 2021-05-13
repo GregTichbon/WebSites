@@ -16,14 +16,14 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class EncountersByPersonDate : ReportClass {
+    public class Encounters_Maintenance : ReportClass {
         
-        public EncountersByPersonDate() {
+        public Encounters_Maintenance() {
         }
         
         public override string ResourceName {
             get {
-                return "EncountersByPersonDate.rpt";
+                return "Encounters_Maintenance.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         public override string FullResourceName {
             get {
-                return "TeOraHouWhanganui.Private.Reports.Crystal.EncountersByPersonDate.rpt";
+                return "TeOraHouWhanganui.Private.Reports.Crystal.Encounters_Maintenance.rpt";
             }
             set {
                 // Do nothing
@@ -82,7 +82,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section DetailSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -90,7 +90,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
                 return this.ReportDefinition.Sections[5];
             }
@@ -98,7 +98,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
                 return this.ReportDefinition.Sections[6];
             }
@@ -106,15 +106,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
-            get {
-                return this.ReportDefinition.Sections[7];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_FromDate {
+        public CrystalDecisions.Shared.IParameterField Parameter_username {
             get {
                 return this.DataDefinition.ParameterFields[0];
             }
@@ -122,7 +114,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_ToDate {
+        public CrystalDecisions.Shared.IParameterField Parameter_fromdate {
             get {
                 return this.DataDefinition.ParameterFields[1];
             }
@@ -130,33 +122,17 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_username {
-            get {
-                return this.DataDefinition.ParameterFields[2];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_fromdate {
-            get {
-                return this.DataDefinition.ParameterFields[3];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.Shared.IParameterField Parameter_todate {
             get {
-                return this.DataDefinition.ParameterFields[4];
+                return this.DataDefinition.ParameterFields[2];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedEncountersByPersonDate : Component, ICachedReport {
+    public class CachedEncounters_Maintenance : Component, ICachedReport {
         
-        public CachedEncountersByPersonDate() {
+        public CachedEncounters_Maintenance() {
         }
         
         [Browsable(false)]
@@ -193,7 +169,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            EncountersByPersonDate rpt = new EncountersByPersonDate();
+            Encounters_Maintenance rpt = new Encounters_Maintenance();
             rpt.Site = this.Site;
             return rpt;
         }

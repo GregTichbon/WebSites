@@ -292,18 +292,31 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
         protected void doreport4()
         {
 
-            //SqlConnection con2 = new SqlConnection(strConnString);
-            //SqlDataAdapter adp2 = new SqlDataAdapter("select * from person", con2);
-            //adp2.Fill(ds);
-            string report = Server.MapPath("~/private/reports/crystal/testNoData.rpt");
+            string username = HttpContext.Current.User.Identity.Name.ToLower();
+            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+
+            DataSet ds = new DataSet();
+            rpt = new ReportDocument();
+            using (SqlConnection con = new SqlConnection(strConnString))
+            {
+                SqlDataAdapter da = new SqlDataAdapter("Report_Maintenance_Encounters", con);
+
+                da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+                da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
+                da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
+
+                da.Fill(ds);
+
+                //int records = ds.Tables["Table"].Rows.Count;
+
+            }
+            string report = Server.MapPath("~/private/reports/crystal/EncountersByPersonDate.rpt");
             rpt.Load(report);
+            rpt.SetDataSource(ds.Tables["Table"]);
 
+            crv_report.ReportSource = rpt;
             Session.Add("Report", rpt);
-
-            //rpt.SetDataSource(ds.Tables["Table"]);
-
-            //crv_report.ReportSource = rpt;
-            //crv_report.RefreshReport();
         }
         protected void Button1_Click(object sender, EventArgs e)
         {

@@ -62,18 +62,23 @@ namespace TeOraHouWhanganui.Private
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
-            username = HttpContext.Current.User.Identity.Name.ToLower();
-
-            if (username == "")
-            {
-                username = "toh\\gtichbon";   //localhost
-            }
-            //username = HttpContext.Current.User.Identity.Name.ToLower();
-            //Username += "<br />" + Environment.UserName;
+           
 
             if (!IsPostBack)
             {
+                // username = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower();
+                username = HttpContext.Current.User.Identity.Name.ToLower();
+
+                if (username == "")
+                {
+                    username = "toh\\gtichbon";   //localhost
+                }
+
+                ViewState["username"] = username;
+                //username = HttpContext.Current.User.Identity.Name.ToLower();
+                //Username += "<br />" + Environment.UserName;
+
+
                 person_ctr = Request.QueryString["id"] ?? "";
                 if (person_ctr == "")
                 {
@@ -737,6 +742,8 @@ namespace TeOraHouWhanganui.Private
 
         protected void btn_submit_Click(object sender, EventArgs e)
         {
+            username = ViewState["username"].ToString();
+
             Boolean Creating = false;
             string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
             SqlConnection con = new SqlConnection(strConnString);
