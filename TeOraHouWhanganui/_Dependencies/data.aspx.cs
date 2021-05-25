@@ -180,6 +180,8 @@ namespace TeOraHouWhanganui._Dependencies
                     string description = dr["description"].ToString();
                     string wofdue = Functions.formatdate(dr["wofdue"].ToString(), "d MMM yyyy");
                     string registrationdue = Functions.formatdate(dr["registrationdue"].ToString(), "d MMM yyyy");
+                    string note = dr["note"].ToString();
+                    string alert = dr["alert"].ToString();
 
                     html += description;
                     if(wofdue != "")
@@ -189,6 +191,10 @@ namespace TeOraHouWhanganui._Dependencies
                     if (registrationdue != "")
                     {
                         html += "\nRegistration Due: " + registrationdue;
+                    }
+                    html += "\n" + note;
+                    if(alert != "") { 
+                    html += "\nAlert: " + alert;
                     }
                 }
                 dr.Close();

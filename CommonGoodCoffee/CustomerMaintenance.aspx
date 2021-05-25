@@ -214,7 +214,8 @@
                 //,maxDate: moment().add(-1, 'year')
             });
   
-            $('.submit').click(function () { //Started creating functions so that I can group code together - see update_order() - not yet tested
+            $('.submit').click(function (e) { //Started creating functions so that I can group code together - see update_order() - not yet tested
+                //e.preventDefault();
                 delim = String.fromCharCode(254);
 
                 update_order();
@@ -245,11 +246,15 @@
                     $('#fld_order_invoicereference').val($(tr).find('td').eq(9).text());
                     $('#fld_order_note').val($(tr).find('td').eq(10).text());
 
+                    show_div_order_stockitembatch();
+                    /*
                     if ($('#fld_order_delivereddate').val() != '') {
                         $('#div_order_stockitembatch').show();
                     } else {
                         $('#div_order_stockitembatch').hide();
                     }
+                    */
+                    
 
                     stockitem_ctr = $('#fld_order_stockitem').val();
                     stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
@@ -404,12 +409,14 @@
                         warning = "\nThere is an Invoice Reference!";
                     }
                     var response = confirm("Are you sure you want to remove the delivery date?" + warning);
+                    /*
                     if (response) {
                         $('#div_order_stockitembatch').hide();
                         $("#fld_order_stockitembatch").empty();
                     } else {
                         $('#fld_order_delivereddate').val(e.oldDate);
                     }
+                    */
                     /*
                     alert('Delivery date has been removed, need to confirm this and then take into account that it has no longer been delivered when compiling stock batches.');
                     stockitem_ctr = $('#fld_order_stockitem').val();
@@ -419,12 +426,15 @@
 
                     get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr, quantity);
                     */
+                } else {
+                    show_div_order_stockitembatch();
+                    //$('#div_order_stockitembatch').show();
                 }
                 
             })
 
             function show_div_order_stockitembatch() {
-                if ($('#fld_order_stockitem').val() != '' && $('#fld_order_quantity').val() != '' && $('#fld_order_amount').val() != '') {
+                if ($('#fld_order_stockitem').val() != '' && $('#fld_order_quantity').val() != '' && $('#fld_order_amount').val() != '') { // && $('#fld_order_delivereddate').val() != '') {
                     stockitem_ctr = $('#fld_order_stockitem').val();
                     stockitembatch_ctr = 0;
                     order_ctr = 0;
@@ -441,13 +451,14 @@
 
            
             
-            function update_order() {
+            function update_order() {   
+                
                 delim = String.fromCharCode(254);
                 $('#orderstable > tbody > tr[maint="changed"]').each(function () {
                     tr_id = $(this).attr('id');
                     tr_date = $(this).find('td:eq(1)').text();
                     tr_reference = $(this).find('td:eq(2)').text();
-                    tr_stockitem = $(this).find('td:eq(3)').attr('stockitem_ctr');
+                    tr_stockitem = $(this).find('td:eq(3)').attr('stockitem_ctr'); 
                     tr_grind = $(this).find('td:eq(4)').attr('grind_ctr');
                     tr_quantity = $(this).find('td:eq(5)').text();
                     tr_amount = $(this).find('td:eq(6)').text();
@@ -652,7 +663,7 @@
                 <div id="div_businessname" class="form-group row">
                     <label class="control-label col-md-6" for="fld_businessname">Business Name</label>
                     <div class="col-md-6">
-                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control confirm" value="<%:fld_businessname%>" maxlength="20" />
+                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control confirm" value="<%:fld_businessname%>" maxlength="100" required="required" />
                     </div>
                 </div>
 
@@ -677,13 +688,13 @@
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_firstname">First name</label>
                 <div class="col-md-6">
-                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control confirm" value="<%:fld_firstname%>" maxlength="20" required="required" />
+                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control confirm" value="<%:fld_firstname%>" maxlength="50" />
                 </div>
             </div>
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_surname">Surname</label>
                 <div class="col-md-6">
-                    <input id="fld_surname" name="fld_surname" type="text" class="form-control confirm" value="<%:fld_surname%>" maxlength="20" />
+                    <input id="fld_surname" name="fld_surname" type="text" class="form-control confirm" value="<%:fld_surname%>" maxlength="50" />
                 </div>
             </div>
         </div>
@@ -797,7 +808,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_grind">Grind</label>
                     <div class="col-sm-8">
-                        <select id="fld_order_grind" name="fld_order_grind" class="form-control" required="required">
+                        <select id="fld_order_grind" name="fld_order_grind" class="form-control">
                             <%                                                                                                                                            
                                 //string[] nooptions = { }; 
                                 Dictionary<string, string> order_grind_options = new Dictionary<string, string>();
@@ -816,13 +827,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_amount">Amount</label>
+                    <label class="control-label col-sm-4" for="fld_order_amount">Price</label>
                     <div class="col-sm-8">
                         <input type="text" id="fld_order_amount" name="fld_order_amount" class="form-control" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_delivereddate">Delivered</label>  
+                    <label class="control-label col-sm-4" for="fld_order_delivereddate">Dispatched</label>  
                     <div class="col-sm-8">
                         <div class="input-group fld_order_delivereddate">
                             <input id="fld_order_delivereddate" name="fld_order_delivereddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
@@ -837,7 +848,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-4" for="fld_order_stockitembatch">Batch</label>
                         <div class="col-sm-8">
-                            <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control" required="required">
+                            <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control">
                             </select>
                         </div>
                     </div>
@@ -937,7 +948,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_amount">Amount</label>
+                    <label class="control-label col-sm-4" for="fld_subscription_amount">Price</label>
                     <div class="col-sm-8">
                         <input type="text" id="fld_subscription_amount" name="fld_subscription_amount" class="form-control" />
                     </div>

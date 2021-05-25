@@ -86,6 +86,8 @@
     <Content Include="Images\original\7.jpg" />
     <Content Include="Reporting\Default.aspx" />
     <Content Include="Reporting\Report.aspx" />
+    <Content Include="Reporting\stockconsignments.aspx" />
+    <Content Include="Reporting\Subscriptions.aspx" />
     <Content Include="stockitemBatchMaintenance.aspx" />
     <Content Include="StockItemList.aspx" />
     <Content Include="StockItemMaintenance.aspx" />
@@ -172,6 +174,20 @@
     </Compile>
     <Compile Include="Reporting\Report.aspx.designer.cs">
       <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\stockconsignments.aspx.cs">
+      <DependentUpon>stockconsignments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reporting\stockconsignments.aspx.designer.cs">
+      <DependentUpon>stockconsignments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\Subscriptions.aspx.cs">
+      <DependentUpon>Subscriptions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reporting\Subscriptions.aspx.designer.cs">
+      <DependentUpon>Subscriptions.aspx</DependentUpon>
     </Compile>
     <Compile Include="stockitemBatchMaintenance.aspx.cs">
       <DependentUpon>stockitemBatchMaintenance.aspx</DependentUpon>

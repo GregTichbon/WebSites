@@ -33,7 +33,7 @@ namespace CommonGoodCoffee
                     html += "<tbody>";
                     while (dr.Read())
                     {
-                         
+
                         String stockitem_ctr = dr["stockitem_ctr"].ToString();
                         String item = dr["stockitem"].ToString();
                         String description = dr["description"].ToString();
@@ -46,21 +46,22 @@ namespace CommonGoodCoffee
                         decimal balance = transactions - sold - committed;
 
                         string batchclass = "";
-
-
-                        if ((DateTime.Today - Convert.ToDateTime(batchdate)).Days > 6)
-                        {
-                            batchclass = " class=\"highlight\"";
-                        }
                         string hide0 = "";
-                        if(transactions - sold == 0)
-                        {
-                            hide0 = " class=\"hide0\"";
-                        }
 
+                        if (batchdate != "")
+                        {
+                            if ((DateTime.Today - Convert.ToDateTime(batchdate)).Days > 6)
+                            {
+                                batchclass = " class=\"highlight\"";
+                            }
+                            if (transactions - sold == 0)
+                            {
+                                hide0 = " class=\"hide0\"";
+                            }
+                        }
                         string headeritem = "";
                         string headerdescription = "";
-                        if(stockitem_ctr != laststockitem)
+                        if (stockitem_ctr != laststockitem)
                         {
                             headeritem = item;
                             headerdescription = description;
@@ -68,12 +69,15 @@ namespace CommonGoodCoffee
 
                             laststockitem = stockitem_ctr;
                         }
-                        html += "<tr" + hide0 + "><td><span" + batchclass + "><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">" + batchdate + " - " + reference + "</a></span></td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
+                        if (batchdate != "")
+                        {
+                            html += "<tr" + hide0 + "><td><span" + batchclass + "><a href=\"stockitemBatchMaintenance.aspx?id=" + stockitembatch_ctr + "\">" + batchdate + " - " + reference + "</a></span></td><td>" + committed + "</td><td>" + sold + "</td><td>" + transactions + "</td><td>" + balance + "</td></tr>";
+                        }
                     }
                     html += "</tbody>";
                 }
                 dr.Close();
             }
         }
-    }
+}
 }

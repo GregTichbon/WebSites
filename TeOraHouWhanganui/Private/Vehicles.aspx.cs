@@ -32,7 +32,7 @@ namespace TeOraHouWhanganui.Private
 
                     con.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
-                    html = "<table class=\"table\"><thead><tr><th style=\"text-align: right\">Sequence</th><th>Registration</th><th>Name</th><th>Description</th><th>WOF Due</th><th>Registration Due</th><th>Start Date</th><th>End Date</th><th><a class=\"add\">Add</a></tr></thead><tbody>";
+                    html = "<table class=\"table\"><thead><tr><th style=\"text-align: right\">Sequence</th><th>Registration</th><th>Name</th><th>Description</th><th>WOF Due</th><th>Registration Due</th><th>Start Date</th><th>End Date</th><th>Note</th><th>Alert</th><th><a class=\"add\">Add</a></tr></thead><tbody>";
                     if (dr.HasRows)
                     {
                         while (dr.Read())
@@ -47,6 +47,7 @@ namespace TeOraHouWhanganui.Private
                             string startdate = Functions.formatdate(dr["startdate"].ToString(), "d MMM yyyy");
                             string enddate = Functions.formatdate(dr["enddate"].ToString(), "d MMM yyyy");
                             string note = dr["note"].ToString();
+                            string alert = dr["alert"].ToString();
                             string Sequence = dr["sequence"].ToString();
 
 
@@ -71,13 +72,25 @@ namespace TeOraHouWhanganui.Private
                             {
                                 descriptionDisplay = descriptionDisplay.Substring(0, 200) + "<b>...</b>";
                             }
-                            html += "<td class=\"editdescription\" data-id=\"" + vehicle_ctr + "\"><input id=\"description_" + vehicle_ctr + "\" name=\"description_" + vehicle_ctr + "\" type=\"hidden\" value=\"" + description + "\"><span id=\"spandescription_" + vehicle_ctr + "\">" + descriptionDisplay + "</span></td>";
+                            html += "<td class=\"editcontent\" data-type=\"description\" data-id=\"" + vehicle_ctr + "\"><input id=\"description_" + vehicle_ctr + "\" name=\"description_" + vehicle_ctr + "\" type=\"hidden\" value=\"" + description + "\"><span id=\"spandescription_" + vehicle_ctr + "\">" + descriptionDisplay + "</span></td>";
                            
                             html += "<td><input class=\"form-control date fld_wofdue" + wofclass + "\" id=\"wofdue_" + vehicle_ctr + "\" name=\"wofdue_" + vehicle_ctr + "\" value=\"" + wofdue + "\"></td>";
                             html += "<td><input class=\"form-control date fld_registrationdue" + registrationclass +"\" id=\"registrationdue_" + vehicle_ctr + "\" name=\"registrationdue_" + vehicle_ctr + "\" value=\"" + registrationdue + "\"></td>";
 
                             html += "<td><input class=\"form-control date fld_startdate\" id=\"startdate_" + vehicle_ctr + "\" name=\"startdate_" + vehicle_ctr + "\" value=\"" + startdate + "\"></td>";
-                            html += "<td colspan=\"2\"><input class=\"form-control date fld_enddate\" id=\"enddate_" + vehicle_ctr + "\" name=\"enddate_" + vehicle_ctr + "\" value=\"" + enddate + "\"></td>";
+                            html += "<td><input class=\"form-control date fld_enddate\" id=\"enddate_" + vehicle_ctr + "\" name=\"enddate_" + vehicle_ctr + "\" value=\"" + enddate + "\"></td>";
+                            string noteDisplay = note;
+                            if (noteDisplay.Length > 200)
+                            {
+                                noteDisplay = noteDisplay.Substring(0, 200) + "<b>...</b>";
+                            }
+                            html += "<td class=\"editcontent\" data-type=\"note\" data-id=\"" + vehicle_ctr + "\"><input id=\"note_" + vehicle_ctr + "\" name=\"note_" + vehicle_ctr + "\" type=\"hidden\" value=\"" + note + "\"><span id=\"spannote_" + vehicle_ctr + "\">" + noteDisplay + "</span></td>";
+                            string alertDisplay = alert;
+                            if (alertDisplay.Length > 200)
+                            {
+                                alertDisplay = alertDisplay.Substring(0, 200) + "<b>...</b>";
+                            }
+                            html += "<td colspan=\"2\" class=\"editcontent\" data-type=\"alert\" data-id=\"" + vehicle_ctr + "\"><input id=\"alert_" + vehicle_ctr + "\" name=\"alert_" + vehicle_ctr + "\" type=\"hidden\" value=\"" + alert + "\"><span id=\"spanalert_" + vehicle_ctr + "\">" + alertDisplay + "</span></td>";
 
                             //html += "<td><a><img alt=\"Add Below\" class=\"icon add\" src=\"/images/plus.png\"></a> <a><img id=\"remove_" + vehicle_ctr + "\" alt=\"Remove\" class=\"icon remove\" src=\"/images/cross.png\"></a></td>";
                             html += "</tr>";
@@ -121,7 +134,8 @@ namespace TeOraHouWhanganui.Private
                             cmd.Parameters.Add("@registrationdue", SqlDbType.VarChar).Value = Request.Form["registrationdue_" + id] ?? "";
                             cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = Request.Form["startdate_" + id] ?? "";
                             cmd.Parameters.Add("@enddate", SqlDbType.VarChar).Value = Request.Form["enddate_" + id] ?? "";
-                            cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = "";
+                            cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = Request.Form["note_" + id] ?? "";
+                            cmd.Parameters.Add("@alert", SqlDbType.VarChar).Value = Request.Form["alert_" + id] ?? "";
                             cmd.Parameters.Add("@Sequence", SqlDbType.VarChar).Value = Request.Form["sequence_" + id] ?? "";
 
 

@@ -161,8 +161,9 @@ namespace TeOraHouWhanganui._Dependencies
             {
                 string wofdue = Functions.formatdate(dr["wofdue"].ToString(), "d MMM yyyy");
                 string registrationdue = Functions.formatdate(dr["registrationdue"].ToString(), "d MMM yyyy");
+                string alert = dr["alert"].ToString();
                 string highlight = "";
-                if ((wofdue != "" && (Convert.ToDateTime(wofdue) - DateTime.Today).Days < 14) || (registrationdue != "" && (Convert.ToDateTime(registrationdue) - DateTime.Today).Days < 14))
+                if ((wofdue != "" && (Convert.ToDateTime(wofdue) - DateTime.Today).Days < 14) || (registrationdue != "" && (Convert.ToDateTime(registrationdue) - DateTime.Today).Days < 14) || alert != "")
                 {
                     highlight = " class=\"highlight\"";
                 }

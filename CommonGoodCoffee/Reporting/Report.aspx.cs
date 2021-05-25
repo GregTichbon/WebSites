@@ -18,7 +18,13 @@ namespace CommonGoodCoffee.Reports
         protected void Page_Load(object sender, EventArgs e)
         {
 
-
+            /*
+            0 = Heading
+            1 = Format
+            2 = Class
+            3 = Link
+            4 = Link key
+            */
 
             string id = Request.QueryString["id"] + "";
             if (id != "")
@@ -37,7 +43,7 @@ namespace CommonGoodCoffee.Reports
 
                     if (dr.HasRows)
                     {
-                        string[,] parameters = new string[3, dr.FieldCount];
+                        string[,] parameters = new string[5, dr.FieldCount];
                         html += "<table class=\"table\"><thead><tr>";
                         for (int f1 = 0; f1 <= dr.FieldCount - 1; f1++)
                         {
@@ -60,15 +66,36 @@ namespace CommonGoodCoffee.Reports
                             html += "<tr>";
                             for (int f1 = 0; f1 <= dr.FieldCount - 1; f1++)
                             {
+                                string useclass = "";
                                 if (parameters[0, f1] != "")
                                 {
-                                    html += "<td>";
+                                    if (parameters[2, f1] + "" != "")
+                                    {
+                                        useclass = " class=\"" + parameters[2, f1] + "\"";
+                                    }
+                                    html += "<td" + useclass + ">";
+
                                     string val = dr[f1].ToString();
                                     if (parameters[1, f1] == "Date")
                                     {
                                         val = Functions.formatdate(val, "dd/MM/yy");
+                                    } else if(parameters[1, f1] == "Email")
+                                    {
+                                        val = "<a href=\"mailto:" + val + "\">" + val + "</a>";
                                     }
-                                    html += val;
+
+
+                                    if (parameters[3, f1] + "" != "")
+                                    {
+                                        int fld = Convert.ToInt32( parameters[4, f1]);
+                                        html += "<a href=\"" + parameters[3, f1] + dr[fld].ToString() + "\">" + val + "</a>";
+                                    } else
+                                    {
+                                        html += val;
+                                    }
+
+
+                                   
                                     html += "</td>";
                                 }
                             }

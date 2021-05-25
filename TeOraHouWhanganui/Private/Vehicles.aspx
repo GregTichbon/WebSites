@@ -99,15 +99,17 @@
 
             $("#form1").validate();
 
-            $('.editdescription').click(function () {
+            $('.editcontent').click(function () {
                 id = $(this).data('id');
-                $('#description').val($('#description_' + id).val());
+                type = $(this).data("type");
+                $('#content').val($('#' + type + "_" + id).val());
                 //$('#description').val($('#spandescription_' + id).html());
 
  
                 $("#dialog").dialog({
                     modal: true,
                     width: 800,
+                    title: type,
                     close: function (event, ui) {
   
                     },
@@ -122,10 +124,11 @@
                             text: "OK",
                             //icon: "ui-icon-heart",
                             click: function () {
-                                content = $('#description').val();
+                                content = $('#content').val();
                                 //$('#spandescription_' + id).html('<pre>' + content.replaceAll('<', '&lt;').replaceAll('>', '&gt;') + '</pre>');
-                                $('#spandescription_' + id).text(content);
-                                $('#description_' + id).val(content);
+
+                                $('#span' + type + '_' + id).text(content);
+                                $('#' + type + '_' + id).val(content);
                                 $(this).dialog("close");
                             }
                         }
@@ -188,7 +191,7 @@
     </div>
 
      <div id="dialog" style="display: none">
-        <textarea style="width:100%" rows="20" name="description" id="description"></textarea>
+        <textarea style="width:100%" rows="20" name="content" id="content"></textarea>
     </div>
 
     <div class="toprighticon">

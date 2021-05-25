@@ -54,6 +54,14 @@
         <a href="accounts">Personal Accounts</a>
         <br />
         <a href="http://ubc.org.nz/people/signupList.aspx">Schools Learn to Row 2019</a>
+
+         <br />
+        <h2>Facebook</h2>
+        <a href="https://www.facebook.com/groups/176226072933036/">Te Ora Hou Whanganui Kaimahi Group</a>
+         <br />
+         <a href="https://www.facebook.com/teorahou.whanganui">Te Ora Hou Whanganui</a>
+        
+
     </form>
 </body>
 </html>
