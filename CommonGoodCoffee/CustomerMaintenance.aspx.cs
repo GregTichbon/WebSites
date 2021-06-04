@@ -57,8 +57,8 @@ namespace CommonGoodCoffee
                 ViewState["customer_ctr"] = customer_ctr;
                 ViewState["returnto"] = Request.QueryString["returnto"] + "";
 
-                //genders.Add("Female", "Female");
-                //genders.Add("Male", "Male");
+                YesNo.Add("Yes", "Yes");
+                YesNo.Add("No", "No");
 
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
                 String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
@@ -83,6 +83,7 @@ namespace CommonGoodCoffee
                     options.Add("storedprocedure", "");
                     options.Add("storedprocedurename", "");
                     options.Add("usevalues", "");
+                    options.Add("parameters", "NoBatch");
                     //options.Add("insertblank", "start");
                     stockitems = Functions.buildselectionlist(connectionString, "get_stockitems", options);
 
@@ -132,8 +133,8 @@ namespace CommonGoodCoffee
 
                         html_tab += "<li><a data-target=\"#div_orders\">Orders</a></li>";
                         html_orders = "<thead>";
-                        //html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Item Date</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Delivered</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
-                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Delivered</th><th>Batch</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        //html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Item Date</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Dispatched</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Dispatched</th><th>Batch</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_orders += "</thead>";
                         html_orders += "<tbody>";
 
@@ -177,6 +178,18 @@ namespace CommonGoodCoffee
                                 string batchstockitem = dr["batchstockitem"].ToString();
                                 string invoicereference = dr["invoicereference"].ToString();
                                 string note = dr["note"].ToString();
+
+                                if(batchstockitem_ctr == "")
+                                {
+                                    string stockitemBatch_CTR = dr["stockitemBatch_CTR"].ToString();
+                                    if(stockitemBatch_CTR == "0")
+                                    {
+                                        batchstockitem_ctr = "0";
+                                        batchstockitem = "Drop Ship";
+
+                                    }
+                                }
+
                                 html_orders += "<tr id=\"order_" + order_CTR + "\">";
                                 html_orders += "<td style=\"text-align:center\"></td>";
 
@@ -208,7 +221,7 @@ namespace CommonGoodCoffee
 
                         html_tab += "<li><a data-target=\"#div_subscriptions\">Subscriptions</a></li>";
                         html_subscriptions = "<thead>";
-                        html_subscriptions += "<tr><th style=\"width:50px;text-align:center\"></th><th>Frequency</th><th>Period</th><th>Start Date</th><th>Coffee</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"subscriptionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_subscriptions += "<tr><th style=\"width:50px;text-align:center\"></th><th>Frequency</th><th>Period</th><th>Start Date</th><th>Coffee</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Drop Ship</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"subscriptionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_subscriptions += "</thead>";
                         html_subscriptions += "<tbody>";
 
@@ -222,6 +235,7 @@ namespace CommonGoodCoffee
                         html_subscriptions += "<td></td>"; //Grind
                         html_subscriptions += "<td></td>"; //Quantity
                         html_subscriptions += "<td></td>"; //Amount
+                        html_subscriptions += "<td></td>"; //Drop Ship
                         html_subscriptions += "<td></td>"; //Note
                         html_subscriptions += "<td><a href=\"javascript:void(0)\" class=\"subscriptionedit\" data-mode=\"edit\">Edit</td>";
                         html_subscriptions += "</tr>";
@@ -245,6 +259,7 @@ namespace CommonGoodCoffee
                                 string grind = dr["grind"].ToString();
                                 string quantity = Convert.ToDecimal(dr["quantity"]).ToString("0.00");
                                 string amount = Convert.ToDecimal(dr["amount"]).ToString("0.00");
+                                string dropship = dr["dropship"].ToString();
                                 string note = dr["note"].ToString();
 
                                 html_subscriptions += "<tr id=\"subscription_" + subscription_CTR + "\">";
@@ -257,8 +272,8 @@ namespace CommonGoodCoffee
                                 html_subscriptions += "<td grind_ctr=\"" + grind_ctr + "\">" + grind + "</td>";
                                 html_subscriptions += "<td>" + quantity + "</td>";
                                 html_subscriptions += "<td>" + amount + "</td>";
+                                html_subscriptions += "<td>" + dropship + "</td>";
                                 html_subscriptions += "<td>" + note + "</td>";
-
                                 html_subscriptions += "<td><a href=\"javascript:void(0)\" class=\"subscriptionedit\" data-mode=\"edit\">Edit</td>";
                                 html_subscriptions += "</tr>";
 
@@ -400,7 +415,8 @@ namespace CommonGoodCoffee
                                 cmd.Parameters.Add("@grind_ctr", SqlDbType.VarChar).Value = valuesSplit[4];
                                 cmd.Parameters.Add("@quantity", SqlDbType.VarChar).Value = valuesSplit[5];
                                 cmd.Parameters.Add("@amount", SqlDbType.VarChar).Value = valuesSplit[6];
-                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[7];
+                                cmd.Parameters.Add("@dropship", SqlDbType.VarChar).Value = valuesSplit[7];
+                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[8];
                                 con.Open();
                                 cmd.ExecuteScalar();
                                 con.Close();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace TeOraHouWhanganui.Private.Administration
         public Dictionary<string, string> access = new Dictionary<string, string>();
         protected void Page_Load(object sender, EventArgs e)
         {
-            string connectionString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string connectionString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             options.Clear();
             options.Add("storedprocedure", "");
@@ -82,7 +83,7 @@ namespace TeOraHouWhanganui.Private.Administration
 
         protected void btn_submit_Click(object sender, EventArgs e)
         {
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;

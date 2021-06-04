@@ -7,6 +7,7 @@
     <p><a href="CustomerSearch.aspx" class="btn btn-info">Customer Maintenance</a></p>
     <p><a href="stockitemList.aspx" class="btn btn-info">Stock Items</a></p>
     <p><a href="stockreceived.aspx" class="btn btn-info">Stock Received</a></p>
+    <p><a href="processSubscriptions.aspx" class="btn btn-info">Process Subscriptions</a></p>
 
     <p><a href="reporting" class="btn btn-info">Reporting Menu</a></p>
 </asp:Content>

@@ -84,6 +84,7 @@
     <Content Include="Images\original\2.jpg" />
     <Content Include="Images\original\3.jpg" />
     <Content Include="Images\original\7.jpg" />
+    <Content Include="ProcessSubscriptions.aspx" />
     <Content Include="Reporting\Default.aspx" />
     <Content Include="Reporting\Report.aspx" />
     <Content Include="Reporting\stockconsignments.aspx" />
@@ -159,6 +160,13 @@
     </Compile>
     <Compile Include="Main.Master.designer.cs">
       <DependentUpon>Main.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ProcessSubscriptions.aspx.cs">
+      <DependentUpon>ProcessSubscriptions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProcessSubscriptions.aspx.designer.cs">
+      <DependentUpon>ProcessSubscriptions.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporting\Default.aspx.cs">

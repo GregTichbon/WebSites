@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace TeOraHouWhanganui._Dependencies
         {
             string personaccess = "";
 
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(strConnString))
             using (SqlCommand cmd = new SqlCommand("Get_AccessString", con))
             {

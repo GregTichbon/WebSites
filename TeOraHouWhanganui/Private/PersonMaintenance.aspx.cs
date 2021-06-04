@@ -745,7 +745,7 @@ namespace TeOraHouWhanganui.Private
             username = ViewState["username"].ToString();
 
             Boolean Creating = false;
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;

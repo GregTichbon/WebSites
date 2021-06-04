@@ -146,6 +146,7 @@
     <Content Include="_Dependencies\RowSorter\RowSorter.js" />
     <Content Include="_Dependencies\Support.html" />
     <Content Include="_Dependencies\Support.js" />
+    <None Include="Properties\PublishProfiles\TOH Northland.pubxml" />
     <None Include="TestAndPlay\offline.manifest" />
     <Content Include="TestAndPlay\offline1.aspx" />
     <Content Include="XDefault.aspx" />

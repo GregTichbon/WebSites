@@ -33,7 +33,7 @@ namespace TeOraHouWhanganui.Private.Reports
                     break;
                 case "Everyone":
                     reportname = "Everyone";
-                    string connectionString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+                    string connectionString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
                     using (SqlConnection con = new SqlConnection(connectionString))
                     using (SqlCommand cmd = new SqlCommand("Reports", con))
@@ -76,7 +76,7 @@ namespace TeOraHouWhanganui.Private.Reports
 
         public void createreport()
         {
-            string connectionString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string connectionString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand("Reports", con))

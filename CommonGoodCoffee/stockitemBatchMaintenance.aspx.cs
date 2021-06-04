@@ -144,7 +144,7 @@ namespace CommonGoodCoffee
                         */
                         html_tab += "<li><a data-target=\"#div_orders\">Orders</a></li>";
                         html_orders = "<thead>";
-                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Customer</th><th>Quantity</th><th>Delivered</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Customer</th><th>Quantity</th><th>Dispatched</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_orders += "</thead>";
                         html_orders += "<tbody>";
 

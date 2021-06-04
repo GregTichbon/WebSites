@@ -81,6 +81,12 @@ namespace CommonGoodCoffee._Dependencies
                 dr.Close();
                 con.Close();
             }
+            string selected0 = "";
+            if (stockitembatch_ctr == "0")
+            {
+                selected0 = " selected";
+            }
+            html += "<option" + selected0 + " value=\"0\">Drop Ship</option>";
             return (html);
         }
     }

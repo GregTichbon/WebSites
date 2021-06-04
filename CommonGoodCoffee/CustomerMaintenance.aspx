@@ -502,7 +502,8 @@
                     $('#fld_subscription_grind').val($(tr).find('td').eq(5).attr('grind_ctr'));
                     $('#fld_subscription_quantity').val($(tr).find('td').eq(6).text());
                     $('#fld_subscription_amount').val($(tr).find('td').eq(7).text());
-                    $('#fld_subscription_note').val($(tr).find('td').eq(8).text());
+                    $('#fld_subscription_dropship').val($(tr).find('td').eq(8).text());
+                    $('#fld_subscription_note').val($(tr).find('td').eq(9).text());
                 }
 
                 mywidth = $(window).width() * .95;
@@ -554,7 +555,8 @@
                             $(tr).find('td').eq(5).attr('grind_ctr', $('#fld_subscription_grind').val());
                             $(tr).find('td').eq(6).text($('#fld_subscription_quantity').val());
                             $(tr).find('td').eq(7).text($('#fld_subscription_amount').val());
-                            $(tr).find('td').eq(8).text($('#fld_subscription_note').val());
+                            $(tr).find('td').eq(8).text($('#fld_subscription_dropship option:selected').text());
+                            $(tr).find('td').eq(9).text($('#fld_subscription_note').val());
 
                             $(this).dialog("close");
                         }
@@ -586,8 +588,9 @@
                     tr_grind = $(this).find('td:eq(5)').attr('grind_ctr');
                     tr_quantity = $(this).find('td:eq(6)').text();
                     tr_amount = $(this).find('td:eq(7)').text();
-                    tr_note = $(this).find('td:eq(8)').text();
-                    value = tr_frequency + delim + tr_period + delim + tr_startdate + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_note;
+                    tr_dropship = $(this).find('td:eq(8)').text();
+                    tr_note = $(this).find('td:eq(9)').text();
+                    value = tr_frequency + delim + tr_period + delim + tr_startdate + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_dropship + delim + tr_note;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -951,6 +954,20 @@
                     <label class="control-label col-sm-4" for="fld_subscription_amount">Price</label>
                     <div class="col-sm-8">
                         <input type="text" id="fld_subscription_amount" name="fld_subscription_amount" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_subscription_dropship">Drop Ship</label>
+                    <div class="col-sm-8">
+                        <select id="fld_subscription_dropship" name="fld_subscription_dropship" class="form-control" required="required">
+                            <option value="">--- Please Select ---</option>
+                            <%       
+                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
                     </div>
                 </div>
                 

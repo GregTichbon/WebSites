@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -110,7 +111,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
         protected void doreport1()
         {
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             DataSet ds = new DataSet();
             rpt = new ReportDocument();
@@ -171,7 +172,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
         protected void doreport2()
         {
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             DataSet ds = new DataSet();
             rpt = new ReportDocument();
@@ -231,7 +232,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
         protected void doreport3()
         {
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             DataSet ds = new DataSet();
             rpt = new ReportDocument();
@@ -293,7 +294,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
         {
 
             string username = HttpContext.Current.User.Identity.Name.ToLower();
-            string strConnString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             DataSet ds = new DataSet();
             rpt = new ReportDocument();

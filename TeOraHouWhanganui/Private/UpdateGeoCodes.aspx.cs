@@ -19,7 +19,7 @@ namespace TeOraHouWhanganui.Private
             string sql = @"select id, Address from Address where isnull([Address],'') <> '' and Longitude is null ";
             Dictionary<string, string> options = new Dictionary<string, string>();
 
-            string connectionString = "Data Source=toh-app;Initial Catalog=TeOraHou;Integrated Security=False;user id=OnlineServices;password=Whanganui497";
+            string connectionString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(sql, con))

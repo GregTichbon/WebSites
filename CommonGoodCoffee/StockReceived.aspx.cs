@@ -34,6 +34,7 @@ namespace CommonGoodCoffee
                 options.Add("storedprocedure", "");
                 options.Add("storedprocedurename", "");
                 options.Add("usevalues", "");
+                //options.Add("parameters", "NotNoBtach");
                 //options.Add("insertblank", "start");
                 itemtypes = Functions.buildselectionlist(connectionString, "get_stockitems", options);
 
