@@ -11,7 +11,23 @@ namespace cntrvibe.iti.ninja
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!Page.IsPostBack)
+            {
+                string wdcscripts = "";
+                if (Request.QueryString["populate"] != null || 1 == 2)
+                {
+                    wdcscripts += "$.getScript('/_dependencies/populate.js');";
+                }
+                if (Request.QueryString["showfields"] != null)
+                {
+                    wdcscripts += "$.getScript('/_dependencies/showfields.js');";
+                }
+                if (wdcscripts != "")
+                {
+                    wdcscripts = "<script type='text/javascript'>" + wdcscripts + "</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "ConfirmSubmit", wdcscripts);
+                }
+            }
         }
     }
 }
