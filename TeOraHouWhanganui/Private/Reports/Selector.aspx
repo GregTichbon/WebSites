@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Attendance.aspx.cs" Inherits="TeOraHouWhanganui.Private.Reports.Attendance" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Selector.aspx.cs" Inherits="TeOraHouWhanganui.Private.Reports.Selector" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
@@ -24,11 +24,8 @@
             });
 
             $('#menu').click(function () {
-                window.location.href = "<%=ResolveUrl("default.aspx")%>";
+                window.location.href = "<%=ResolveUrl("../default.aspx")%>";
             });
-            $('#reportmenu').click(function () {
-                window.location.href = "<%=ResolveUrl("~/private/reports/default.aspx")%>";
-             });
 
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
@@ -57,46 +54,22 @@
 
     <div class="toprighticon">
         <button id="assistance" type="button" class="btn btn-info">Assistance</button>
-        <input type="button" id="reportmenu" class="btn btn-info" value="REPORTS MENU" />
         <button id="menu" type="button" class="btn btn-info">MENU</button>
     </div>
 
-    <h1>Event Attendance
-    </h1>
+    <h1>Report Selector - <%=reporttitle %>
+    </h1><br />
     <div class="form-horizontal">
-
-        <div class="col-sm-4 form-group">
-            <label class="control-label">Date From</label>
-            <div class="input-group date">
-                <asp:TextBox ID="fld_datefrom" runat="server" class="form-control" required="required"></asp:TextBox>
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-
-
-        <div class="col-sm-4 form-group">
-            <label class="control-label">Date To</label>
-            <div class="input-group date">
-                <asp:TextBox ID="fld_dateto" runat="server" class="form-control" required="required"></asp:TextBox>
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-
-        <div class="col-sm-4 form-group">
-            <label class="control-label"></label>
-            <div class="input-group">
+        <%=html %>
+        <div class="form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-8">
                 <asp:Button ID="btn_submit" runat="server" Text="Run" OnClick="btn_submit_Click" class="submit btn btn-info" />
             </div>
         </div>
-
     </div>
 
-
-    <%=html %>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
 </asp:Content>
+

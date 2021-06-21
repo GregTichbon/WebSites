@@ -9,6 +9,8 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
+
 namespace CommonGoodCoffee
 {
     public partial class StockReceived : System.Web.UI.Page
@@ -27,6 +29,11 @@ namespace CommonGoodCoffee
         {
             if (!IsPostBack)
             {
+                if (!localfunctions.AccessStringTest(""))
+                {
+                    Response.Redirect("login.aspx");
+                }
+
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
                 String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString + "; MultipleActiveResultSets=True";
 
@@ -80,6 +87,8 @@ namespace CommonGoodCoffee
                             cmd.Parameters.Add("@stockitem_ctr", SqlDbType.VarChar).Value = valuesSplit[0];
                             cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = Request.Form["fld_date"].ToString();
                             cmd.Parameters.Add("@reference", SqlDbType.VarChar).Value = Request.Form["fld_reference"].ToString();
+
+                            cmd.Parameters.Add("@ordered", SqlDbType.VarChar).Value = Request.Form["fld_ordered"].ToString();
                             cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = Request.Form["fld_note"].ToString();
 
                             cmd.Parameters.Add("@transaction_quantity", SqlDbType.VarChar).Value = valuesSplit[1];

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee.Reports
 {
@@ -17,6 +18,10 @@ namespace CommonGoodCoffee.Reports
         public string html = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!localfunctions.AccessStringTest(""))
+            {
+                Response.Redirect("login.aspx");
+            }
 
             /*
             0 = Heading

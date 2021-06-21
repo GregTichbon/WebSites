@@ -1195,7 +1195,7 @@
             <li>Sensitive</li>
             <li>General</li>
         </ul>
-        <p>Everyone has access to encounter notes at the General level.</p>
+        <p>Everyone has access to the encounter notes for which they have specifically given access to, unless, they are give "General Access" rights.</p>
 
     </div>
      <!-- #include file = "/_dependencies/support.html" -->

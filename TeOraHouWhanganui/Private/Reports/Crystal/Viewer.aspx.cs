@@ -292,7 +292,6 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
         protected void doreport4()
         {
-
             string username = HttpContext.Current.User.Identity.Name.ToLower();
             string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 

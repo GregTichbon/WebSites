@@ -9,17 +9,27 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee.Reporting
 {
     public partial class Subscriptions : System.Web.UI.Page
     {
+
         public string html = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!localfunctions.AccessStringTest(""))
+            {
+                Response.Redirect("login.aspx");
+            }
 
             string lastdate = "";
             string lastreference = "";
+
+            html += "<table class=\"table\"><thead><tr>";
+            html += "<th>Customer</th><th>Frequency</th><th>Start Date</th><th>Item</th><th>Grind</th><th>Quantity</th><th>Drop Ship</th><th>Last Order</th><th>Next Order</th>";
+            html += "</tr></thead><tbody>";
 
             string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];
             String connectionString = ConfigurationManager.ConnectionStrings[systemPrefix + "ConnectionString"].ConnectionString;
@@ -35,9 +45,7 @@ namespace CommonGoodCoffee.Reporting
                 if (dr.HasRows)
                 {
 
-                    html += "<table class=\"table\"><thead><tr>";
-                    html += "<th>Customer</th><th>Frequency</th><th>Start Date</th><th>Item</th><th>Grind</th><th>Quantity</th>";
-                    html += "</tr></thead><tbody>";
+                   
 
                     while (dr.Read())
                     {
@@ -48,13 +56,18 @@ namespace CommonGoodCoffee.Reporting
                         html += "<td><a href=\"/stockitemMaintenance.aspx?id=" + dr["StockItem_CTR"].ToString() + "\">" + dr["StockItem"].ToString() + "</a></td>";
                         html += "<td>" + dr["Grind"].ToString() + "</td>";
                         html += "<td>" + dr["Quantity"].ToString() + "</td>";
+                        html += "<td>" + dr["dropShip"].ToString() + "</td>";
+                        html += "<td>" + Functions.formatdate(dr["LastOrder"].ToString(), "dd MMM yyyy") + "</td>";
+                        html += "<td>" + Functions.formatdate(dr["NextOrder"].ToString(), "dd MMM yyyy") + "</td>";
                         html += "</tr>";
                     }
-                    html += "</tbody></table>";
+                   
                 }
                 dr.Close();
                 con.Close();
             }
+
+            html += "</tbody></table>";
         }
     }
 }

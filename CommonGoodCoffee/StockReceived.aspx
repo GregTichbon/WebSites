@@ -23,6 +23,25 @@
                     $(thisitem).show();
                 }
             })
+            $(".numeric").keydown(function (event) {
+                if (event.shiftKey == true) {
+                    event.preventDefault();
+                }
+                if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                    (event.keyCode >= 96 && event.keyCode <= 105) ||
+                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+                    event.keyCode == 39 || event.keyCode == 46 ||
+                    (event.keyCode == 190 && !($(this).hasClass('nopoint')))) {
+
+                } else {
+                    event.preventDefault();
+                }
+
+                if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                    event.preventDefault();
+                //if a decimal has been added, disable the "."-button
+
+            });
 
             $('#menu').click(function () {
                 window.location.href = "/default.aspx";
@@ -71,6 +90,7 @@
                     tr = $(this).closest('tr');
                     $('#fld_item_type').val($(tr).find('td').eq(1).data('id'));
                     $('#fld_item_quantity').val($(tr).find('td').eq(2).text());
+                    //$('#fld_item_onorder').val($(tr).find('td').eq(3).text());
                     $('#fld_item_note').val($(tr).find('td').eq(3).text());
                 }
 
@@ -116,7 +136,8 @@
                             $(tr).find('td').eq(1).text($('#fld_item_type option:selected').text());
                             $(tr).find('td').eq(1).data('id', $('#fld_item_type').val());
                             $(tr).find('td').eq(2).text($('#fld_item_quantity').val());
-                            $(tr).find('td').eq(3).text($('#fld_item_note').val());
+                            $(tr).find('td').eq(3).text($('#fld_item_onorder').val());
+                            $(tr).find('td').eq(4).text($('#fld_item_note').val());
 
                             $(this).dialog("close");
                         }
@@ -143,6 +164,7 @@
                     tr_id = $(this).attr('id');
                     tr_type = $(this).find('td:eq(1)').data('id');
                     tr_quantity = $(this).find('td:eq(2)').text();
+                    //tr_onorder = $(this).find('td:eq(3)').text();
                     tr_note = $(this).find('td:eq(3)').text();
 
                     value = tr_type + delim + tr_quantity + delim + tr_note;
@@ -190,21 +212,37 @@
                     </div>
                 </div>
             </div>
+    
+        <div class="form-group row">
+            <label class="control-label col-md-6" for="fld_reference">Reference</label>
+            <div class="col-md-6">
+                <input id="fld_reference" name="fld_reference" type="text" class="form-control" maxlength="20" required="required" />
+            </div>
+        </div>
+        
             <div class="form-group row">
-                <label class="control-label col-md-6" for="fld_reference">Reference</label>
-                <div class="col-md-6">
-                    <input id="fld_reference" name="fld_reference" type="text" class="form-control" required="required" />
+                <label class="control-label col-md-6" for="fld_ordered">Ordered</label>
+                <div class="col-sm-6">
+                    <div class="input-group standarddate">
+                        <input id="fld_ordered" name="fld_ordered" type="text" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="control-label col-md-6" for="fld_note">Note</label>
-                <div class="col-md-6">
-                    <textarea id="fld_note" name="fld_note" class="form-control"></textarea>
-                </div>
+       
+
+
+        <div class="form-group row">
+            <label class="control-label col-md-6" for="fld_note">Note</label>
+            <div class="col-md-6">
+                <textarea id="fld_note" name="fld_note" class="form-control"></textarea>
             </div>
         </div>
     </div>
-  
+    </div>
+
     <!------------------------------------------ TABS ------------------------------------------------------------>
 
     <div class="form-horizontal">
@@ -243,9 +281,10 @@
                 <div id="div_item_quantity" class="form-group">
                     <label class="control-label col-sm-4" for="fld_item_quantity">Quantity</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_item_quantity" name="fld_item_quantity" class="form-control" required="required" />
+                        <input type="text" id="fld_item_quantity" name="fld_item_quantity" class="form-control numeric" required="required" />
                     </div>
                 </div>
+
                 
                
                 <div class="form-group">

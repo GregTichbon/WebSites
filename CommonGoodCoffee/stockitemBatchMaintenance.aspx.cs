@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee
 {
@@ -18,6 +19,7 @@ namespace CommonGoodCoffee
         public string stockitem_ctr;
         public string stockItem;
         public string fld_date;
+        public string fld_ordered;
         public string fld_reference;
         public string fld_note;
 
@@ -38,6 +40,11 @@ namespace CommonGoodCoffee
         {
             if (!IsPostBack)
             {
+                if (!localfunctions.AccessStringTest(""))
+                {
+                    Response.Redirect("login.aspx");
+                }
+
                 stockitembatch_ctr = Request.QueryString["id"] ?? "new";
                 if (stockitembatch_ctr == "new")
                 {
@@ -81,6 +88,7 @@ namespace CommonGoodCoffee
                                     stockItem = dr["stockItem"].ToString();
                                     fld_date = Functions.formatdate(dr["date"].ToString(), "dd MMM yyyy");
                                     fld_reference = dr["reference"].ToString();
+                                    fld_ordered = dr["ordered"].ToString(); 
                                     fld_note = dr["note"].ToString();
                                 }
                             }
@@ -236,10 +244,12 @@ namespace CommonGoodCoffee
                         Creating = true;
                         stockitem_ctr = ViewState["stockitem_ctr"].ToString();
                     }
+
                     cmd.Parameters.Add("@stockitembatch_ctr", SqlDbType.VarChar).Value = stockitembatch_ctr;
                     cmd.Parameters.Add("@stockitem_ctr", SqlDbType.VarChar).Value = stockitem_ctr;
                     cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = Request.Form["fld_date"].Trim();
                     cmd.Parameters.Add("@reference", SqlDbType.VarChar).Value = Request.Form["fld_reference"].Trim();
+                    cmd.Parameters.Add("@ordered", SqlDbType.VarChar).Value = Request.Form["fld_ordered"].Trim();
                     cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = Request.Form["fld_note"].Trim();
                     cmd.Parameters.Add("@transaction_quantity", SqlDbType.VarChar).Value = Request.Form["fld_takeon_quantity"].Trim();
                     cmd.Parameters.Add("@transaction_note", SqlDbType.VarChar).Value = Request.Form["fld_takeon_note"].Trim();

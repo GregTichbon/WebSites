@@ -131,6 +131,7 @@
     <Content Include="Private\Reports\Crystal\Viewer.aspx" />
     <Content Include="Private\Reports\Default.aspx" />
     <Content Include="Private\Reports\Report.aspx" />
+    <Content Include="Private\Reports\Selector.aspx" />
     <Content Include="Private\Roster.aspx" />
     <Content Include="Private\RosterMaintenance.aspx" />
     <Content Include="Private\RosterSearch.aspx" />
@@ -414,6 +415,13 @@
     </Compile>
     <Compile Include="Private\Reports\Report.aspx.designer.cs">
       <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Reports\Selector.aspx.cs">
+      <DependentUpon>Selector.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Private\Reports\Selector.aspx.designer.cs">
+      <DependentUpon>Selector.aspx</DependentUpon>
     </Compile>
     <Compile Include="Private\Roster.aspx.cs">
       <DependentUpon>Roster.aspx</DependentUpon>

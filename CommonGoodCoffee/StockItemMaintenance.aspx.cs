@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee
 {
@@ -31,6 +32,10 @@ namespace CommonGoodCoffee
         {
             if (!IsPostBack)
             {
+                if (!localfunctions.AccessStringTest(""))
+                {
+                    Response.Redirect("login.aspx");
+                }
                 stockitem_ctr = Request.QueryString["id"] ?? "";
                 if (stockitem_ctr == "")
                 {

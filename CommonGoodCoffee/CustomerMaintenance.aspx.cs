@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Generic;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee
 {
@@ -17,6 +18,7 @@ namespace CommonGoodCoffee
         public string customer_ctr;
         public string fld_firstname;
         public string fld_surname;
+        public string fld_xero_contactname;
         public string fld_businessname;
         public string[] fld_customertype = new string[1];
         public string[] fld_businesstype = new string[1];
@@ -46,8 +48,16 @@ namespace CommonGoodCoffee
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+
+
             if (!IsPostBack)
             {
+                if (!localfunctions.AccessStringTest(""))
+                {
+                    Response.Redirect("login.aspx");
+                }
+
                 customer_ctr = Request.QueryString["id"] ?? "";
                 if (customer_ctr == "")
                 {
@@ -111,6 +121,7 @@ namespace CommonGoodCoffee
                                 //customer_ctr = dr["customer_ctr"].ToString();
                                 fld_firstname = dr["firstname"].ToString();
                                 fld_surname = dr["surname"].ToString();
+                                fld_xero_contactname = dr["xero_contactname"].ToString();
                                 fld_businessname = dr["businessname"].ToString();
                                 fld_customertype[0] = dr["customertype_ctr"].ToString();
                                 fld_businesstype[0] = dr["businesstype_ctr"].ToString();
@@ -134,7 +145,7 @@ namespace CommonGoodCoffee
                         html_tab += "<li><a data-target=\"#div_orders\">Orders</a></li>";
                         html_orders = "<thead>";
                         //html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Item Date</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Dispatched</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
-                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Dispatched</th><th>Batch</th><th>Invoice</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_orders += "<tr><th style=\"width:50px;text-align:center\"></th><th>Date</th><th>Reference</th><th>Type</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Dispatched</th><th>Batch</th><th>Invoice</th><th>From Subscription</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"orderedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_orders += "</thead>";
                         html_orders += "<tbody>";
 
@@ -151,6 +162,7 @@ namespace CommonGoodCoffee
                         html_orders += "<td></td>"; //Delivered Date
                         html_orders += "<td></td>"; //Batch
                         html_orders += "<td></td>"; //Invoice Reference
+                        html_orders += "<td></td>"; //From Order
                         html_orders += "<td></td>"; //Note
                         html_orders += "<td><a href=\"javascript:void(0)\" class=\"orderedit\" data-mode=\"edit\">Edit</td>";
                         html_orders += "</tr>";
@@ -177,6 +189,7 @@ namespace CommonGoodCoffee
                                 string batchstockitem_ctr = dr["batchstockitem_ctr"].ToString();
                                 string batchstockitem = dr["batchstockitem"].ToString();
                                 string invoicereference = dr["invoicereference"].ToString();
+                                string fromsubscription = dr["fromsubscription"].ToString();
                                 string note = dr["note"].ToString();
 
                                 if(batchstockitem_ctr == "")
@@ -202,7 +215,8 @@ namespace CommonGoodCoffee
                                 html_orders += "<td>" + amount + "</td>";
                                 html_orders += "<td>" + delivereddate + "</td>";
                                 html_orders += "<td data-id=\"" + batchstockitem_ctr + "\">" + batchstockitem + "</td>";
-                                html_orders += "<td>" + invoicereference + "</td>"; 
+                                html_orders += "<td>" + invoicereference + "</td>";
+                                html_orders += "<td>" + fromsubscription + "</td>";
                                 html_orders += "<td>" + note + "</td>";
 
                                 //html_orders += "<td colspan=\"9\">Working on</td>";
@@ -221,7 +235,7 @@ namespace CommonGoodCoffee
 
                         html_tab += "<li><a data-target=\"#div_subscriptions\">Subscriptions</a></li>";
                         html_subscriptions = "<thead>";
-                        html_subscriptions += "<tr><th style=\"width:50px;text-align:center\"></th><th>Frequency</th><th>Period</th><th>Start Date</th><th>Coffee</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Drop Ship</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"subscriptionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
+                        html_subscriptions += "<tr><th style=\"width:50px;text-align:center\"></th><th>Frequency</th><th>Period</th><th>Start Date</th><th>Last Order</th><th>Next Order</th><th>Coffee</th><th>Grind</th><th>Quantity</th><th>Amount</th><th>Drop Ship</th><th>Note</th><th style=\"width:100px\">Action / <a class=\"subscriptionedit\" data-mode=\"add\" href=\"javascript: void(0)\">Add</a></th></tr>";
                         html_subscriptions += "</thead>";
                         html_subscriptions += "<tbody>";
 
@@ -231,6 +245,8 @@ namespace CommonGoodCoffee
                         html_subscriptions += "<td></td>"; //Frequency
                         html_subscriptions += "<td></td>"; //Period
                         html_subscriptions += "<td></td>"; //Start Date
+                        html_subscriptions += "<td></td>"; //Last Date
+                        html_subscriptions += "<td></td>"; //Next Date
                         html_subscriptions += "<td></td>"; //Coffee
                         html_subscriptions += "<td></td>"; //Grind
                         html_subscriptions += "<td></td>"; //Quantity
@@ -253,6 +269,8 @@ namespace CommonGoodCoffee
                                 string frequency = dr["frequency"].ToString();
                                 string period = dr["period"].ToString();
                                 string startdate = Functions.formatdate(dr["startdate"].ToString(), "dd MMM yyyy");
+                                string lastorder = Functions.formatdate(dr["lastorder"].ToString(), "dd MMM yyyy");
+                                string nextorder = Functions.formatdate(dr["nextorder"].ToString(), "dd MMM yyyy");
                                 string stockitem_ctr = dr["stockitem_ctr"].ToString();
                                 string stockitem = dr["stockitem"].ToString();
                                 string grind_ctr = dr["grind_ctr"].ToString();
@@ -268,6 +286,8 @@ namespace CommonGoodCoffee
                                 html_subscriptions += "<td>" + frequency + "</td>";
                                 html_subscriptions += "<td>" + period + "</td>";
                                 html_subscriptions += "<td>" + startdate + "</td>";
+                                html_subscriptions += "<td>" + lastorder + "</td>";
+                                html_subscriptions += "<td>" + nextorder + "</td>";
                                 html_subscriptions += "<td stockitem_ctr=\"" + stockitem_ctr + "\">" + stockitem + "</td>";
                                 html_subscriptions += "<td grind_ctr=\"" + grind_ctr + "\">" + grind + "</td>";
                                 html_subscriptions += "<td>" + quantity + "</td>";
@@ -321,6 +341,8 @@ namespace CommonGoodCoffee
                     cmd.Parameters.Add("@emailaddress", SqlDbType.VarChar).Value = Request.Form["fld_emailaddress"].Trim();
                     cmd.Parameters.Add("@deliveryaddress", SqlDbType.VarChar).Value = Request.Form["fld_deliveryaddress"].Trim();
                     cmd.Parameters.Add("@notes", SqlDbType.VarChar).Value = Request.Form["fld_notes"].Trim();
+                    cmd.Parameters.Add("@xero_contactname", SqlDbType.VarChar).Value = Request.Form["fld_xero_contactname"].Trim();
+                    
 
                     cmd.Connection = con;
                     //try
@@ -411,12 +433,14 @@ namespace CommonGoodCoffee
                                 cmd.Parameters.Add("@frequency", SqlDbType.VarChar).Value = valuesSplit[0];
                                 cmd.Parameters.Add("@period", SqlDbType.VarChar).Value = valuesSplit[1];
                                 cmd.Parameters.Add("@startdate", SqlDbType.VarChar).Value = valuesSplit[2];
-                                cmd.Parameters.Add("@stockitem_ctr", SqlDbType.VarChar).Value = valuesSplit[3];
-                                cmd.Parameters.Add("@grind_ctr", SqlDbType.VarChar).Value = valuesSplit[4];
-                                cmd.Parameters.Add("@quantity", SqlDbType.VarChar).Value = valuesSplit[5];
-                                cmd.Parameters.Add("@amount", SqlDbType.VarChar).Value = valuesSplit[6];
-                                cmd.Parameters.Add("@dropship", SqlDbType.VarChar).Value = valuesSplit[7];
-                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[8];
+                                cmd.Parameters.Add("@lastorder", SqlDbType.VarChar).Value = valuesSplit[3];
+                                //cmd.Parameters.Add("@nextorder", SqlDbType.VarChar).Value = valuesSplit[4];
+                                cmd.Parameters.Add("@stockitem_ctr", SqlDbType.VarChar).Value = valuesSplit[4];
+                                cmd.Parameters.Add("@grind_ctr", SqlDbType.VarChar).Value = valuesSplit[5];
+                                cmd.Parameters.Add("@quantity", SqlDbType.VarChar).Value = valuesSplit[6];
+                                cmd.Parameters.Add("@amount", SqlDbType.VarChar).Value = valuesSplit[7];
+                                cmd.Parameters.Add("@dropship", SqlDbType.VarChar).Value = valuesSplit[8];
+                                cmd.Parameters.Add("@note", SqlDbType.VarChar).Value = valuesSplit[9];
                                 con.Open();
                                 cmd.ExecuteScalar();
                                 con.Close();

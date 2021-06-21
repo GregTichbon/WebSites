@@ -84,6 +84,8 @@
     <Content Include="Images\original\2.jpg" />
     <Content Include="Images\original\3.jpg" />
     <Content Include="Images\original\7.jpg" />
+    <Content Include="InvoiceExport.aspx" />
+    <Content Include="Login.aspx" />
     <Content Include="ProcessSubscriptions.aspx" />
     <Content Include="Reporting\Default.aspx" />
     <Content Include="Reporting\Report.aspx" />
@@ -153,6 +155,20 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceExport.aspx.cs">
+      <DependentUpon>InvoiceExport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InvoiceExport.aspx.designer.cs">
+      <DependentUpon>InvoiceExport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Main.Master.cs">
       <DependentUpon>Main.Master</DependentUpon>
@@ -244,6 +260,7 @@
       <DependentUpon>Data.aspx</DependentUpon>
     </Compile>
     <Compile Include="_Dependencies\MainClass.cs" />
+    <Compile Include="_Dependencies\myFuntions.cs" />
     <Compile Include="_Dependencies\Posts.asmx.cs">
       <DependentUpon>Posts.asmx</DependentUpon>
       <SubType>Component</SubType>

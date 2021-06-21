@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using localfunctions = CommonGoodCoffee._Dependencies.myFuntions;
 
 namespace CommonGoodCoffee
 {
@@ -28,6 +29,12 @@ namespace CommonGoodCoffee
             */
             if (!Page.IsPostBack)
             {
+
+                if (!localfunctions.AccessStringTest(""))
+                {
+                    Response.Redirect("login.aspx");
+                }
+
                 string uptodate = (string)Session["uptodate"] ?? "";
                 fld_uptodate.Text = uptodate;
                 if (uptodate != "")

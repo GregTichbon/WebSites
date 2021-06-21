@@ -39,7 +39,7 @@
         <asp:Button ID="btn_submit" runat="server" OnClick="btn_submit_Click" class="submit btn btn-info" Text="Submit" />
 
     </div>
-    <h1>Submission Processing - working on
+    <h1>Submission Processing
     </h1>
     <div class="form-horizontal row">
         <div class="form-group">

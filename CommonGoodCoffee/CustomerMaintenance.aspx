@@ -109,6 +109,29 @@
                 });
             })
 
+            $(".numeric").keydown(function (event) {
+
+                if (event.shiftKey == true) {
+                    event.preventDefault();
+                }
+
+
+                if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                    (event.keyCode >= 96 && event.keyCode <= 105) ||
+                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+                    event.keyCode == 39 || event.keyCode == 46 ||
+                    (event.keyCode == 190 && !($(this).hasClass('nopoint')))) {
+
+                } else {
+                    event.preventDefault();
+                }
+
+                if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                    event.preventDefault();
+                //if a decimal has been added, disable the "."-button
+
+            });
+
             $('#fileInput').on('change', function () {
                 if (this.files && this.files[0]) {
                     if (this.files[0].type.match(/^image\//)) {
@@ -150,6 +173,8 @@
                     modal: true
                 });
             });
+
+
 
             $('.geocode').click(function () {
                 address = $('#fld_address_address').val();
@@ -498,12 +523,14 @@
                     $('#fld_subscription_frequency').val($(tr).find('td').eq(1).text());
                     $('#fld_subscription_period').val($(tr).find('td').eq(2).text());
                     $('#fld_subscription_startdate').val($(tr).find('td').eq(3).text());
-                    $('#fld_subscription_stockitem').val($(tr).find('td').eq(4).attr('stockitem_ctr'));
-                    $('#fld_subscription_grind').val($(tr).find('td').eq(5).attr('grind_ctr'));
-                    $('#fld_subscription_quantity').val($(tr).find('td').eq(6).text());
-                    $('#fld_subscription_amount').val($(tr).find('td').eq(7).text());
-                    $('#fld_subscription_dropship').val($(tr).find('td').eq(8).text());
-                    $('#fld_subscription_note').val($(tr).find('td').eq(9).text());
+                    $('#fld_subscription_lastorder').val($(tr).find('td').eq(4).text());
+                    //$('#fld_subscription_nextorder').val($(tr).find('td').eq(5).text());
+                    $('#fld_subscription_stockitem').val($(tr).find('td').eq(6).attr('stockitem_ctr'));
+                    $('#fld_subscription_grind').val($(tr).find('td').eq(7).attr('grind_ctr'));
+                    $('#fld_subscription_quantity').val($(tr).find('td').eq(8).text());
+                    $('#fld_subscription_amount').val($(tr).find('td').eq(9).text());
+                    $('#fld_subscription_dropship').val($(tr).find('td').eq(10).text());
+                    $('#fld_subscription_note').val($(tr).find('td').eq(11).text());
                 }
 
                 mywidth = $(window).width() * .95;
@@ -549,14 +576,17 @@
                             $(tr).find('td').eq(1).text($('#fld_subscription_frequency').val());
                             $(tr).find('td').eq(2).text($('#fld_subscription_period').val());
                             $(tr).find('td').eq(3).text($('#fld_subscription_startdate').val());
-                            $(tr).find('td').eq(4).text($('#fld_subscription_stockitem option:selected').text());
-                            $(tr).find('td').eq(4).attr('stockitem_ctr', $('#fld_subscription_stockitem').val());
-                            $(tr).find('td').eq(5).text($('#fld_subscription_grind option:selected').text());
-                            $(tr).find('td').eq(5).attr('grind_ctr', $('#fld_subscription_grind').val());
-                            $(tr).find('td').eq(6).text($('#fld_subscription_quantity').val());
-                            $(tr).find('td').eq(7).text($('#fld_subscription_amount').val());
-                            $(tr).find('td').eq(8).text($('#fld_subscription_dropship option:selected').text());
-                            $(tr).find('td').eq(9).text($('#fld_subscription_note').val());
+                            $(tr).find('td').eq(4).text($('#fld_subscription_lastorder').val());
+                            //$(tr).find('td').eq(5).text($('#fld_subscription_nextorder').val());
+                            $(tr).find('td').eq(5).text("Updated?");
+                            $(tr).find('td').eq(6).text($('#fld_subscription_stockitem option:selected').text());
+                            $(tr).find('td').eq(6).attr('stockitem_ctr', $('#fld_subscription_stockitem').val());
+                            $(tr).find('td').eq(7).text($('#fld_subscription_grind option:selected').text());
+                            $(tr).find('td').eq(7).attr('grind_ctr', $('#fld_subscription_grind').val());
+                            $(tr).find('td').eq(8).text($('#fld_subscription_quantity').val());
+                            $(tr).find('td').eq(9).text($('#fld_subscription_amount').val());
+                            $(tr).find('td').eq(10).text($('#fld_subscription_dropship option:selected').text());
+                            $(tr).find('td').eq(11).text($('#fld_subscription_note').val());
 
                             $(this).dialog("close");
                         }
@@ -584,13 +614,15 @@
                     tr_frequency = $(this).find('td:eq(1)').text();
                     tr_period = $(this).find('td:eq(2)').text();
                     tr_startdate = $(this).find('td:eq(3)').text();
-                    tr_stockitem = $(this).find('td:eq(4)').attr('stockitem_ctr');
-                    tr_grind = $(this).find('td:eq(5)').attr('grind_ctr');
-                    tr_quantity = $(this).find('td:eq(6)').text();
-                    tr_amount = $(this).find('td:eq(7)').text();
-                    tr_dropship = $(this).find('td:eq(8)').text();
-                    tr_note = $(this).find('td:eq(9)').text();
-                    value = tr_frequency + delim + tr_period + delim + tr_startdate + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_dropship + delim + tr_note;
+                    tr_lastorder = $(this).find('td:eq(4)').text();
+                    //tr_nextorder = $(this).find('td:eq(5)').text();
+                    tr_stockitem = $(this).find('td:eq(6)').attr('stockitem_ctr');
+                    tr_grind = $(this).find('td:eq(7)').attr('grind_ctr');
+                    tr_quantity = $(this).find('td:eq(8)').text();
+                    tr_amount = $(this).find('td:eq(9)').text();
+                    tr_dropship = $(this).find('td:eq(10)').text();
+                    tr_note = $(this).find('td:eq(11)').text();
+                    value = tr_frequency + delim + tr_period + delim + tr_startdate + delim + tr_lastorder + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_dropship + delim + tr_note;
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
@@ -666,7 +698,7 @@
                 <div id="div_businessname" class="form-group row">
                     <label class="control-label col-md-6" for="fld_businessname">Business Name</label>
                     <div class="col-md-6">
-                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control confirm" value="<%:fld_businessname%>" maxlength="100" required="required" />
+                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control" value="<%:fld_businessname%>" maxlength="100" required="required" />
                     </div>
                 </div>
 
@@ -691,15 +723,16 @@
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_firstname">First name</label>
                 <div class="col-md-6">
-                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control confirm" value="<%:fld_firstname%>" maxlength="50" />
+                    <input id="fld_firstname" name="fld_firstname" type="text" class="form-control" value="<%:fld_firstname%>" maxlength="50" />
                 </div>
             </div>
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_surname">Surname</label>
                 <div class="col-md-6">
-                    <input id="fld_surname" name="fld_surname" type="text" class="form-control confirm" value="<%:fld_surname%>" maxlength="50" />
+                    <input id="fld_surname" name="fld_surname" type="text" class="form-control" value="<%:fld_surname%>" maxlength="50" />
                 </div>
             </div>
+            
         </div>
         <div class="col-md-4">
             <img id="img_photo" alt="" src="Images/<%: customer_ctr %>.jpg" style="height: 200px" /><br />
@@ -748,6 +781,12 @@
                         <textarea id="fld_deliveryaddress" name="fld_deliveryaddress" rows="6" class="form-control"><%: fld_deliveryaddress %></textarea>
                     </div>
                 </div>
+                <div class="form-group row">
+                <label class="control-label col-md-4" for="fld_xero_contactname">Xero Contact Name</label>
+                <div class="col-md-8">
+                    <input id="fld_xero_contactname" name="fld_xero_contactname" type="text" class="form-control" value="<%:fld_xero_contactname%>" maxlength="50" />
+                </div>
+            </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_notes">Notes</label>
                     <div class="col-sm-8">
@@ -789,7 +828,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_reference">Reference</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_order_reference" name="fld_order_reference" class="form-control" />
+                        <input type="text" id="fld_order_reference" name="fld_order_reference" maxlength="20" class="form-control" />
                     </div>
                 </div>
 
@@ -826,13 +865,13 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_quantity">Quantity</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_order_quantity" name="fld_order_quantity" class="form-control" required="required"/>
+                        <input type="text" id="fld_order_quantity" name="fld_order_quantity" class="form-control numeric" required="required"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_order_amount">Price</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_order_amount" name="fld_order_amount" class="form-control" />
+                        <input type="text" id="fld_order_amount" name="fld_order_amount" class="form-control numeric" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -898,7 +937,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_subscription_period">Period</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_period" name="fld_subscription_period" class="form-control" required="required" maxlength="2" />
+                        <input type="text" id="fld_subscription_period" name="fld_subscription_period" class="form-control numeric nopoint" required="required" maxlength="2" />
                     </div>
                 </div>
 
@@ -915,7 +954,34 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label for="fld_subscription_lastorder" class="control-label col-sm-4">
+                        Last Order
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="input-group standarddate">
+                            <input id="fld_subscription_lastorder" name="fld_subscription_lastorder" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
+                    <label for="fld_subscriptionnextorder" class="control-label col-sm-4">
+                        Next Order
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="input-group standarddate">
+                            <input id="fld_subscriptionnextorder" name="fld_subscriptionnextorder" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                -->
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_subscription_stockitem">Item</label>
                     <div class="col-sm-8">
@@ -947,13 +1013,13 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_subscription_quantity">Quantity</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_quantity" name="fld_subscription_quantity" class="form-control" />
+                        <input type="text" id="fld_subscription_quantity" name="fld_subscription_quantity" class="form-control numeric" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_subscription_amount">Price</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_amount" name="fld_subscription_amount" class="form-control" />
+                        <input type="text" id="fld_subscription_amount" name="fld_subscription_amount" class="form-control numeric" />
                     </div>
                 </div>
                 <div class="form-group">

@@ -54,6 +54,36 @@
 
                             alert("to do");
                             if ($('#dialogform').valid()) {
+
+                                var arForm = $("#form1")
+                                    .find("input,textarea,select,hidden")
+                                    .not("[id^='__']")
+                                    .serializeArray();
+
+                                //arForm.push({ name: 'vehicle_ctr', value: $('#vehicle_ctr').val() });
+                                var formData = JSON.stringify({ formVars: arForm });
+                                alert(formData);
+
+                                $.ajax({
+                                    type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                    url: '/_dependencies/posts.asmx/update_followup', // the url where we want to POST
+                                    contentType: "application/json; charset=utf-8",
+                                    data: formData,
+                                    dataType: 'json', // what type of data do we expect back from the server
+                                    async: false,
+                                    success: function (result) {
+                                    },
+                                    error: function (xhr, status) {
+                                        alert('error');
+                                    }
+                                });
+
+
+
+
+
+
+
                                 $(this).dialog('close');
                             }
                         }

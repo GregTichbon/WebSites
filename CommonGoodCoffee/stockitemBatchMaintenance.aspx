@@ -45,6 +45,26 @@
                 $(".prev span").text(y);
             });
 
+            $(".numeric").keydown(function (event) {
+                if (event.shiftKey == true) {
+                    event.preventDefault();
+                }
+                if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+                    (event.keyCode >= 96 && event.keyCode <= 105) ||
+                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+                    event.keyCode == 39 || event.keyCode == 46 || 
+                    (event.keyCode == 190 && !($(this).hasClass('nopoint')))) {
+
+                } else {
+                    event.preventDefault();
+                }
+
+                if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                    event.preventDefault();
+                //if a decimal has been added, disable the "."-button
+
+            });
+
             $('.standarddate').datetimepicker({
                 format: 'D MMM YYYY',
                 extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
@@ -198,9 +218,23 @@
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_reference">Reference</label>
                 <div class="col-md-6">
-                    <input id="fld_reference" name="fld_reference" type="text" class="form-control" value="<%:fld_reference%>" />
+                    <input id="fld_reference" name="fld_reference" type="text" class="form-control" maxlength="20" value="<%:fld_reference%>" />
                 </div>
             </div>
+             
+                <div class="form-group row">
+                    <label class="control-label col-md-6" for="fld_ordered">Ordered</label>
+                    <div class="col-sm-6">
+                        <div class="input-group standarddate">
+                            <input id="fld_ordered" name="fld_ordered" type="text" class="form-control" value="<%:fld_ordered%>" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+    
+
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_note">Note</label>
                 <div class="col-md-6">
@@ -213,7 +247,7 @@
              <div class="form-group row">
                  <label class="control-label col-md-6" for="fld_takeon_quantity">Quantity</label>
                  <div class="col-md-6">
-                     <input id="fld_takeon_quantity" name="fld_takeon_quantity" type="text" class="form-control" />
+                     <input id="fld_takeon_quantity" name="fld_takeon_quantity" type="text" class="form-control numeric" />
                  </div>
              </div>
                 <div class="form-group row">
@@ -279,7 +313,7 @@
                 <div id="div_transaction_quantity" class="form-group">
                     <label class="control-label col-sm-4" for="fld_transaction_quantity">Quantity</label>
                     <div class="col-sm-8">
-                        <input type="text" id="fld_transaction_quantity" name="fld_transaction_quantity" class="form-control" required="required" />
+                        <input type="text" id="fld_transaction_quantity" name="fld_transaction_quantity" class="form-control numeric" required="required" />
                     </div>
                 </div>
                 

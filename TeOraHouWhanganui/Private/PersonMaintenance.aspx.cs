@@ -299,6 +299,7 @@ namespace TeOraHouWhanganui.Private
                         string Encounter_CTR = dr["Encounter_CTR"].ToString();
                         string StartDateTime = Convert.ToDateTime(dr["StartDateTime"]).ToString("dd MMM yyyy HH:mm");
                         string EndDateTime = Convert.ToDateTime(dr["EndDateTime"]).ToString("dd MMM yyyy HH:mm");
+                        string duration = dr["duration"].ToString();
                         string Narrative = dr["Narrative"].ToString();
                         string Worker = dr["Worker"].ToString();
                         string Encounteraccesslevel = dr["Encounteraccesslevel"].ToString();
@@ -324,7 +325,7 @@ namespace TeOraHouWhanganui.Private
 
                         html_encounter += "<tr id=\"encounter_" + Encounter_CTR + "\">";
                         html_encounter += "<td style=\"text-align:center\"></td>";
-                        html_encounter += "<td>" + StartDateTime + "</td>";
+                        html_encounter += "<td>" + StartDateTime + "<br />" + duration + "</td>";
                         html_encounter += "<td>" + EndDateTime + "</td>";
                         html_encounter += "<td>" + Narrative + "</td>";
                         html_encounter += "<td workerid=\"" + WorkerCTR + "\">" + WorkerDisplay + "</td>";

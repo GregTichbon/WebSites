@@ -8,6 +8,7 @@
     <p><a href="stockitemList.aspx" class="btn btn-info">Stock Items</a></p>
     <p><a href="stockreceived.aspx" class="btn btn-info">Stock Received</a></p>
     <p><a href="processSubscriptions.aspx" class="btn btn-info">Process Subscriptions</a></p>
+    <p><a href="InvoiceExport.aspx" class="btn btn-info">Export Invoices</a></p>
 
     <p><a href="reporting" class="btn btn-info">Reporting Menu</a></p>
 </asp:Content>

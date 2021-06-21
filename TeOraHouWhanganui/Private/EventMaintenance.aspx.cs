@@ -117,6 +117,7 @@ namespace TeOraHouWhanganui.Private
                             {
                                 while (dr.Read())
                                 {
+                                    string entityid = dr["entityid"].ToString();
                                     string name = dr["name"].ToString();
                                     string enrolment_ctr = dr["enrolment_ctr"].ToString();
                                     string enrolmentstatus = dr["enrolmentstatus"].ToString();
@@ -130,7 +131,7 @@ namespace TeOraHouWhanganui.Private
 
                                     html_attendance += "<tr data-id=\"" + enrolment_ctr + "\" status=\"" + enrolmentstatus + "\">";
                                     //html_attendance += "<td style=\"text-align:center\"></td>";
-                                    html_attendance += "<td>" + name + "</td>";
+                                    html_attendance += "<td><a href=\"personMaintenance.aspx?id=" + entityid + "\" target=\"_blank\">" + name + "</a></td>";
                                     html_attendance += "<td>" + firstevent + " - " + lastevent + "</td>";
                                     html_attendance += "<td>" + attendance + "</td>";
                                     html_attendance += "<td class=\"capacity\">" + capacity + "</td>";
