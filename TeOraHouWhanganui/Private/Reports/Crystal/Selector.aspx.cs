@@ -26,7 +26,6 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                 }
 
                 string[] fields;
-
                 switch (r)
                 {
                     case "1":
