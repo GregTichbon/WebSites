@@ -11,6 +11,6 @@
 namespace CommonGoodCoffee.Reports
 {
     public partial class Default
-    {
+    { 
     }
 }
