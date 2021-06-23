@@ -31,7 +31,7 @@ namespace CommonGoodCoffee
             {
                 if (!localfunctions.AccessStringTest(""))
                 {
-                    Response.Redirect("login.aspx");
+                    Response.Redirect("/login.aspx");
                 }
 
                 string systemPrefix = WebConfigurationManager.AppSettings["systemPrefix"];

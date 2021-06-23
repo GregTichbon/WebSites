@@ -15,6 +15,7 @@ namespace TeOraHouWhanganui._Dependencies
     {
         public static Boolean AccessStringTest(string username, string requiredaccess)
         {
+            //username = @"toh\jmatthews";
             string personaccess = "";
 
             string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;

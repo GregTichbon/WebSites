@@ -14,7 +14,7 @@
                 });
             })
 
-         
+
 
             //Generic.Functions.googleanalyticstracking()%>
 
@@ -36,7 +36,7 @@
 
     <p><a href="PersonSearch.aspx" class="btn btn-info">Person Maintenance</a></p>
 
-    <%            if (TeOraHouWhanganui._Dependencies.functions.AccessStringTest(username, "1"))
+    <%  if (TeOraHouWhanganui._Dependencies.functions.AccessStringTest(username, "1"))
         {
             Response.Write("<p><a href=\"administration/access.aspx\" class=\"btn btn-info\">Security Access</a></p>");
         }

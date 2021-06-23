@@ -97,10 +97,12 @@ namespace TeOraHouWhanganui.Private.Reports
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@reportname", SqlDbType.VarChar).Value = reportname;
-
-                for (int f1 = 0; f1 < fields.GetLength(0); f1++)
+                if (fields != null)
                 {
-                    cmd.Parameters.Add("@" + fields[f1, 0], SqlDbType.VarChar).Value = fields[f1, 1];
+                    for (int f1 = 0; f1 < fields.GetLength(0); f1++)
+                    {
+                        cmd.Parameters.Add("@" + fields[f1, 0], SqlDbType.VarChar).Value = fields[f1, 1];
+                    }
                 }
                 con.Open();
 

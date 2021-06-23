@@ -16,11 +16,19 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
     {
         ReportDocument rpt;
         public string html = "";
+        public string username = "";
 
         protected void Page_Init(object sender, EventArgs e)
         {
+            username = HttpContext.Current.User.Identity.Name.ToLower();
+
+            if (username == "")
+            {
+                username = "toh\\gtichbon";   //localhost
+            }
             if (!IsPostBack)
             {
+                
                 string r = Request.QueryString["id"] + "";
 
                 switch (r)
@@ -120,6 +128,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                 SqlDataAdapter da = new SqlDataAdapter("Report_Encounters", con);
 
                 da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                 da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
                 da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
 
@@ -181,6 +190,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                 SqlDataAdapter da = new SqlDataAdapter("Report_Encounters", con);
 
                 da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                 da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
                 da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
 
@@ -241,6 +251,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
                 SqlDataAdapter da = new SqlDataAdapter("Report_Encounters", con);
 
                 da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                 da.SelectCommand.Parameters.Add("@fromdate", SqlDbType.VarChar).Value = Request.QueryString["fromdate"];
                 da.SelectCommand.Parameters.Add("@todate", SqlDbType.VarChar).Value = Request.QueryString["todate"];
 
@@ -292,7 +303,7 @@ namespace TeOraHouWhanganui.Private.Reports.Crystal
 
         protected void doreport4()
         {
-            string username = HttpContext.Current.User.Identity.Name.ToLower();
+
             string strConnString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
 
             DataSet ds = new DataSet();

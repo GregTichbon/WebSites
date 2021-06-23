@@ -18,6 +18,7 @@
         <input type="button" id="reportmenu" class="btn btn-info" value="REPORT MENU" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />
     </div>
+    <h2><%= heading%></h2>
     <%=html%>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">

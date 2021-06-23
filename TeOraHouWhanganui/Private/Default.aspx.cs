@@ -24,7 +24,7 @@ namespace TeOraHouWhanganui.Private
                 username = "toh\\gtichbon";   //localhost
             }
             /*
-            if (localfunctions.functions.AccessStringTest(username, "111"))
+            if (localfunctions.functions.AccessStringTest(username, "1001"))
             {
                 string a = "1";
             }

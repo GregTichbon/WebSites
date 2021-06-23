@@ -26,7 +26,9 @@
             $('#menu').click(function () {
                 window.location.href = "<%=ResolveUrl("../default.aspx")%>";
             });
-
+            $('#reportmenu').click(function () {
+                window.location.href = "<%=ResolveUrl("~/private/reports/default.aspx")%>";
+            });
             $('#assistance').click(function () {
                 $("#dialog_assistance").dialog({
                     resizable: false,
@@ -54,6 +56,7 @@
 
     <div class="toprighticon">
         <button id="assistance" type="button" class="btn btn-info">Assistance</button>
+        <button id="reportmenu" class="btn btn-info">REPORTS MENU</button>
         <button id="menu" type="button" class="btn btn-info">MENU</button>
     </div>
 

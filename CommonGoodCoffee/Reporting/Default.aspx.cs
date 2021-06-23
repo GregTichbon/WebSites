@@ -14,7 +14,7 @@ namespace CommonGoodCoffee.Reports
         {
             if (!localfunctions.AccessStringTest(""))
             {
-                Response.Redirect("login.aspx");
+                Response.Redirect("/login.aspx");
             }
         }
     }

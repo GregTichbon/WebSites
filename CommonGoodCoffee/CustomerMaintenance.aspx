@@ -269,7 +269,7 @@
                     $('#fld_order_delivereddate').val($(tr).find('td').eq(7).text());
                     //$('#fld_order_stockitembatch').val($(tr).find('td').eq(8).data('id'));
                     $('#fld_order_invoicereference').val($(tr).find('td').eq(9).text());
-                    $('#fld_order_note').val($(tr).find('td').eq(10).text());
+                    $('#fld_order_note').val($(tr).find('td').eq(11).text());
 
                     show_div_order_stockitembatch();
                     /*
@@ -344,7 +344,7 @@
                             $(tr).find('td').eq(8).text($('#fld_order_stockitembatch option:selected').text());
                             $(tr).find('td').eq(8).data('id', $('#fld_order_stockitembatch').val());
                             $(tr).find('td').eq(9).text($('#fld_order_invoicereference').val());
-                            $(tr).find('td').eq(10).text($('#fld_order_note').val());
+                            $(tr).find('td').eq(11).text($('#fld_order_note').val());
 
                             $(this).dialog("close");
                         }
@@ -490,7 +490,7 @@
                     tr_delivereddate = $(this).find('td:eq(7)').text();
                     tr_stockitembatch = $(this).find('td:eq(8)').data('id');
                     tr_invoicereference = $(this).find('td:eq(9)').text();
-                    tr_note = $(this).find('td:eq(10)').text();
+                    tr_note = $(this).find('td:eq(11)').text();
 
                     value = tr_date + delim + tr_reference + delim + tr_stockitem + delim + tr_grind + delim + tr_quantity + delim + tr_amount + delim + tr_delivereddate + delim + tr_stockitembatch + delim + tr_invoicereference + delim + tr_note;
                     $('<input>').attr({
