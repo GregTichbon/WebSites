@@ -3,6 +3,8 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
     <link href="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css")%>" rel="stylesheet" />
     <script src="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js")%>"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
+
     <style>
         transaction_date {
             width: 200px;
@@ -23,7 +25,7 @@
         var mode = "<%=ViewState["customer_ctr"]%>";
 
         $(document).ready(function () {
-
+            $('#form1').areYouSure();
             $('.transaction').click(function () {
                 thistransaction = $(this).parent().next();
                 thishidden = $(thistransaction).is(":hidden");

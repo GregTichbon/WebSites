@@ -4,6 +4,7 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
     <link href="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css")%>" rel="stylesheet" />
     <script src="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js")%>"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
     <style>
              
     </style>
@@ -12,6 +13,8 @@
         var newctr = 0;
 
         $(document).ready(function () {
+
+            $('#form1').areYouSure();
 
             $('.transaction').click(function () {
                 thistransaction = $(this).parent().next();
@@ -49,11 +52,14 @@
                 if (event.shiftKey == true) {
                     event.preventDefault();
                 }
-                if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+               
+                if (
+                    (event.keyCode >= 48 && event.keyCode <= 57) ||
                     (event.keyCode >= 96 && event.keyCode <= 105) ||
-                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
-                    event.keyCode == 39 || event.keyCode == 46 || 
-                    (event.keyCode == 190 && !($(this).hasClass('nopoint')))) {
+                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || 
+                    (event.keyCode == 190 && !($(this).hasClass('nopoint'))) ||
+                    (event.keyCode == 189 && !($(this).hasClass('nominus')))
+                ) {
 
                 } else {
                     event.preventDefault();
@@ -61,8 +67,10 @@
 
                 if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
                     event.preventDefault();
-                //if a decimal has been added, disable the "."-button
-
+  
+                if ($(this).val() !== '' && event.keyCode == 189)
+                    event.preventDefault();
+     
             });
 
             $('.standarddate').datetimepicker({

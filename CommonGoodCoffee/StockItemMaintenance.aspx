@@ -1,8 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="StockItemMaintenance.aspx.cs" Inherits="CommonGoodCoffee.StockItemMaintenance" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
     <link href="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css")%>" rel="stylesheet" />
     <script src="<%=ResolveUrl("~/_Dependencies/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js")%>"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.AreYouSure/1.9.0/jquery.are-you-sure.min.js"></script>
     <style>
         transaction_date {
             width: 200px;
@@ -15,7 +17,6 @@
         transaction_type {
             width: 300px;
         }
-             
     </style>
 
     <script type="text/javascript">
@@ -23,7 +24,7 @@
         var mode = "<%=ViewState["customer_ctr"]%>";
 
         $(document).ready(function () {
-
+            $('#form1').areYouSure();
             $('.transaction').click(function () {
                 thistransaction = $(this).parent().next();
                 thishidden = $(thistransaction).is(":hidden");
@@ -186,7 +187,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    
+
     <div class="toprighticon">
         <input type="button" id="list" class="btn btn-info" value="Stock List" />
         <input type="button" id="menu" class="btn btn-info" value="MENU" />
@@ -222,10 +223,10 @@
             </div>
 
         </div>
-        
+
     </div>
 
-   
+
     <!------------------------------------------ TABS ------------------------------------------------------------>
 
     <div class="form-horizontal">
@@ -256,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-               <!--
+                <!--
                 <div id="div_batch_quantity" class="form-group">
                     <label class="control-label col-sm-4" for="fld_batch_quantity">Quantity</label>
                     <div class="col-sm-8">
@@ -264,7 +265,7 @@
                     </div>
                 </div>
                 -->
-               
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_batch_note">Note</label>
                     <div class="col-sm-8">
@@ -273,13 +274,13 @@
                 </div>
             </div>
 
-          
-            
+
+
             <!-- ================================= END OF TABS ===================================  -->
         </div>
     </div>
-     
-    
+
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" runat="server">
     <form id="form2">

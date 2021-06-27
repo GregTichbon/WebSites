@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="CustomerMaintenance.aspx.cs" Inherits="CommonGoodCoffee.CustomerMaintenance" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="PersonMaintenance.aspx.cs" Inherits="Church.PersonMaintenance" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
@@ -36,7 +36,7 @@
 
     <script type="text/javascript">
         var newctr = 0;
-        var mode = "<%=ViewState["customer_ctr"]%>";
+        var mode = "<%=ViewState["person_ctr"]%>";
         var last_order_date = "";
         var last_order_reference = "";
 
@@ -49,12 +49,12 @@
             });
 
             $('#search').click(function () {
-                window.location.href = "/customersearch.aspx";
+                window.location.href = "/personsearch.aspx";
             });
 
             $("#form1").validate();
 
-            $('#fld_customertype').change(function () {
+            $('#fld_persontype').change(function () {
                 if ($(this).val() == 1) {
                     $('#div_businessfields').show();
                 } else {
@@ -94,13 +94,13 @@
                                 type: "POST",
                                 //async: false,
                                 url: "_dependencies/posts.asmx/SaveImage",
-                                data: '{"imageData": "' + image + '", "id": "<%: customer_ctr %>"}',
+                                data: '{"imageData": "' + image + '", "id": "<%: person_ctr %>"}',
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
                                 success: function (result) {
                                     //alert(result);
                                     d = new Date();
-                                    $("#img_photo").attr("src", "images/<%:customer_ctr %>.jpg?" + d.getTime());
+                                    $("#img_photo").attr("src", "images/<%:person_ctr %>.jpg?" + d.getTime());
                                 },
                                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                                     alert("Status: " + textStatus); alert("Error: " + errorThrown);
@@ -244,7 +244,7 @@
                 useCurrent: true
                 //,maxDate: moment().add(-1, 'year')
             });
-  
+
             $('.submit').click(function (e) { //Started creating functions so that I can group code together - see update_order() - not yet tested
                 //e.preventDefault();
                 delim = String.fromCharCode(254);
@@ -285,7 +285,7 @@
                         $('#div_order_stockitembatch').hide();
                     }
                     */
-                    
+
 
                     stockitem_ctr = $('#fld_order_stockitem').val();
                     stockitembatch_ctr = $(tr).find('td').eq(8).data('id');
@@ -463,7 +463,7 @@
                     show_div_order_stockitembatch();
                     //$('#div_order_stockitembatch').show();
                 }
-                
+
             })
 
             function show_div_order_stockitembatch() {
@@ -478,20 +478,20 @@
                     $('#fld_order_stockitembatch').val('');
                     $('#div_order_stockitembatch').hide();
                 }
-                    
-                
+
+
             }
 
-           
-            
-            function update_order() {   
-                
+
+
+            function update_order() {
+
                 delim = String.fromCharCode(254);
                 $('#orderstable > tbody > tr[maint="changed"]').each(function () {
                     tr_id = $(this).attr('id');
                     tr_date = $(this).find('td:eq(1)').text();
                     tr_reference = $(this).find('td:eq(2)').text();
-                    tr_stockitem = $(this).find('td:eq(3)').attr('stockitem_ctr'); 
+                    tr_stockitem = $(this).find('td:eq(3)').attr('stockitem_ctr');
                     tr_grind = $(this).find('td:eq(4)').attr('grind_ctr');
                     tr_quantity = $(this).find('td:eq(5)').text();
                     tr_amount = $(this).find('td:eq(6)').text();
@@ -654,7 +654,7 @@
 
             }
 
-            function get_stockitembatches(stockitem_ctr,stockitembatch_ctr,order_ctr) {
+            function get_stockitembatches(stockitem_ctr, stockitembatch_ctr, order_ctr) {
                 $.post("/_Dependencies/data.aspx", { mode: "get_stockitembatches", stockitem_ctr: stockitem_ctr, stockitembatch_ctr: stockitembatch_ctr, order_ctr: order_ctr, quantity: quantity })
                     .done(function (data) {
                         $("#fld_order_stockitembatch").empty().append(data);
@@ -664,7 +664,7 @@
 
         }); //document.ready
 
-        
+
 
         function get_newctr() {
             newctr++;
@@ -685,51 +685,10 @@
     <div class="bottomrighticon">
         <asp:Button ID="btn_submit" runat="server" OnClick="btn_submit_Click" class="submit btn btn-info" Text="Submit" />
     </div>
-    <h1>Customer Maintenance
+    <h1>Person Maintenance
     </h1>
     <div class="form-horizontal row">
         <div class="col-md-8">
-
-            <div class="form-group row">
-                <label class="control-label col-sm-6" for="fld_customertype">Type</label>
-                <div class="col-sm-6">
-                    <select id="fld_customertype" name="fld_customertype" class="form-control" required="required">
-                        <option value="">--- Please select ---</option>
-                        <% 
-                            Dictionary<string, string> customertypeoptions = new Dictionary<string, string>();
-                            customertypeoptions["type"] = "select";
-                            customertypeoptions["valuefield"] = "value";
-                            Response.Write(Generic.Functions.buildselection(customertypes, fld_customertype, customertypeoptions));
-                        %>
-                    </select>
-                </div>
-            </div>
-            <div id="div_businessfields" style="display: <%=displaybusinessfields%>">
-                <div id="div_businessname" class="form-group row">
-                    <label class="control-label col-md-6" for="fld_businessname">Business Name</label>
-                    <div class="col-md-6">
-                        <input id="fld_businessname" name="fld_businessname" type="text" class="form-control" value="<%:fld_businessname%>" maxlength="100" required="required" />
-                    </div>
-                </div>
-
-
-                <div class="form-group row">
-                    <label class="control-label col-sm-6" for="fld_businesstype">Business Type</label>
-                    <div class="col-sm-6">
-                        <select id="fld_businesstype" name="fld_businesstype" class="form-control" required="required">
-                            <option value="">--- Please select ---</option>
-                            <% 
-                                Dictionary<string, string> businesstypeoptions = new Dictionary<string, string>();
-                                businesstypeoptions["type"] = "select";
-                                businesstypeoptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(businesstypes, fld_businesstype, businesstypeoptions));
-                            %>
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-
             <div class="form-group row">
                 <label class="control-label col-md-6" for="fld_firstname">First name</label>
                 <div class="col-md-6">
@@ -742,10 +701,10 @@
                     <input id="fld_surname" name="fld_surname" type="text" class="form-control" value="<%:fld_surname%>" maxlength="50" />
                 </div>
             </div>
-            
+
         </div>
         <div class="col-md-4">
-            <img id="img_photo" alt="" src="Images/<%: customer_ctr %>.jpg" style="height: 200px" /><br />
+            <img id="img_photo" alt="" src="Images/<%: person_ctr %>.jpg" style="height: 200px" /><br />
             <a id="getphoto">Upload Photo</a> <%=fld_xxxxxx %>
         </div>
     </div>
@@ -773,6 +732,33 @@
             <div id="div_general" class="tab-pane fade in active">
                 <!--<h3 class="tabheading">General</h3>-->
 
+                <div class="form-group row">
+                    <label class="control-label col-sm-4" for="fld_persontype">Type</label>
+                    <div class="col-sm-8">
+                        <select id="fld_persontype" name="fld_persontype" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <% 
+                                Dictionary<string, string> persontypeoptions = new Dictionary<string, string>();
+                                persontypeoptions["type"] = "select";
+                                persontypeoptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(persontypes, fld_persontype, persontypeoptions));
+                            %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_gender">Gender</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_gender" name="fld_gender" class="form-control" value="<%: fld_gender %>" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="fld_dateofbirth">Date of Birth</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="fld_dateofbirth" name="fld_dateofbirth" class="form-control" value="<%: fld_dateofbirth %>" />
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="fld_greeting">Greeting</label>
                     <div class="col-sm-8">
@@ -786,40 +772,35 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_deliveryaddress">Delivery Address</label>
+                    <label class="control-label col-sm-4" for="fld_deliveryaddress">Address</label>
                     <div class="col-sm-8">
-                        <textarea id="fld_deliveryaddress" name="fld_deliveryaddress" rows="6" class="form-control"><%: fld_deliveryaddress %></textarea>
+                        <textarea id="fld_deliveryaddress" name="fld_deliveryaddress" rows="6" class="form-control"><%: fld_address %></textarea>
                     </div>
                 </div>
-                <div class="form-group row">
-                <label class="control-label col-md-4" for="fld_xero_contactname">Xero Contact Name</label>
-                <div class="col-md-8">
-                    <input id="fld_xero_contactname" name="fld_xero_contactname" type="text" class="form-control" value="<%:fld_xero_contactname%>" maxlength="50" />
-                </div>
-            </div>
+
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_notes">Notes</label>
+                    <label class="control-label col-sm-4" for="fld_note">Note</label>
                     <div class="col-sm-8">
-                        <textarea id="fld_notes" name="fld_notes" rows="6" class="form-control"><%: fld_notes %></textarea>
+                        <textarea id="fld_note" name="fld_note" rows="6" class="form-control"><%: fld_note %></textarea>
                     </div>
                 </div>
             </div>
 
 
 
-  
 
-            <!-- ================================= ORDERS TAB ===================================  -->
-            <div id="div_orders" class="tab-pane fade in">
-                <!--<h3 class="tabheading">Orders</h3>-->
-                <table id="orderstable" class="table" style="width: 100%">
-                    <%= html_orders %>
+
+            <!-- ================================= ATTENDANCE TAB ===================================  -->
+            <div id="div_attendance" class="tab-pane fade in">
+                <!--<h3 class="tabheading">Attendance</h3>-->
+                <table id="attendancetable" class="table" style="width: 100%">
+                    <%= html_attendance %>
                 </table>
             </div>
 
-            <!-- ================================= ORDERS DIALOG ===================================  -->
+            <!-- ================================= ATTENDANCE DIALOG ===================================  -->
 
-            <div id="dialog_order" title="Maintain Orders" style="display: none" class="form-horizontal">
+            <div id="dialog_attendance" title="Maintain Attendance" style="display: none" class="form-horizontal">
                 <input type="hidden" id="fld_order_ctr" name="fld_order_ctr" />
                 <div class="form-group">
                     <label for="fld_order_date" class="control-label col-sm-4">
@@ -842,76 +823,6 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_stockitem">Item</label>
-                    <div class="col-sm-8">
-                        <select id="fld_order_stockitem" name="fld_order_stockitem" class="form-control" required="required">
-                            <%                                                                                                                                            
-                                //string[] nooptions = { }; 
-                                Dictionary<string, string> order_stockitems_options = new Dictionary<string, string>();
-                                order_stockitems_options["type"] = "select";
-                                order_stockitems_options["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(stockitems, nooptions, order_stockitems_options));
-                            %>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_grind">Grind</label>
-                    <div class="col-sm-8">
-                        <select id="fld_order_grind" name="fld_order_grind" class="form-control">
-                            <%                                                                                                                                            
-                                //string[] nooptions = { }; 
-                                Dictionary<string, string> order_grind_options = new Dictionary<string, string>();
-                                order_grind_options["type"] = "select";
-                                order_grind_options["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(grinds, nooptions, order_grind_options));
-                            %>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_quantity">Quantity</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_order_quantity" name="fld_order_quantity" class="form-control numeric" required="required"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_amount">Price</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_order_amount" name="fld_order_amount" class="form-control numeric" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_order_delivereddate">Dispatched</label>  
-                    <div class="col-sm-8">
-                        <div class="input-group fld_order_delivereddate">
-                            <input id="fld_order_delivereddate" name="fld_order_delivereddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="div_order_stockitembatch" style="display: none">
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="fld_order_stockitembatch">Batch</label>
-                        <div class="col-sm-8">
-                            <select id="fld_order_stockitembatch" name="fld_order_stockitembatch" class="form-control">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="fld_order_invoicereference">Invoice</label>
-                        <div class="col-sm-8">
-                            <input type="text" id="fld_order_invoicereference" name="fld_order_invoicereference" class="form-control" />
-                        </div>
-                    </div>
 
 
                 <div class="form-group">
@@ -922,136 +833,37 @@
                 </div>
             </div>
 
-            <!-- ================================= SUBSCRIPTIONS TAB ===================================  -->
-            <div id="div_subscriptions" class="tab-pane fade in">
-                <!--<h3 class="tabheading">Subscriptions</h3>-->
-                <table id="subscriptionstable" class="table" style="width: 100%">
-                    <%= html_subscriptions %>
+            <!-- ================================= NOTES TAB ===================================  -->
+            <div id="div_notes" class="tab-pane fade in">
+                <!--<h3 class="tabheading">Notes</h3>-->
+                <table id="notestable" class="table" style="width: 100%">
+                    <%= html_notes %>
                 </table>
             </div>
 
-            <!-- ================================= SUBSCRIPTIONS DIALOG ===================================  -->
+            <!-- ================================= NOTES DIALOG ===================================  -->
 
-            <div id="dialog_subscription" title="Maintain Subscriptions" style="display: none" class="form-horizontal">
-
+            <div id="dialog_notes" title="Maintain Notes" style="display: none" class="form-horizontal">
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_frequency">Frequency</label>
-                    <div class="col-sm-8">
-                        <select id="fld_subscription_frequency" name="fld_subscription_frequency" class="form-control" required="required">
-                            <option value="">-- Please Select --</option>
-                            <option>Daily</option>
-                            <option>Monthly</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_period">Period</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_period" name="fld_subscription_period" class="form-control numeric nopoint" required="required" maxlength="2" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="fld_subscription_startdate" class="control-label col-sm-4">
+                    <label for="fld_note_date" class="control-label col-sm-4">
                         Start Date
                     </label>
                     <div class="col-sm-8">
                         <div class="input-group standarddate">
-                            <input id="fld_subscription_startdate" name="fld_subscription_startdate" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
+                            <input id="fld_note_date" name="fld_note_date" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="fld_subscription_lastorder" class="control-label col-sm-4">
-                        Last Order
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="input-group standarddate">
-                            <input id="fld_subscription_lastorder" name="fld_subscription_lastorder" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!--
-                <div class="form-group">
-                    <label for="fld_subscriptionnextorder" class="control-label col-sm-4">
-                        Next Order
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="input-group standarddate">
-                            <input id="fld_subscriptionnextorder" name="fld_subscriptionnextorder" required="required" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                -->
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_stockitem">Item</label>
-                    <div class="col-sm-8">
-                        <select id="fld_subscription_stockitem" name="fld_subscription_stockitem" class="form-control" required="required">
-                            <%                                                                                                                                            
-                                //string[] nooptions = { }; 
-                                Dictionary<string, string> subscription_stockitems_options = new Dictionary<string, string>();
-                                subscription_stockitems_options["type"] = "select";
-                                subscription_stockitems_options["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(stockitems, nooptions, subscription_stockitems_options));
-                            %>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_grind">Grind</label>
-                    <div class="col-sm-8">
-                        <select id="fld_subscription_grind" name="fld_subscription_grind" class="form-control" required="required">
-                            <%                                                                                                                                            
-                                //string[] nooptions = { }; 
-                                Dictionary<string, string> subscription_grind_options = new Dictionary<string, string>();
-                                subscription_grind_options["type"] = "select";
-                                subscription_grind_options["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(grinds, nooptions, subscription_grind_options));
-                            %>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_quantity">Quantity</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_quantity" name="fld_subscription_quantity" class="form-control numeric" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_amount">Price</label>
-                    <div class="col-sm-8">
-                        <input type="text" id="fld_subscription_amount" name="fld_subscription_amount" class="form-control numeric" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_dropship">Drop Ship</label>
-                    <div class="col-sm-8">
-                        <select id="fld_subscription_dropship" name="fld_subscription_dropship" class="form-control" required="required">
-                            <option value="">--- Please Select ---</option>
-                            <%       
-                                Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
-                                YesNoOptions["type"] = "select";
-                                YesNoOptions["valuefield"] = "value";
-                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
-                            %>
-                        </select>
-                    </div>
-                </div>
-                
+
+
 
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="fld_subscription_note">Note</label>
+                    <label class="control-label col-sm-4" for="fld_note_note">Note</label>
                     <div class="col-sm-8">
-                        <textarea id="fld_subscription_note" name="fld_subscription_note" class="form-control tinymce"></textarea>
+                        <textarea id="fld_note_note" name="fld_note_note" class="form-control tinymce"></textarea>
                     </div>
                 </div>
             </div>
