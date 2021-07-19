@@ -15,7 +15,7 @@ namespace TeOraHouWhanganui.Private
 {
     public partial class PersonMaintenance : System.Web.UI.Page
     {
-        public string username = "";
+        public string username = ""; 
         public string person_ctr;
         public string fld_firstname;
         public string fld_surname;
