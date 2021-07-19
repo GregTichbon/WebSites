@@ -458,7 +458,7 @@
                     workers = '';
                 } else {
                     tr = $(this).closest('tr');
-                    $('#fld_encounter_startdatetime').val($(tr).find('td').eq(1).text());
+                    $('#fld_encounter_startdatetime').val($(tr).find('td').eq(1).text().substring(0,17));
                     $('#fld_encounter_enddatetime').val($(tr).find('td').eq(2).text());
                     $('#fld_encounter_narrative').val($(tr).find('td').eq(3).html());
                     workers = $(tr).find('td').eq(4).attr("workerid");
@@ -636,6 +636,29 @@
                             } else {
                                 $(tr).find('td:first').attr("class", "changed");
 
+                                //alert($('#fld_workerrole_endassignments').val());
+                                if ($('#fld_workerrole_endassignments').val() == 'Yes') {
+                                    newenddate = $('#fld_workerrole_enddate').val();
+                                    //alert(newenddate);
+                                    warnings = "";
+                                    $('#div_assigned > table > tbody > tr').each(function () {
+                                        enddate = $(this).find('td:eq(4)').text();
+                                        if (enddate == "") {
+                                            //alert(enddate);
+                                            $(this).find('td:eq(4)').text(newenddate);
+                                            //if ($(this).find('td:first').hasClass("changed")) {
+                                            if ($(this).attr('maint') == "changed") {
+                                                warnings = "There are some assignments that have already been changed";
+                                            } else {
+                                                $(this).attr('maint', 'changed');
+                                                $(this).find('td:first').attr("class", "changed");
+                                            }
+                                        }
+                                    });
+                                    if (warnings != "") {
+                                        alert("Warning: " + warnings);
+                                    }
+                                }
                             }
                             $(tr).attr('maint', 'changed');
 
@@ -662,6 +685,15 @@
                 */
 
                 $("#dialog_workerrole").dialog('option', 'buttons', myButtons);
+            })
+
+            $('#div_workerrole_enddate').on("dp.change", function (e) {
+                if (e.date == '') {
+                    $('#div_workerrole_endassignments').hide();
+                }
+                else {
+                    $('#div_workerrole_endassignments').show();
+                }
             })
 
             /* ========================================= EDIT ADDRESSES ===========================================*/
@@ -1722,7 +1754,7 @@
                         End Date 
                     </label>
                     <div class="col-sm-8">
-                        <div class="input-group standarddate">
+                        <div class="input-group standarddate" id="div_workerrole_enddate">
                             <input id="fld_workerrole_enddate" name="fld_workerrole_enddate" placeholder="eg: 23 Jun 1985" type="text" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -1735,6 +1767,22 @@
                     <label class="control-label col-sm-4" for="fld_workerrole_note">Note</label>
                     <div class="col-sm-8">
                         <textarea id="fld_workerrole_note" name="fld_workerrole_note" class="form-control tinymce"></textarea>
+                    </div>
+                </div>
+
+               <div id="div_workerrole_endassignments" class="form-group" style="display:none">
+                    <label class="control-label col-sm-4" for="fld_workerrole_endassignments">End all assignments at this date?</label>
+                    <div class="col-sm-8">
+                        <select id="fld_workerrole_endassignments" name="fld_workerrole_endassignments" class="form-control" required="required">
+                            <option value="">--- Please select ---</option>
+                            <%                                                                                                                                            
+                               //string[] nooptions = { }; //temp
+                                //Dictionary<string, string> YesNoOptions = new Dictionary<string, string>();
+                                YesNoOptions["type"] = "select";
+                                YesNoOptions["valuefield"] = "value";
+                                Response.Write(Generic.Functions.buildselection(YesNo, nooptions, YesNoOptions));
+                            %>
+                        </select>
                     </div>
                 </div>
             </div>

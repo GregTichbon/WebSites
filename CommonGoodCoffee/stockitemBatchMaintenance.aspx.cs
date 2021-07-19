@@ -279,7 +279,7 @@ namespace CommonGoodCoffee
                             using (SqlCommand cmd = new SqlCommand("Delete_StockTransaction", con))
                             {
                                 cmd.CommandType = CommandType.StoredProcedure;
-                                cmd.Parameters.Add("@stocktransaction_ctr", SqlDbType.VarChar).Value = stocktransaction_ctr;
+                                cmd.Parameters.Add("@stocktransaction_ctr", SqlDbType.VarChar).Value = stocktransaction_ctr.Substring(0, stocktransaction_ctr.Length - 7);  ;
                                 con.Open();
                                 cmd.ExecuteScalar().ToString();
                                 con.Close();

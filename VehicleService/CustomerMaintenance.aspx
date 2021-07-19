@@ -49,7 +49,7 @@
             $("#form1").validate();
 
             $('.datetime').datetimepicker({
-                format: 'D MMM YYYY HH:mm',
+                format: 'D MMM YYYY',
                 extraFormats: ['D MMM YY', 'D MMM YYYY', 'DD/MM/YY', 'DD/MM/YYYY', 'DD.MM.YY', 'DD.MM.YYYY', 'DD MM YY', 'DD MM YYYY'],
                 //daysOfWeekDisabled: [0, 6],
                 showClear: true,

@@ -60,7 +60,7 @@ namespace VehicleService
                         //{
                         update = " <img src=\"/_dependencies/images/tick.gif\" class=\"updatewof\">";
                         //}
-                        html += "<tr data-customer=\"" + Customer_CTR + "\" data-vehicle=\"" + vehicle_CTR + "\" data-customer_vehicle=\"" + Customer_Vehicle_CTR + "\" data-followup=\"" + vehicle_followup_ctr + "\">";
+                        html += "<tr data-customer=\"" + Customer_CTR + "\" data-vehicle=\"" + vehicle_CTR + "\" data-customer_vehicle=\"" + Customer_Vehicle_CTR + "\" data-followup=\"" + vehicle_followup_ctr + "\" data-wof_cycle=\"" + WOF_Cycle + "\">";
                         if (Vehicle != lastvehicle)
                         {
                             html += "<td><a class=\"customer\">" + Customer + "</a></td><td><a class=\"customer_vehicle\">" + Vehicle + " </a></td><td>" + WOF_Due + update + "</td>";

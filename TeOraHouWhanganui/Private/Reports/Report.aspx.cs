@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Generic;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,9 +15,13 @@ namespace TeOraHouWhanganui.Private.Reports
     {
         public string reportname = "";
         public string html = "";
+        public string heading = "";
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string id = Request.QueryString["id"];
+            //id = "Current Workers";
             switch (id)
             {
                 case "AccessLevels":
@@ -79,14 +84,163 @@ namespace TeOraHouWhanganui.Private.Reports
                     }
                     else
                     {
-                        string [,] fields = new string[,] { { "startdate", FromDate }, { "enddate", ToDate } };
+                        string[,] fields = new string[,] { { "startdate", FromDate }, { "enddate", ToDate } };
                         reportname = "Encounters Summary Audit";
                         createreport(fields);
                     }
                     break;
+                case "Current Workers":
+                    createreportNEW("Current Workers");
+                    break;
             }
         }
 
+        public void createreportNEW(string id)
+        {
+            string groupingparameter = "";
+            string[][] groupingparameters = new string[1][];
+            string[] lastvals = new string[] { };
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["TOHWConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString + ";MultipleActiveResultSets=true"))
+            using (SqlCommand cmd = new SqlCommand("reports", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@reportname", SqlDbType.VarChar).Value = id;
+
+                SqlDataAdapter da = new SqlDataAdapter();
+                DataSet ds = new DataSet();
+
+                da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                cmd.Dispose();
+
+                Boolean ingroup = false;
+                foreach (DataTable thistable in ds.Tables)
+                {
+                    if (thistable.Rows.Count > 0)
+                    {
+                        //int x = thistable.Columns.Count;
+                        //string z = thistable.Columns[0].ColumnName;
+
+                        if (thistable.Columns[0].ColumnName == "Heading")
+                        {
+                            heading = thistable.Rows[0]["Heading"].ToString();
+
+                            if (thistable.Columns.Count > 0)
+                            {
+                                groupingparameter = thistable.Rows[0][1].ToString();  //"1,2,3,4"; //group by these columns  "1,2,3,4|9,8,7"
+                                var tempgroupingparameters = groupingparameter.Split('|').Select(x => x.Split(',')).ToArray();
+                                Array.Resize(ref groupingparameters, tempgroupingparameters.Length);
+                                for (int i = 0; i != tempgroupingparameters.Length; i++)
+                                {
+                                    for (int j = 0; j != tempgroupingparameters[i].Length; j++)
+                                    {
+                                        Array.Resize(ref groupingparameters[i], tempgroupingparameters[0].Length);
+                                        groupingparameters[i][j] = tempgroupingparameters[i][j];
+                                    }
+                                }
+                                lastvals = new string[groupingparameters.Length];
+                            }
+                        }
+                        else
+                        {
+                            string[,] parameters = new string[5, thistable.Columns.Count];
+                            html += "<table class=\"table\"><thead><tr>";
+                            for (int f1 = 0; f1 <= thistable.Columns.Count - 1; f1++)
+                            {
+                                string[] theseparameters = thistable.Columns[f1].ColumnName.Split('|');
+                                for (int f2 = 0; f2 <= theseparameters.Length - 1; f2++)
+                                {
+                                    parameters[f2, f1] = theseparameters[f2];
+                                }
+                                if (parameters[0, f1] != "")
+                                {
+                                    html += "<th>";
+                                    html += parameters[0, f1].Replace("_", " ");
+                                    html += "</th>";
+                                }
+                            }
+                            html += "</tr></thead><tbody>";
+                            foreach (DataRow dr in thistable.Rows)
+                            {
+                                html += "<tr>";
+                                string val = "";
+                                for (int f1 = 0; f1 <= thistable.Columns.Count - 1; f1++)
+                                {
+                                    string useclass = "";
+                                    if (parameters[0, f1] != "")
+                                    {
+                                        val = dr[f1].ToString();
+
+                                        if (groupingparameter != "" && f1 == Convert.ToInt32(groupingparameters[0][0]) - 1)  //only doing 1 group by at the moment, put this in a loop in the future
+                                        {
+                                            if (val == lastvals[f1])
+                                            {
+                                                //val = "";
+                                                ingroup = true;
+                                            }
+                                            else
+                                            {
+                                                lastvals[f1] = val;
+                                                ingroup = false;
+                                            }
+                                        }
+                                        if(ingroup && groupingparameters[0].Contains((f1 + 1).ToString()))
+                                        {
+                                            val = "";
+                                        }
+                                        if (parameters[2, f1] + "" != "")
+                                        {
+                                            useclass = " class=\"" + parameters[2, f1] + "\"";
+                                        }
+                                        html += "<td" + useclass + ">";
+                                        if (val != "")
+                                        {
+                                            switch (parameters[1, f1] + "")
+                                            {
+                                                case "Date": //Change this to a format string
+                                                    {
+                                                        val = Functions.formatdate(val, "dd/MM/yy");
+                                                        break;
+                                                    }
+                                                case "Email":
+                                                    {
+                                                        val = "<a href=\"mailto:" + val + "\">" + val + "</a>";
+                                                        break;
+                                                    }
+                                                case "":
+                                                    {
+                                                        break;
+                                                    }
+                                                default:
+                                                    {
+                                                        val = Functions.formatdate(val, parameters[1, f1]);
+                                                        break;
+                                                    }
+                                            }
+
+                                            if (parameters[3, f1] + "" != "")
+                                            {
+                                                int fld = Convert.ToInt32(parameters[4, f1]);
+                                                val = "<a href=\"" + parameters[3, f1] + dr[fld].ToString() + "\">" + val + "</a>";
+                                            }
+                                        }
+                                    }
+                                    html += val;
+                                    html += "</td>";
+                                }
+                                html += "</tr>";
+
+                            }
+                            html += "</tbody></table>";
+                        }
+                    }
+                }
+            }
+        }
 
         public void createreport(string[,] fields = null)
         {
@@ -157,15 +311,9 @@ namespace TeOraHouWhanganui.Private.Reports
                                     if (parameters[3, f1] + "" != "")
                                     {
                                         int fld = Convert.ToInt32(parameters[4, f1]);
-                                        html += "<a href=\"" + parameters[3, f1] + dr[fld].ToString() + "\">" + val + "</a>";
+                                        val = "<a href=\"" + parameters[3, f1] + dr[fld].ToString() + "\">" + val + "</a>";
                                     }
-                                    else
-                                    {
-                                        html += val;
-                                    }
-
-
-
+                                    html += val;
                                     html += "</td>";
                                 }
                             }
@@ -197,7 +345,5 @@ namespace TeOraHouWhanganui.Private.Reports
                 }
             }
         }
-
-        
     }
 }

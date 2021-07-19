@@ -179,12 +179,26 @@
                     tr_note = $(this).find('td:eq(4)').text();
 
                     value = tr_date + delim + tr_type + delim + tr_quantity + delim + tr_note;
+
                     $('<input>').attr({
                         type: 'hidden',
                         name: tr_id,
                         value: value
                     }).appendTo('#form1');
                 });
+
+                $('#transactionstable > tbody > tr[maint="deleted"]').each(function () {
+                    tr_id = $(this).attr('id') + '_delete';
+                    if (tr_id.substring(0, 3) != 'new') {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: tr_id,
+                            value: ""
+                        }).appendTo('#form1');
+                    }
+                });
+
+
             }
 
 

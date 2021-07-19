@@ -1,0 +1,82 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Auction.master.cs" Inherits="Auction.Auction" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title><%= parameters["Auction"]  %></title>
+
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="/_Dependencies/css/jquery-ui.css" rel="stylesheet" />
+    <link href="/_Dependencies/css/main.css" rel="stylesheet" />
+    <style>
+        .todo {
+            background-color:red;
+        }
+    </style>
+
+    <!-- Javascript -->
+    <script src="/_Dependencies/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="/_Dependencies/Scripts/jquery.validate.min.js"></script>
+    <script src="/_Dependencies/Scripts/additional-methods.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="/_Dependencies/Scripts/generic.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).tooltip();
+            $('.inhibitcutcopypaste').bind("cut copy paste", function (e) {
+                e.preventDefault();
+            });
+            //$('[required]').css('border', '1px solid red');
+            $('[required]').addClass('required');
+
+            $(".numeric").keydown(function (event) {
+                if (event.shiftKey == true) {
+                    event.preventDefault();
+                }
+
+                if (
+                    (event.keyCode >= 48 && event.keyCode <= 57) ||
+                    (event.keyCode >= 96 && event.keyCode <= 105) ||
+                    event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || (event.keyCode == 190 && 1 == 2)
+                ) {
+                    //ok
+                } else {
+                    event.preventDefault();
+                }
+
+                if ($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+                    event.preventDefault();
+
+                //if a decimal has been added, disable the "."-button
+            });
+        });
+    </script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="bg-near-white">
+    <div class="pa3 mw9 center">
+        <div class="pa3 mb4">
+            <img src="/Images/Auction<%=parameters["Auction_ID"] %>/Header.png" alt="" />
+        </div>
+        <form runat="server" id="form1" class="form-horizontal" role="form">
+            <div id="upgrade-browser" style="display: none">
+                <p><strong>Attention:</strong> This site may not function correctly with your current browser. We recommend using IE 8+, Chrome or Firefox.</p>
+            </div>
+            <noscript>
+                <div id="noscript-browser">
+                    <p><strong>Attention:</strong> This site requires that Javascript be enabled.</p>
+                </div>
+            </noscript>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </form>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+            <%--    useful for another form--%>
+        </asp:ContentPlaceHolder>
+    </div>
+</body>
+</html>
