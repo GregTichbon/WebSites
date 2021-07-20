@@ -108,6 +108,7 @@ namespace Auction.Administration
 
 
                             //string imagepath = path + "\\auction\\items\\" + item_ctr;
+                            images = "";
                             string path = Server.MapPath("..\\images\\auction" + parameters["Auction_ID"] + "\\items\\" + item_ctr);
                             if (Directory.Exists(path))
                             {

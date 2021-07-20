@@ -180,7 +180,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    Auction ID:<%=parameters["Auction_ID"]%>
+   
     <img id="informationIcon" src="Images/Auction<%=parameters["Auction_ID"]%>/question.png" title="Click on me for information on bidding." />
     <div id="debug"></div>
 

@@ -26,15 +26,15 @@ namespace TeOraHouWhanganui.Private.Reports
             {
                 case "AccessLevels":
                     reportname = "Access Levels";
-                    createreport();
+                    createreportNEW(reportname);
                     break;
                 case "WorkerAccessLevelsWorker":
                     reportname = "Worker Access Levels - by Worker";
-                    createreport();
+                    createreportNEW(reportname);
                     break;
                 case "WorkerAccessLevelsYouth":
                     reportname = "Worker Access Levels - by Youth";
-                    createreport();
+                    createreportNEW(reportname);
                     break;
                 case "Everyone":
                     reportname = "Everyone";
@@ -86,7 +86,7 @@ namespace TeOraHouWhanganui.Private.Reports
                     {
                         string[,] fields = new string[,] { { "startdate", FromDate }, { "enddate", ToDate } };
                         reportname = "Encounters Summary Audit";
-                        createreport(fields);
+                        createreportNEW(reportname,fields);
                     }
                     break;
                 case "Current Workers":
@@ -95,7 +95,7 @@ namespace TeOraHouWhanganui.Private.Reports
             }
         }
 
-        public void createreportNEW(string id)
+        public void createreportNEW(string id, string[,] fields = null)
         {
             string groupingparameter = "";
             string[][] groupingparameters = new string[1][];
@@ -109,6 +109,13 @@ namespace TeOraHouWhanganui.Private.Reports
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@reportname", SqlDbType.VarChar).Value = id;
+                if (fields != null)
+                {
+                    for (int f1 = 0; f1 < fields.GetLength(0); f1++)
+                    {
+                        cmd.Parameters.Add("@" + fields[f1, 0], SqlDbType.VarChar).Value = fields[f1, 1];
+                    }
+                }
 
                 SqlDataAdapter da = new SqlDataAdapter();
                 DataSet ds = new DataSet();
@@ -129,7 +136,7 @@ namespace TeOraHouWhanganui.Private.Reports
                         {
                             heading = thistable.Rows[0]["Heading"].ToString();
 
-                            if (thistable.Columns.Count > 0)
+                            if (thistable.Columns.Count > 1)
                             {
                                 groupingparameter = thistable.Rows[0][1].ToString();  //"1,2,3,4"; //group by these columns  "1,2,3,4|9,8,7"
                                 var tempgroupingparameters = groupingparameter.Split('|').Select(x => x.Split(',')).ToArray();
@@ -166,6 +173,7 @@ namespace TeOraHouWhanganui.Private.Reports
                             html += "</tr></thead><tbody>";
                             foreach (DataRow dr in thistable.Rows)
                             {
+                                int c1 = 0;
                                 html += "<tr>";
                                 string val = "";
                                 for (int f1 = 0; f1 <= thistable.Columns.Count - 1; f1++)
@@ -173,22 +181,23 @@ namespace TeOraHouWhanganui.Private.Reports
                                     string useclass = "";
                                     if (parameters[0, f1] != "")
                                     {
+                                        c1++;
                                         val = dr[f1].ToString();
 
-                                        if (groupingparameter != "" && f1 == Convert.ToInt32(groupingparameters[0][0]) - 1)  //only doing 1 group by at the moment, put this in a loop in the future
+                                        if (groupingparameter != "" && c1 == Convert.ToInt32(groupingparameters[0][0]))  //only doing 1 group by at the moment, put this in a loop in the future
                                         {
-                                            if (val == lastvals[f1])
+                                            if (val == lastvals[c1-1])
                                             {
                                                 //val = "";
                                                 ingroup = true;
                                             }
                                             else
                                             {
-                                                lastvals[f1] = val;
+                                                lastvals[c1-1] = val;
                                                 ingroup = false;
                                             }
                                         }
-                                        if(ingroup && groupingparameters[0].Contains((f1 + 1).ToString()))
+                                        if(ingroup && groupingparameters[0].Contains((c1).ToString()))
                                         {
                                             val = "";
                                         }
@@ -228,12 +237,11 @@ namespace TeOraHouWhanganui.Private.Reports
                                                 val = "<a href=\"" + parameters[3, f1] + dr[fld].ToString() + "\">" + val + "</a>";
                                             }
                                         }
+                                        html += val;
+                                        html += "</td>";
                                     }
-                                    html += val;
-                                    html += "</td>";
                                 }
                                 html += "</tr>";
-
                             }
                             html += "</tbody></table>";
                         }

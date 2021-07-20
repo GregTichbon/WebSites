@@ -40,6 +40,18 @@
 
         </tr>
         <tr>
+            <td>Lower Value</td>
+            <td>
+                <input type="text" name="lowervalue" id="lowervalue" value="<%=lowervalue%>" maxlength="20" /></td>
+
+        </tr>
+                <tr>
+            <td>Upper Value</td>
+            <td>
+                <input type="text" name="uppervalue" id="uppervalue" value="<%=uppervalue%>" maxlength="20" /></td>
+
+        </tr>
+        <tr>
             <td>Open from</td>
             <td>
                 <input type="text" name="openfrom" id="openfrom" value="<%=openfrom%>" maxlength="20" /></td>
@@ -184,6 +196,7 @@
             <td>&nbsp;</td>
             <td>
                 <asp:Button ID="btn_submit" runat="server" OnClick="btn_submit_Click" class="btn btn-info" Text="Submit" />
+                Note: The application needs to be restarted to write to global.  May be change to Application values and update on submit?
         </tr>
     </table>
 

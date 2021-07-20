@@ -10,6 +10,10 @@
         { %>
     <p><a href="donorlist.aspx">Donors</a></p>
     <%} %>
+    <% if (parameters["DoArtistsAuthors"] == "Yes")
+        { %>
+    <p><a href="artistauthorlist.aspx">Artists/Authors</a></p>
+    <%} %>
     <p><a href="categorylist.aspx">Categories</a></p>
     <p><a href="userlist.aspx">Users</a></p>
 

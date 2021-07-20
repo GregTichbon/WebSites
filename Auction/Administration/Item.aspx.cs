@@ -23,6 +23,7 @@ namespace Auction.Administration
         //public string auctiontype;
         public string reserve;
         public string retailprice;
+        public string uppervalue;
         public string startbid;
         public string increment = "0";
         public string donor;
@@ -114,6 +115,7 @@ namespace Auction.Administration
                                 //auctiontype = dr["auctiontype"].ToString();
                                 reserve = dr["reserve"].ToString();
                                 retailprice = dr["retailprice"].ToString();
+                                uppervalue = dr["uppervalue"].ToString();
                                 increment = dr["increment"].ToString();
                                 startbid = dr["startbid"].ToString();
                                 //donor = dr["donor"].ToString();
@@ -121,6 +123,7 @@ namespace Auction.Administration
                                 hide = dr["hide"].ToString();
                                 category_ctr = dr["category_ctr"].ToString();
                                 bids = dr["bids"].ToString();
+                                string highestbid = dr["highestbid"].ToString();
 
                                 if (bids == "0")
                                 {
@@ -129,7 +132,7 @@ namespace Auction.Administration
                                 }
                                 else
                                 {
-                                    bids = "<span class=\"itembids\" id=\"item_" + item_ctr + "\">" + bids + " View</span>";
+                                    bids = "<span class=\"itembids\" id=\"item_" + item_ctr + "\">" + bids + "bids, highest: " + highestbid + " View</span>";
                                 }
                             }
                         }
@@ -271,6 +274,7 @@ namespace Auction.Administration
             cmd.Parameters.Add("@hide", SqlDbType.VarChar).Value = Request.Form["hide"];
             cmd.Parameters.Add("@auction_ctr", SqlDbType.VarChar).Value = parameters["Auction_ID"];
             cmd.Parameters.Add("@category_ctr", SqlDbType.VarChar).Value = Request.Form["category_ctr"];
+            cmd.Parameters.Add("@uppervalue", SqlDbType.VarChar).Value = Request.Form["uppervalue"];
 
             cmd.Connection = con;
             try

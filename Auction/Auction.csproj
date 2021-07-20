@@ -67,9 +67,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Administration\ArtistAuthor.aspx" />
+    <Content Include="Administration\ArtistAuthorList.aspx" />
     <Content Include="Administration\Category.aspx" />
     <Content Include="Administration\CategoryList.aspx" />
     <Content Include="Administration\Default.aspx" />
+    <Content Include="Administration\Donor.aspx" />
+    <Content Include="Administration\DonorList.aspx" />
     <Content Include="Administration\Item.aspx" />
     <Content Include="Administration\ItemList.aspx" />
     <Content Include="Administration\Setup.aspx" />
@@ -121,6 +125,20 @@
     <Content Include="_Dependencies\Scripts\magnifier\magnify.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administration\ArtistAuthor.aspx.cs">
+      <DependentUpon>ArtistAuthor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ArtistAuthor.aspx.designer.cs">
+      <DependentUpon>ArtistAuthor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\ArtistAuthorList.aspx.cs">
+      <DependentUpon>ArtistAuthorList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ArtistAuthorList.aspx.designer.cs">
+      <DependentUpon>ArtistAuthorList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Category.aspx.cs">
       <DependentUpon>Category.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -141,6 +159,20 @@
     </Compile>
     <Compile Include="Administration\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Donor.aspx.cs">
+      <DependentUpon>Donor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Donor.aspx.designer.cs">
+      <DependentUpon>Donor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\DonorList.aspx.cs">
+      <DependentUpon>DonorList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\DonorList.aspx.designer.cs">
+      <DependentUpon>DonorList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Item.aspx.cs">
       <DependentUpon>Item.aspx</DependentUpon>

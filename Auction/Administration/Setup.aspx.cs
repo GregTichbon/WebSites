@@ -40,10 +40,13 @@ namespace Auction.Administration
         public string dodonors;
         public string doartistsauthors;
         public string showhighestbidder;
+        public string lowervalue;
+        public string uppervalue;
 
 
         public string[] auctiontype_values = new string[2] { "Silent", "Live" };
         public string[] yesno_values = new string[2] { "Yes", "No" };
+        //public string[] valuetype_values = new string[3] { "None", "Retail","Upper/Lower"};
 
         public Dictionary<string, string> parameters;
 
@@ -67,7 +70,7 @@ namespace Auction.Administration
                 {
                     closeat = Convert.ToDateTime(closeat).ToString("d-MMM-yy hh:mm");
                 }
-                closedmessage = parameters["ClosedMessage"];
+                closedmessage = parameters["ClosedMessage"];                                                 //   CASE SENSITIVE
                 termsandconditions = parameters["TermsAndConditions"];
                 url = parameters["URL"];
                 auctiontype = parameters["AuctionType"];
@@ -86,7 +89,8 @@ namespace Auction.Administration
                 dodonors = parameters["DoDonors"];
                 doartistsauthors = parameters["DoArtistsAuthors"];
                 showhighestbidder = parameters["ShowHighestBidder"];
-
+                lowervalue = parameters["LowerValue"];
+                uppervalue = parameters["UpperValue"];
             }
 
 
@@ -127,6 +131,8 @@ namespace Auction.Administration
             cmd.Parameters.Add("@dodonors", SqlDbType.VarChar).Value = Request.Form["dodonors"];
             cmd.Parameters.Add("@doartistsauthors", SqlDbType.VarChar).Value = Request.Form["doartistsauthors"];
             cmd.Parameters.Add("@showhighestbidder", SqlDbType.VarChar).Value = Request.Form["showhighestbidder"];
+            cmd.Parameters.Add("@lowervalue", SqlDbType.VarChar).Value = Request.Form["lowervalue"];
+            cmd.Parameters.Add("@uppervalue", SqlDbType.VarChar).Value = Request.Form["lowervalue"];
 
             cmd.Connection = con;
             //try

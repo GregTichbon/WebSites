@@ -140,10 +140,6 @@
             <td>
                 <input type="text" name="Title" id="Title" value="<%=title%>" maxlength="255" />&nbsp;&nbsp;&nbsp;<%= bids %></td>
         </tr>
-
-
-
-
         <tr>
             <td>Short description</td>
             <td>
@@ -184,11 +180,28 @@
                 <input type="text" name="Reserve" id="Reserve" value="<%=reserve%>" class="numeric" />
             </td>
         </tr>
+
+        <% if (parameters["LowerValue"] != "")
+{ %>
+
         <tr>
-            <td>Retail Price ($)</td>
+            <td><%=parameters["LowerValue"] %> ($)</td>
             <td>
                 <input type="text" name="RetailPrice" id="RetailPrice" value="<%=retailprice%>" class="numeric" /></td>
         </tr>
+        <%} %>
+
+               <% if (parameters["UpperValue"] != "")
+{ %>
+
+        <tr>
+            <td><%=parameters["UpperValue"] %></td>
+            <td>
+                <input type="text" name="UpperValue" id="UpperValue" value="<%=uppervalue%>" class="numeric" /></td>
+        </tr>
+        <%} %>
+        
+        
         <tr>
             <td>Increment ($)</td>
             <td>
